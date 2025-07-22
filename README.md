@@ -1,6 +1,6 @@
 # The Universal Mission for DCS World
 
-**Current version: open beta 0.1.250722** (see the "version history" section at the end of this file for a list of the latest changes)
+**Current version: open beta 0.1.250722-update1** (see the "version history" section at the end of this file for a list of the latest changes)
 
 **This is a BETA version, there may be bugs and there WILL be unbalanced stuff.**
 
@@ -29,8 +29,8 @@ I think with The Universal Mission is, finally, the proper way to approach this 
 
 **Please read the "planned development" section below for more information.**
 
-- The current version supports only modern (post-Cold War) units and Caucasus, Persian Gulf and Syria theaters
-  - Kola, Marianas and Germany support will come soon, others will follow later
+- The current version supports only modern (post-Cold War) units and Caucasus, Kola, Marianas, Persian Gulf and Syria theaters
+  - Germany support will come soon, others will follow later
 - Not all mission types are supported yet
 - Career progress may be lost because of future updates, don't get too attached to it
 
@@ -99,14 +99,11 @@ Please also note that PvP is not supported at the moment and that the mission wi
 
 ## Planned development
 
-### Planned for next update (ASAP, before I leave for vacations :)
-
-- Support for Kola, Marianas and Germany theaters
-
 ### VERY high priority
 
 - New objectives: helicopter (drop/pickup units...), CAP, CAS, OCA (airbase attack)
 - New menu for enemy contacts report, allowing both to quiery AWACS reports and to ask other AI pilots about what they see in the air and on the ground
+- Support for Germany theater
 
 ### High priority
 
@@ -171,4 +168,11 @@ The core script is quite simple and small, I probably won't need too much help w
 
 ## Version history
 
-- **0.1.250722** (07/22/2025): Initial public release
+- **0.1.250722-update1** (07/22/2025)
+  - Added Kola theater
+  - Added Marianas theater
+  - Added message when XP is awarded to player after landing
+  - Fixed bug when friendly non-unit object is hit
+  - Slightly lowered XP required for medals and promotions
+- **0.1.250722** (07/22/2025)
+  - Initial public release
