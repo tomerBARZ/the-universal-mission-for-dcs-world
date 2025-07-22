@@ -1,0 +1,9 @@
+-- do
+--     for k,_ in pairs(Library.factions.tables) do
+--         for _,tp in pairs(DCSEx.enums.timePeriod) do
+--             if not Library.factions.tables[k].units[tp] or #Library.factions.tables[k].units[tp] == 0 then
+--
+--             end
+--         end
+--     end
+-- end

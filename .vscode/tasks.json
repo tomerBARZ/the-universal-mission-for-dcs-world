@@ -1,0 +1,16 @@
+{
+  "key": "ctrl+shift+b",
+  "isDefault": true,
+  "label": "Make project",
+  "type": "shell",
+  "command": "./Make.bat",
+  "presentation": {
+    "echo": true,
+    "reveal": "always",
+    "focus": true,
+    "panel": "shared",
+    "showReuseMessage": false,
+    "clear": true
+  },
+  "group": { "kind": "build", "isDefault": true }
+}

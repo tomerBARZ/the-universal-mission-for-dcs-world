@@ -1,0 +1,3 @@
+Library.tasks = {}
+
+--{{TASKS}}--
