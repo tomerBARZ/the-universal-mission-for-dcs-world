@@ -54,7 +54,7 @@ do
 
         local abortRoot = missionCommands.addSubMenu("⬣ Abort mission")
         if not TUM.settings.getValue(TUM.settings.id.MULTIPLAYER) and DCSEx.io.canReadAndWrite() then
-            missionCommands.addCommand("✓ Confirm (all xp will be lost!)", abortRoot, doCommandAbortMission, nil)
+            missionCommands.addCommand("✓ Confirm (all xp since last landing will be lost!)", abortRoot, doCommandAbortMission, nil)
         else
             missionCommands.addCommand("✓ Confirm", abortRoot, doCommandAbortMission, nil)
         end
