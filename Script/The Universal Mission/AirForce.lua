@@ -115,8 +115,14 @@ do
         if desiredUnitCount[side] <= 0 then return false end -- No airforce
         if not TUM.DEBUG_MODE and #DCSEx.world.getPlayersInAir() == 0 then return false end -- No players currently in the air, don't spawn new AI aircraft (except in debug mode)
 
+        local validAirbases = {}
         local airbases = coalition.getAirbases(side)
-        if not airbases or #airbases == 0 then return false end -- No airbases found for this coalition, nowhere to takeoff from
+        for _,ab in pairs(airbases) do
+            if ab:getDesc().category ~= Airbase.Category.SHIP then -- Ignore ships
+                table.insert(validAirbases, ab)
+            end
+        end
+        if not validAirbases or #validAirbases == 0 then return false end -- No airbases found for this coalition, nowhere to take off from
 
         local center = nil
         if side == TUM.settings.getPlayerCoalition() then
@@ -124,7 +130,7 @@ do
         else
             center = TUM.objectives.getCenter()
         end
-        airbases = DCSEx.dcs.getNearestObjects(center, airbases)
+        validAirbases = DCSEx.dcs.getNearestObjects(center, validAirbases)
 
         local airborneUnitCount = getAirborneUnitCount(side)
 
