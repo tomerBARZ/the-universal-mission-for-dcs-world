@@ -210,7 +210,7 @@ do
             msg = string.format("You have completed %d objective(s).", completedObjectives)
         end
 
-        trigger.action.outText("REMINDER: "..msg.." They will be awarded to your flight career once you've landed.", 5)
+        trigger.action.outText("[REMINDER] "..msg.." All progress will be recorded to your flight log upon landing.", 5)
         trigger.action.outSound("UI-Ok.ogg")
         return true
     end
