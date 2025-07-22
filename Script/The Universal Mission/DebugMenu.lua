@@ -56,14 +56,13 @@ do
     end
 
     local function doSimulatePlayerLanding()
-        -- TUM.playerCareer.awardScore(TUM.playerScore.getScore(), TUM.playerScore.getCompletedObjectives())
+        local playerUnit = coalition.getPlayers(TUM.settings.getPlayerCoalition())[1]
 
-        local event = {
-            id = world.event.S_EVENT_LAND,
-            initiator = coalition.getPlayers(TUM.settings.getPlayerCoalition())[1]
-        }
+        local runwayTouchEvent = { id = world.event.S_EVENT_RUNWAY_TOUCH, initiator = playerUnit }
+        TUM.onEvent(runwayTouchEvent)
 
-        TUM.onEvent(event)
+        local landingEvent = { id = world.event.S_EVENT_LAND, initiator = playerUnit }
+        timer.scheduleFunction(TUM.onEvent, landingEvent, timer.getTime() + 1)
     end
 
     function TUM.debugMenu.createMenu()
