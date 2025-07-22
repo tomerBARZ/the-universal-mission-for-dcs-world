@@ -116,8 +116,10 @@ do
 
         -- Friendly aircraft hit
         if event.target:getDesc().category == Unit.Category.AIRPLANE or event.target:getDesc().category == Unit.Category.HELICOPTER then
-            if not event.initiator:getPlayerName() then -- Players don't radio out when they're hit
-                doAmbientChatter("pilotImHit", nil, event.target:getCallsign(), 3)
+            if Object.getCategory(event.initiator) == Object.Category.UNIT then
+                if not event.initiator:getPlayerName() then -- Players don't radio out when they're hit
+                    doAmbientChatter("pilotImHit", nil, event.target:getCallsign(), 3)
+                end
             end
         end
     end
