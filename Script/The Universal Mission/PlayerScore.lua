@@ -171,8 +171,6 @@ do
 
             TUM.radio.playForAll("atcSafeLandingPlayer", {event.initiator:getCallsign(), baseName}, baseName.." ATC")
         end
-
-        TUM.playerScore.reset(false)
     end
 
     -------------------------------------

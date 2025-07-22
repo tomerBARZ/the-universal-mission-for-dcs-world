@@ -103,7 +103,7 @@ do
         careerStats.bestSortie = math.max(careerStats.bestSortie, score)
         careerStats.score = careerStats.score + score
         careerStats.completedObjectives = careerStats.completedObjectives + objectives
-        TUM.log("Awarded "..tostring(score).." xp and "..tostring(objectives).." completed objectives to player.")
+        trigger.action.outText(DCSEx.string.toStringThousandsSeparator(score).." xp and "..tostring(objectives).." completed objective(s) were registered in your flight log.", 5)
         local newRibbonCount = getRibbonCount()
 
         local somethingWasAwarded = false
@@ -136,6 +136,8 @@ do
         if somethingWasAwarded then
             TUM.playerCareer.displayMedalBox(false)
         end
+
+        TUM.playerScore.reset(false)
 
         return somethingWasAwarded
     end
