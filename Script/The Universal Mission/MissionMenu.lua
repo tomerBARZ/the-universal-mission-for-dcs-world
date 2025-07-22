@@ -8,7 +8,6 @@ TUM.missionMenu = {}
 do
     local function doCommandAbortMission()
         TUM.mission.endMission(TUM.mission.endCause.ABORTED)
-        TUM.intermission.createMenu()
     end
 
     local function doCommandMissionStatus()

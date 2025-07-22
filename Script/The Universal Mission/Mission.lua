@@ -36,6 +36,7 @@ do
         end
 
         missionStatus = TUM.mission.status.NONE
+        TUM.intermission.createMenu()
     end
 
     function TUM.mission.checkMissionStatus(silent)
