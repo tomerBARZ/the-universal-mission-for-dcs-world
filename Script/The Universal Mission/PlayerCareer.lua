@@ -28,20 +28,20 @@ do
     local OBJECTIVES_PER_RIBBON = 4 -- How many completed objectives to gain a new ribbon?
 
     local MEDALS = {
-        { "Air medal", 200 },
-        { "Bronze star", 300 },
-        { "Airman's medal", 400 },
-        { "Distinguished Flying Cross", 500 },
-        { "Silver Star for Valor", 600 },
-        { "Air Force Cross", 700 },
-        { "Congressional Medal of Honor", 800 },
+        { "Air medal", 150 },
+        { "Bronze star", 225 },
+        { "Airman's medal", 300 },
+        { "Distinguished Flying Cross", 375 },
+        { "Silver Star for Valor", 450 },
+        { "Air Force Cross", 525 },
+        { "Congressional Medal of Honor", 600 },
     }
 
     local RANKS = {
         { "2d Lt.", "Second lieutenant", 0 },
-        { "1st Lt.", "First lieutenant", 500 },
-        { "Capt.", "Captain", 2000 },
-        { "Maj.", "Major", 8000 },
+        { "1st Lt.", "First lieutenant", 400 },
+        { "Capt.", "Captain", 1600 },
+        { "Maj.", "Major", 6400 },
         { "Lt Col.", "Lieutenant colonel", 16000 },
         { "Col.", "Colonel", 32000 },
     }
