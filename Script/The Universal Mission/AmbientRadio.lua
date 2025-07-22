@@ -325,7 +325,7 @@ do
             if weaponDesc.category == Weapon.Category.BOMB then
                 doAmbientChatter("pilotLaunchPickle", nil, event.initiator:getCallsign(), 1)
             elseif weaponDesc.category == Weapon.Category.ROCKET then
-                doAmbientChatter(event.initiator:getCoalition(),"pilotLaunchRocket", nil, event.initiator:getCallsign(), 1)
+                doAmbientChatter("pilotLaunchRocket", nil, event.initiator:getCallsign(), 1)
             elseif weaponDesc.category == Weapon.Category.MISSILE then
                 if weaponDesc.missileCategory == Weapon.MissileCategory.AAM then
                     if weaponDesc.guidance == Weapon.GuidanceType.IR then
