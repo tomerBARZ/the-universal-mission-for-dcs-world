@@ -1,6 +1,6 @@
 # The Universal Mission for DCS World
 
-**Current version: open beta 0.1.250722-update1** (see the "version history" section at the end of this file for a list of the latest changes)
+**Current version: open beta 0.1.250723** (see the "version history" section at the end of this file for a list of the latest changes)
 
 **This is a BETA version, there may be bugs and there WILL be unbalanced stuff.**
 
@@ -169,6 +169,13 @@ The core script is quite simple and small, I probably won't need too much help w
 
 ## Version history
 
+- **0.1.250723** (07/23/2025)
+  - Added new "autoexec.cfg" file required by DCS 2.9.18.12722. You have to copy it to **[Saved Games]\DCS\Config directory** or the script won't work.
+  - Fixed a bug with convoys sometimes stuck in trees and buildings
+  - Fixed a bug with "intermission" menu not showing properly on mission completion
+  - Fixed a bug with non carrier-capable aircraft spawning on carriers
+  - Fixed a bug with "rockets!" radio call causing an error message
+  - Improved wording on the "XP awarded" and "all XP will be lost" messages
 - **0.1.250722-update1** (07/22/2025)
   - Added Kola theater
   - Added Marianas theater
