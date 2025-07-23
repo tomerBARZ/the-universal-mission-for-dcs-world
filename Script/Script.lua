@@ -107,11 +107,12 @@ do
     function eventHandler:onEvent(event)
         if not event then return end -- No event
 
-        TUM.ambientRadio.onEvent(event) -- Must be first so other (more important) radio messages with interrupt the "ambient" ones
+        TUM.ambientRadio.onEvent(event) -- Must be first so other (more important) radio messages will interrupt the "ambient" ones
         TUM.ambientWorld.onEvent(event)
         TUM.objectives.onEvent(event)
         TUM.playerScore.onEvent(event)
         TUM.mission.onEvent(event)
+        TUM.supportWingmen.onEvent(event)
     end
 
     function TUM.onEvent(event)

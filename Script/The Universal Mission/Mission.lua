@@ -29,6 +29,7 @@ do
 
     local function closeMission(removeAllUnits)
         if removeAllUnits then
+            TUM.supportWingmen.removeAll()
             TUM.airForce.removeAll()
             TUM.ambientWorld.removeAll()
             TUM.enemyAirDefense.removeAll()
@@ -72,7 +73,6 @@ do
         end
 
         TUM.supportAWACS.create() -- Create the AWACS aircraft if it wasn't airborne already
-
         TUM.enemyAirDefense.create() -- Must be called once objectives have been created
         TUM.airForce.create() -- Must be called once objectives have been created
         TUM.missionMenu.create() -- Must be called once objectives have been created

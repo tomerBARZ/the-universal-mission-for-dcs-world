@@ -101,6 +101,26 @@ do
         return groupTable
     end
 
+    local function setAircraftTaskFollow(groupTable, followedGroupID)
+        groupTable.task = "Escort"
+
+        table.insert(groupTable.route.points[1].task.params.tasks,
+        {
+            ["enabled"] = true,
+            ["auto"] = true,
+            ["id"] = "Follow",
+            ["number"] = #groupTable.route.points[1].task.params.tasks + 1,
+            ["params"] = {
+                groupId = followedGroupID,
+                pos = { x = -100, y = 0, z = -100 },
+                lastWptIndexFlag  = false,
+                lastWptIndex = -1
+             },
+        })
+
+        return groupTable
+    end
+
     local function setAircraftTaskOrbit(groupTable, options)
         -- TODO: oval orbit
         table.insert(groupTable.route.points[#groupTable.route.points].task.params.tasks,
@@ -341,7 +361,11 @@ do
         if isAirUnit then
             if options.taskAwacs then setAircraftTaskAwacs(groupTable) end
             if options.taskCAP then setAircraftTaskCAP(groupTable) end
-            setAircraftTaskOrbit(groupTable, options)
+            if options.taskFollow then
+                setAircraftTaskFollow(groupTable, options.taskFollow)
+            else
+                setAircraftTaskOrbit(groupTable, options)
+            end
             groupCallsign = DCSEx.unitCallsignMaker.getCallsign(unitTypes[1])
             groupTable.name = groupCallsign.name
         end
