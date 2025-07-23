@@ -4,7 +4,7 @@
 -- (Constant) DCSEx.math.TWO_PI
 -- DCSEx.math.addVec(vecA, vecB)
 -- DCSEx.math.clamp(val, min, max)
--- DCSEx.math.getBearing(point, refPoint)
+-- DCSEx.math.getBearing(point, refPoint, returnAsNESWstring)
 -- DCSEx.math.getDistance2D(vec2a, vec2b)
 -- DCSEx.math.getDistance3D(vec3a, vec3b)
 -- DCSEx.math.getRelativeHeading(point, refObject)
@@ -61,9 +61,12 @@ end
 -- Gets the bearing between two vectors, in degrees
 -- @param point A vec2/vec3
 -- @param refPoint Vec2/vec3 to use as a reference point
+-- @param returnAsNESWstring Should the value be returned as a N/S/E/W string instead of a numeric value
 -- @return Bearing, as a number, in degrees
 -------------------------------------
-function DCSEx.math.getBearing(point, refPoint)
+function DCSEx.math.getBearing(point, refPoint, returnAsNESWstring)
+    returnAsNESWstring = returnAsNESWstring or false
+
     refPoint = refPoint or {x = 0, y = 0}
     if point.z then point = DCSEx.math.vec3ToVec2(point) end -- Point is a vec3, convert it
     if refPoint.z then refPoint = DCSEx.math.vec3ToVec2(refPoint) end -- Point is a vec3, convert it
@@ -74,7 +77,15 @@ function DCSEx.math.getBearing(point, refPoint)
         bearing = bearing + DCSEx.math.TWO_PI
     end
 
-    return math.floor(bearing * (180 / math.pi))
+    bearing = math.floor(bearing * (180 / math.pi))
+
+    if returnAsNESWstring then
+        bearing = math.floor((bearing / 45.0) + .5)
+        local namesArray = { "north", "northeast", "east", "southeast", "south", "southwest", "west", "northwest" }
+        return namesArray[(bearing % 8) + 1]
+    end
+
+    return bearing
 end
 
 -------------------------------------
