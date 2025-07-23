@@ -9,6 +9,7 @@ do
     TUM.supportWingmen.orderID = {
         ORBIT = 1,
         REJOIN = 2,
+        ENGAGE_BANDITS = 3,
     }
 
     local wingmenGroupID = nil
@@ -21,6 +22,8 @@ do
             TUM.radio.playForAll("playerFlightOrbit", nil, player:getCallsign(), false)
         elseif orderID == TUM.supportWingmen.orderID.REJOIN then
             TUM.radio.playForAll("playerFlightRejoin", nil, player:getCallsign(), false)
+        elseif orderID == TUM.supportWingmen.orderID.ENGAGE_BANDITS then
+            TUM.radio.playForAll("playerFlightEngageBandits", nil, player:getCallsign(), false)
         end
 
         if not wingmenGroupID then return end
@@ -55,6 +58,22 @@ do
                 }
             }
             TUM.radio.playForAll("pilotWingmanRejoin", nil, wingmanCallsign, true)
+        elseif orderID == TUM.supportWingmen.orderID.ENGAGE_BANDITS then
+            local banditGroups = coalition.getGroups(TUM.settings.getEnemyCoalition(), Group.Category.AIRPLANE)
+            if not banditGroups or #banditGroups == 0 then
+                TUM.radio.playForAll("pilotWingmanEngageNoTarget", nil, wingmanCallsign, true)
+                return
+            end
+            -- TODO: sort by nearest
+            local targetGroup = banditGroups[1]
+
+            taskTable = {
+                id = "AttackGroup",
+                params = {
+                    groupId = DCSEx.dcs.getObjectIDAsNumber(targetGroup),
+                }
+            }
+            TUM.radio.playForAll("pilotWingmanEngageBandits", nil, wingmanCallsign, true)
         end
 
         if not taskTable then return end
@@ -109,6 +128,8 @@ do
         if TUM.settings.getValue(TUM.settings.id.MULTIPLAYER) then return end -- No wingmen in multiplayer
 
         local rootPath = missionCommands.addSubMenu("Flight")
+
+        missionCommands.addCommand("Engage bandits", rootPath, doWingmenOrder, TUM.supportWingmen.orderID.ENGAGE_BANDITS)
         missionCommands.addCommand("Orbit", rootPath, doWingmenOrder, TUM.supportWingmen.orderID.ORBIT)
         missionCommands.addCommand("Rejoin", rootPath, doWingmenOrder, TUM.supportWingmen.orderID.REJOIN)
     end

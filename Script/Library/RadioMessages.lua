@@ -70,6 +70,20 @@ Library.radioMessages = {
     pilotWarningMANPADS = { "MANPADS launch! Flare, flare, flare!", "Flight, MANPADS in the air. Dump flares, now!", "Coming from the ground, MANPADS hot!", "Go defensive, MANPADS off your nose! Flare, flare!", "MANPADS just came up from the deck, break hard and pop everything!" },
     pilotWarningSAMLaunch = { "Spike! SAM just launched, break!", "SAM up! Defensive now!", "Launch! SAM, coming fast, pump chaff, go cold!", "SAM in the air, break hard!", "SAM fired, visual smoke! Extend, extend!" },
 
+    pilotWingmanEngageBandits = {
+        "Copy, engaging now.",
+        "Tally one, pressing.",
+        "Roger, comitting.",
+        "Confirm, going after him.",
+        "Affirm, moving in on bandits."
+    },
+    pilotWingmanEngageNoTarget = {
+        "Negative tally, unable engage.",
+        "Cannot comply, blind on target.",
+        "No joy on targets, cannot proceed.",
+        "Negative contact, unable to commit.",
+        "That's a no, not seeing any targets."
+    },
     pilotWingmanOrbit = {
         "Wilco, holding here.",
         "Copy, orbiting now.",
@@ -201,6 +215,13 @@ Library.radioMessages = {
         "Command, pass coordinates for objective $1.",
         "Command, confirm grid on objective $1."
     },
+    playerFlightEngageBandits = {
+        "Flight, engage bandits.",
+        "Flight, you're cleared hot bandits.",
+        "Flight, commit on bandits when ready.",
+        "Flight, engage bandits, your discretion.",
+        "Flight, you're free to engage bandits."
+    },
     playerFlightOrbit = {
         "Flight, orbit my position.",
         "Flight, set up an orbit on me.",
@@ -208,7 +229,7 @@ Library.radioMessages = {
         "Flight, anchor on my current pos.",
         "Flight, orbit overhead"
     },
-    playerFlightRejoin = 
+    playerFlightRejoin =
     {
         "Flight, rejoin my side",
         "Flight, push it up, rejoin formation.",
