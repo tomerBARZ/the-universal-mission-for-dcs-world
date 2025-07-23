@@ -39,7 +39,8 @@ I think with The Universal Mission is, finally, the proper way to approach this 
 ### First setup
 
 - Download the latest release from this GitHub page.
-- Copy the .miz files for your theater(s) of choice into your **[Saved Games]\DCS World\Missions directory**
+- Copy the provided autoexec.cfg file to your **[Saved Games]\DCS\Config directory**
+- Copy the .miz files for your theater(s) of choice to your **[Saved Games]\DCS\Missions directory**
 - _**(Optional but strongly recommended)**_ Unsanitize the Lua IO module. You don't have to do this, but the persistent career system won't work if you don't. To do it, open the file **[DCS World installation directory]\Scripts\MissionScripting.lua** with a text editor and comment or remove the line "sanitizeModule('io')". Make sure you restart DCS World once you've modified the file.
   - Please note: should you want to backup, delete or transfer it, career progress is saved in **[DCS World installation directory]\TheUniversalMission.sav**
 
@@ -142,9 +143,9 @@ Please also note that PvP is not supported at the moment and that the mission wi
 
 ## How to build the miz files
 
-_(this is only for developpers, end users should just download the latest release)_
+_**(this is for developpers only, end users should just download the latest release)**_
 
-I use a PHP script to "build" the .miz files as PHP is a pretty handy tool capable both of handling all requirement replacements and pack the miz files.
+I use a PHP script to "build" the .miz files as PHP is a pretty handy tool capable both of handling all required replacements and pack the miz files.
 
 If you want to build the .miz files yourself, you'll need to:
 
