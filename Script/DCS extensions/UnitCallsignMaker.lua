@@ -198,6 +198,28 @@ do
         return callsignTable
     end
 
+    function DCSEx.unitCallsignMaker.getNextGroupCallSign(callsign)
+        if not callsign then return nil end
+        local callsignName = callsign:sub(1, #callsign - 2):lower()
+        local callsignGroupNumber = tonumber(callsign:sub(#callsign - 2, #callsign - 1))
+        local callsignUnitNumber = tonumber(callsign:sub(#callsign - 1, #callsign))
+
+        for csType,_ in pairs(CALLSIGNS) do
+            for csNameIndex,_ in pairs(CALLSIGNS[csType]) do
+                if CALLSIGNS[csType][csNameIndex]:lower() == callsignName then
+                    return {
+                        [1] = csNameIndex,
+                        [2] = callsignGroupNumber,
+                        [3] = callsignUnitNumber,
+                        ["name"] = CALLSIGNS[csType][csNameIndex]..tostring(callsignGroupNumber),
+                    }
+                end
+            end
+        end
+
+        return nil
+    end
+
     do
         local missionGroups = DCSEx.envMission.getGroups()
         for _,g in ipairs(missionGroups) do
