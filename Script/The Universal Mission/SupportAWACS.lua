@@ -21,14 +21,25 @@ do
         local awacsController = awacsUnit:getController()
         if not awacsController then return end
 
-        -- local aircraftGroups = awacsController:getDetectedTargets(Controller.Detection.RADAR)
-        local detectedUnits = awacsController:getDetectedTargets()
-
         local detectedAircraft = {}
-        for _,u in pairs(detectedUnits) do
-            if u.object and u.distance and Object.getCategory(u.object) == Object.Category.UNIT and u.object:inAir() then
-                if u.object:getCoalition() ~= TUM.settings.getPlayerCoalition() then
-                    table.insert(detectedAircraft, u.object)
+
+        -- "REALISTIC" AWACS - gets unit list from the list of aircraft the AWACS actually detects
+        -- local detectedUnits = awacsController:getDetectedTargets()
+        -- for _,u in pairs(detectedUnits) do
+        --     if u.object and u.distance and Object.getCategory(u.object) == Object.Category.UNIT and u.object:inAir() then
+        --         if u.object:getCoalition() ~= TUM.settings.getPlayerCoalition() then
+        --             table.insert(detectedAircraft, u.object)
+        --         end
+        --     end
+        -- end
+
+        -- "UNREALISTIC" AWACS - gets unit list straight from unit data, no matter what the AWACS can or cannot detect
+        local detectedGroups = coalition.getGroups(TUM.settings.getEnemyCoalition(), Group.Category.AIRPLANE)
+        for _,g in pairs(detectedGroups) do
+            local units = g:getUnits()
+            for _,u in pairs(units) do
+                if u:inAir() then
+                    table.insert(detectedAircraft, u)
                 end
             end
         end
