@@ -6,7 +6,61 @@
 TUM.supportWingmen = {}
 
 do
+    TUM.supportWingmen.orderID = {
+        ORBIT = 1,
+        REJOIN = 2,
+    }
+
     local wingmenGroupID = nil
+
+    local function doWingmenOrder(orderID)
+        local player = world:getPlayer()
+        if not player then return end
+
+        if orderID == TUM.supportWingmen.orderID.ORBIT then
+            TUM.radio.playForAll("playerFlightOrbit", nil, player:getCallsign(), false)
+        elseif orderID == TUM.supportWingmen.orderID.REJOIN then
+            TUM.radio.playForAll("playerFlightRejoin", nil, player:getCallsign(), false)
+        end
+
+        if not wingmenGroupID then return end
+        local wingmenGroup = DCSEx.world.getGroupByID(wingmenGroupID)
+        if not wingmenGroup then return end
+        if #wingmenGroup:getUnits() == 0 then return end
+        local wingmenCtrl = wingmenGroup:getController()
+        if not wingmenCtrl then return end
+
+        local wingmanCallsign = wingmenGroup:getUnit(1):getCallsign()
+
+        local taskTable = nil
+
+        if orderID == TUM.supportWingmen.orderID.ORBIT then
+            taskTable = {
+                id = "Orbit",
+                params = {
+                    pattern = "Circle",
+                    point = DCSEx.math.vec3ToVec2(player:getPoint()),
+                    altitude = player:getPoint().y
+                }
+            }
+            TUM.radio.playForAll("pilotWingmanOrbit", nil, wingmanCallsign, true)
+        elseif orderID == TUM.supportWingmen.orderID.REJOIN then
+            taskTable = {
+                id = "Follow",
+                params = {
+                    groupId = DCSEx.dcs.getObjectIDAsNumber(world:getPlayer():getGroup()),
+                    pos = { x = -100, y = 0, z = -100 },
+                    lastWptIndexFlag  = false,
+                    lastWptIndex = -1
+                }
+            }
+            TUM.radio.playForAll("pilotWingmanRejoin", nil, wingmanCallsign, true)
+        end
+
+        if not taskTable then return end
+
+        wingmenCtrl:setTask(taskTable)
+    end
 
     local function createWingmen()
         TUM.supportWingmen.removeAll() -- Destroy all pre-existing wingmen
@@ -45,6 +99,14 @@ do
         DCSEx.world.destroyGroupByID(wingmenGroupID)
 
         wingmenGroupID = nil
+    end
+
+    function TUM.supportWingmen.createMenu()
+        if TUM.settings.getValue(TUM.settings.id.MULTIPLAYER) then return end -- No wingmen in multiplayer
+
+        local rootPath = missionCommands.addSubMenu("Flight")
+        missionCommands.addCommand("Orbit", rootPath, doWingmenOrder, TUM.supportWingmen.orderID.ORBIT)
+        missionCommands.addCommand("Rejoin", rootPath, doWingmenOrder, TUM.supportWingmen.orderID.REJOIN)
     end
 
     -------------------------------------
