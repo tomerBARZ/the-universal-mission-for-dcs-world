@@ -1,7 +1,7 @@
 -- ====================================================================================
 -- DCSTOOLS - FUNCTIONS LINKED TO DCS WORLD RULES AND TABLES
 -- ====================================================================================
--- DCSEx.dcs.getBRAA(point, refPoint, showAltitude, metricSystem)
+-- DCSEx.dcs.getBRAA(point, refPoint, showAltitude, metricSystem, casualFormat)
 -- DCSEx.dcs.getCJTFForCoalition(coalitionID)
 -- DCSEx.dcs.getCoalitionAsString(coalitionID)
 -- DCSEx.dcs.getCoalitionColor(coalitionID, alpha)
@@ -29,19 +29,24 @@ end
 -- Gets a BRAA (bearing, range, altitude, aspect) string about a point
 -- Format is "[bearing to unit] for [distance] at [altitude]"
 -- @param unit A unit
--- @param refPoint2 Reference point for the bearing and distance
+-- @param refPoint Reference point for the bearing and distance
 -- @param showAltitude Should altitude be displayed?
 -- @param metricSystem Should metric system units be used?
+-- @param casualFormat Should the format be casual ("32nm northeast" instead of "45 for 32")?
 -- @return BRAA, as a string
 -------------------------------------
-function DCSEx.dcs.getBRAA(point, refPoint, showAltitude, metricSystem)
-    showAltitude = showAltitude or false
+function DCSEx.dcs.getBRAA(point, refPoint, showAltitude, metricSystem, casualFormat)
+    casualFormat = casualFormat or false
     metricSystem = metricSystem or false
+    showAltitude = showAltitude or false
 
     if not point.z then point = DCSEx.math.vec2ToVec3(point, "land") end
     if not refPoint.z then refPoint = DCSEx.math.vec2ToVec3(refPoint, "land") end
 
-    local braa = tostring(DCSEx.math.getBearing(point, refPoint))
+    local braa = nil
+
+    braa = tostring(DCSEx.math.getBearing(point, refPoint, casualFormat))
+
     local distance = DCSEx.math.getDistance2D(point, refPoint)
     if metricSystem then
         distance = distance / 1000.0
@@ -49,7 +54,15 @@ function DCSEx.dcs.getBRAA(point, refPoint, showAltitude, metricSystem)
         distance = DCSEx.converter.metersToNM(distance)
     end
 
-    braa = braa .. " for " .. tostring(math.ceil(distance))
+    if casualFormat then 
+        if metricSystem then
+            braa = math.ceil(distance).."km "..braa
+        else
+            braa = math.ceil(distance).."nm "..braa
+        end
+    else
+        braa = braa .. " for " .. tostring(math.ceil(distance))
+    end
 
     if showAltitude then
         local altitude = point.y
@@ -59,6 +72,13 @@ function DCSEx.dcs.getBRAA(point, refPoint, showAltitude, metricSystem)
             altitude = math.floor(DCSEx.converter.metersToFeet(point.y) / 1000) * 1000
         end
         braa = braa .. " at " .. tostring(altitude)
+        if casualFormat then
+            if metricSystem then
+                braa = braa.."m"
+            else
+                braa = braa.."ft"
+            end
+        end
     end
 
     return braa
