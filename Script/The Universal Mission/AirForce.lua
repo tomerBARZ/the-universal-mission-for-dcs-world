@@ -91,6 +91,8 @@ do
         if not groupInfo then return false end
         table.insert(fighterGroups[side], groupInfo.groupID)
 
+        local players = coalition.getPlayers(TUM.settings.getPlayerCoalition())
+
         if side == TUM.settings.getPlayerCoalition() then
             local newUnit = nil
             local newGroup = DCSEx.world.getGroupByID(groupInfo.groupID)
@@ -103,9 +105,19 @@ do
                 typeName = Library.objectNames.get(newUnit)
             end
 
-            TUM.radio.playForCoalition(TUM.settings.getPlayerCoalition(), "pilotNewFriendlyAircraft", { typeName, launchAirbase:getName() }, callsign)
+            for _,p in ipairs(players) do
+                local abInfo = launchAirbase:getName()
+                abInfo = abInfo.." ("..DCSEx.dcs.getBRAA(launchAirbase:getPoint(), p:getPoint(), false, false, true).." from you)"
+
+                TUM.radio.playForUnit(DCSEx.dcs.getObjectIDAsNumber(p), "pilotNewFriendlyAircraft", { typeName, abInfo }, callsign)
+            end
         else
-            TUM.radio.playForCoalition(TUM.settings.getPlayerCoalition(), "commandNewEnemyAircraft", { tostring(groupSize), launchAirbase:getName() }, "Command")
+            for _,p in ipairs(players) do
+                local abInfo = launchAirbase:getName()
+                abInfo = abInfo.." ("..DCSEx.dcs.getBRAA(launchAirbase:getPoint(), p:getPoint(), false, false, true).." from you)"
+
+                TUM.radio.playForUnit(DCSEx.dcs.getObjectIDAsNumber(p), "commandNewEnemyAircraft", { tostring(groupSize), abInfo }, "Command")
+            end
         end
 
         return true
