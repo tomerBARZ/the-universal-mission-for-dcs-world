@@ -71,9 +71,12 @@ do
 
         local playerTypeName = player:getTypeName()
 
+        local playerCategory = Group.Category.AIRPLANE
+        if player:hasAttribute("Helicopters") then playerCategory = Group.Category.HELICOPTER end
+
         local groupInfo = DCSEx.unitGroupMaker.create(
             TUM.settings.getPlayerCoalition(),
-            Group.Category.AIRPLANE, -- TODO: or helicopter!
+            playerCategory,
             DCSEx.math.randomPointInCircle(DCSEx.math.vec3ToVec2(player:getPoint()), 500, 250),
             { playerTypeName, playerTypeName },
             {
@@ -90,6 +93,7 @@ do
         end
 
         TUM.log("Spawned AI wingmen")
+        TUM.radio.playForAll("pilotWingmanRejoin", nil, "WINGMEN", false)
         wingmenGroupID = groupInfo.groupID
     end
 
