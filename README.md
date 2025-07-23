@@ -69,7 +69,7 @@ The Universal Mission is designed to be easily editable to suit your preferences
 #### Player aircraft
 
 - Change the player aircraft starting condition (runway, parking or parking hot). Air starts are not recommended as all players must be on the ground to begin a new mission
-- Move it to another airbase, change its coalition (make sure blue players are spawned on an airbase located in a REDFOR zone are red players are spawned on an airbase located in a REDFOR zone)
+- Move it to another airbase, change its coalition (make sure blue players are spawned on an airbase located in a BLUFOR zone are red players are spawned on an airbase located in a REDFOR zone)
   - You may also add an aircraft carrier or a FARP for the player to take off from
 - Change its default loadout if you plan to play a specific kind of mission and don't want to lose time asking the ground crew to rearm your aircraft (e.g. if you know you want to play SEAD missions, you may as well stock up on AGM-88s)
 - Change the skill level from "Player" to "Client" and add other aircraft to create a multiplayer mission to play with your friends. Keep in mind that the persistent career/player stats system will be disabled in multiplayer missions and that all player aircraft must belong to the same coalition (TUM does not support PvP)
