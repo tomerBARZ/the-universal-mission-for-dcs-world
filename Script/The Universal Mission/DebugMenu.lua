@@ -55,6 +55,13 @@ do
         TUM.playerScore.awardCompletedObjective()
     end
 
+    local function doSimulatePlayerTakeOff()
+        local playerUnit = coalition.getPlayers(TUM.settings.getPlayerCoalition())[1]
+
+        local takeOffEvent = { id = world.event.S_EVENT_TAKEOFF, initiator = playerUnit }
+        TUM.onEvent(takeOffEvent)
+    end
+
     local function doSimulatePlayerLanding()
         local playerUnit = coalition.getPlayers(TUM.settings.getPlayerCoalition())[1]
 
@@ -72,6 +79,7 @@ do
         missionCommands.addCommand("Detonate \"boom\" map markers", rootMenu, doMarkersBoom, nil)
         missionCommands.addCommand("Detonate aircraft near \"airboom\" map markers", rootMenu, doMarkersAirBoom, nil)
         missionCommands.addCommand("Award 100 points and 1 objective", rootMenu, doAwardPointsAndObjectives, nil)
+        missionCommands.addCommand("Simulate player takeoff", rootMenu, doSimulatePlayerTakeOff, nil)
         missionCommands.addCommand("Simulate player landing", rootMenu, doSimulatePlayerLanding, nil)
         missionCommands.addCommand("Reset player stats", rootMenu, TUM.playerCareer.reset, nil)
     end
