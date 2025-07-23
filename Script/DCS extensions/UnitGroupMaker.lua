@@ -385,6 +385,12 @@ do
                 y = vec2.y + unitOffset.y
             }
 
+            if options.onRoad then
+                local posOnRoads = DCSEx.world.getClosestPointOnRoadsVec2(unitTable)
+                unitTable.x = posOnRoads.x
+                unitTable.y = posOnRoads.y
+            end
+
             if isAirUnit and aircraftDB then
                 unitTable.hardpoint_racks = true
                 unitTable.psi = 1.7703702498393
