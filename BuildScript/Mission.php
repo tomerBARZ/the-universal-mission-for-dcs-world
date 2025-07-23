@@ -97,7 +97,7 @@ function makeZones($theaterJson)
     return $lua;
 }
 
-function createMissionTable($theaterJson)
+function createMissionTable($theaterJson, $debugMode)
 {
     $lua = file_get_contents("./Miz/Mission.lua");
 
@@ -109,6 +109,11 @@ function createMissionTable($theaterJson)
     $lua = str_replace("__MISSION_DESCRIPTION__", "The Universal Mission for DCS World is an attempt to create a fully dynamic single-player/PvE mission giving access to the whole content of DCS World.\\n\\nOpen the F10/Other submenu in the communication menu to begin.\\n\\nVisit github.com/akaAgar/the-universal-mission-for-dcs-world to learn more.", $lua);
     $lua = str_replace("__MISSION_NAME__", "The Universal Mission - ".$theaterJson["displayName"], $lua);
     $lua = str_replace("__WEATHER_TEMPERATURE__", strval($theaterJson["temperature"]), $lua);
+    
+    if ($debugMode)
+        $lua = str_replace("__PLAYER_GROUP__", file_get_contents("./Miz/PlayerGroup-Debug.lua"), $lua);
+    else
+        $lua = str_replace("__PLAYER_GROUP__", file_get_contents("./Miz/PlayerGroup-Release.lua"), $lua);
 
     $lua = str_replace("__PLAYER_AIRDROME_ID__", strval($theaterJson["player"]["airdromeID"]), $lua);
     $lua = str_replace("__PLAYER_X__", strval($theaterJson["player"]["coordinates"][0]), $lua);

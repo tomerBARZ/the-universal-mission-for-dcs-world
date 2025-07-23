@@ -23,7 +23,7 @@ function packMiz($theaterJson, $debugMode)
     if ($zip->open($filename, ZipArchive::CREATE) !== true)
         return false;
     
-    $zip->addFromString("mission", createMissionTable($theaterJson));
+    $zip->addFromString("mission", createMissionTable($theaterJson, $debugMode));
     $zip->addFile("./Miz/Options.lua", "options");
     $zip->addFromString("theatre", $theaterJson["dcsID"]);
     $zip->addFromString("warehouses", createWarehousesTable($theaterJson));
