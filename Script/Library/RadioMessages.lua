@@ -70,6 +70,21 @@ Library.radioMessages = {
     pilotWarningMANPADS = { "MANPADS launch! Flare, flare, flare!", "Flight, MANPADS in the air. Dump flares, now!", "Coming from the ground, MANPADS hot!", "Go defensive, MANPADS off your nose! Flare, flare!", "MANPADS just came up from the deck, break hard and pop everything!" },
     pilotWarningSAMLaunch = { "Spike! SAM just launched, break!", "SAM up! Defensive now!", "Launch! SAM, coming fast, pump chaff, go cold!", "SAM in the air, break hard!", "SAM fired, visual smoke! Extend, extend!" },
 
+    pilotWingmanOrbit = {
+        "Wilco, holding here.",
+        "Copy, orbiting now.",
+        "Roger, in the hold.",
+        "Affirm, setting up the orbit.",
+        "Orbiting at your pos."
+    },
+    pilotWingmanRejoin = {
+        "Off the perch, rejoining your side.",
+        "Tally visual, coming to you.",
+        "Clear, rejoining to route.",
+        "Pushing up to formation.",
+        "Visual, sliding back into position."
+    },
+
     atcSafeLanding = { "Be advised: $1 is wheels down at $2 and clear of runway.", "All aircraft, $1 has landed at $2 and vacated active. Runway is open for next inbound.", "Traffic, $1 is on deck at $2 and heading to parking. Runway clear.", "All flights, $1 just rolled out at $2 and cleared the active.", "Heads up, $1 landed at $2 and moving to the ramp. Runway available for next approach." },
     atcSafeLandingPlayer = { "$1, wheels on deck, welcome back. You may taxi to the parking area.", "$1, good copy on landing. Exit when able, proceed to the parking area.", "$1, touchdown confirmed. Continue to parking.", "$1, welcome home. Clear of runway and taxi to parking area.", "$1, nice landing. Taxi to parking when ready." },
 
@@ -185,6 +200,21 @@ Library.radioMessages = {
         "Command, need objective $1 location, over.",
         "Command, pass coordinates for objective $1.",
         "Command, confirm grid on objective $1."
+    },
+    playerFlightOrbit = {
+        "Flight, orbit my position.",
+        "Flight, set up an orbit on me.",
+        "Flight, hold on me.",
+        "Flight, anchor on my current pos.",
+        "Flight, orbit overhead"
+    },
+    playerFlightRejoin = 
+    {
+        "Flight, rejoin my side",
+        "Flight, push it up, rejoin formation.",
+        "Flight, come back to route.",
+        "Flight, tighten it up.",
+        "Flight, rejoin tactical."
     },
     playerJTACSmoke = {
         "$1, request smoke on objective $2, over.",
