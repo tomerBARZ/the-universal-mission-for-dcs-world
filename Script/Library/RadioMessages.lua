@@ -98,6 +98,11 @@ Library.radioMessages = {
         "Pushing up to formation.",
         "Visual, sliding back into position."
     },
+    pilotWingmanReportStatus = {
+        "Flight, checking in.\n\n$1",
+        "Flight, reporting.\n\n$1",
+        "Flight, status report.\n\n$1",
+    },
 
     atcSafeLanding = { "Be advised: $1 is wheels down at $2 and clear of runway.", "All aircraft, $1 has landed at $2 and vacated active. Runway is open for next inbound.", "Traffic, $1 is on deck at $2 and heading to parking. Runway clear.", "All flights, $1 just rolled out at $2 and cleared the active.", "Heads up, $1 landed at $2 and moving to the ramp. Runway available for next approach." },
     atcSafeLandingPlayer = { "$1, wheels on deck, welcome back. You may taxi to the parking area.", "$1, good copy on landing. Exit when able, proceed to the parking area.", "$1, touchdown confirmed. Continue to parking.", "$1, welcome home. Clear of runway and taxi to parking area.", "$1, nice landing. Taxi to parking when ready." },
@@ -236,6 +241,13 @@ Library.radioMessages = {
         "Flight, come back to route.",
         "Flight, tighten it up.",
         "Flight, rejoin tactical."
+    },
+    playerFlightReportStatus = {
+        "Flight, confirm you're set.",
+        "Flight, how are you looking?",
+        "Flight, report in.",
+        "Flight, status check.",
+        "Flight, talk me through your state."
     },
     playerJTACSmoke = {
         "$1, request smoke on objective $2, over.",
