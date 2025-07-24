@@ -14,6 +14,51 @@ do
 
     local wingmenGroupID = nil
 
+    local function getWingmenGroup()
+        if TUM.settings.getValue(TUM.settings.id.MULTIPLAYER) then return nil end -- No wingmen in multiplayer
+        if not wingmenGroupID then return nil end
+        local wingmenGroup = DCSEx.world.getGroupByID(wingmenGroupID)
+        if not wingmenGroup then return nil end
+        if #wingmenGroup:getUnits() == 0 then return nil end
+
+        return wingmenGroup
+    end
+
+    local function isValidTarget(detectedTarget, attributes)
+        attributes = attributes or {}
+        if not detectedTarget then return false end
+        if not detectedTarget.object then return false end
+
+        if #attributes == 0 then return true end
+        for _,a in ipairs(attributes) do
+            if detectedTarget.object:hasAttribute(a) then
+                return true
+            end
+        end
+
+        return false
+    end
+
+    local function getDetectedTargets(attributes)
+        local wingmenGroup = getWingmenGroup()
+        if not wingmenGroup then return {} end
+
+        local detectedTargets = {}
+        for _,u in ipairs(wingmenGroup:getUnits()) do
+            local ctrl = u:getController()
+            if ctrl then
+                local targets = ctrl:getDetectedTargets(Controller.Detection.VISUAL, Controller.Detection.OPTIC, Controller.Detection.RADAR, Controller.Detection.RWR, Controller.Detection.IRST)
+                for _,t in ipairs(targets) do
+                    if isValidTarget(t, attributes) then
+                        table.insert(detectedTargets, t.object)
+                    end
+                end
+            end
+        end
+
+        return detectedTargets
+    end
+
     local function doWingmenOrder(orderID)
         local player = world:getPlayer()
         if not player then return end
@@ -81,6 +126,23 @@ do
         wingmenCtrl:setTask(taskTable)
     end
 
+    local function doWingmenOrderEngage(orderID)
+    end
+
+    local function doWingmenCommandReportTargets(attributes)
+        local detectedTargets = getDetectedTargets(attributes)
+
+        local reportText = "Detected targets:"
+        if #detectedTargets == 0 then
+            reportText = reportText.." none"
+        else
+            for _,t in ipairs(detectedTargets) do
+                reportText = reportText.."\n - "..Library.objectNames.get(t)
+            end
+        end
+        trigger.action.outText(reportText, 5)
+    end
+
     local function createWingmen()
         TUM.supportWingmen.removeAll() -- Destroy all pre-existing wingmen
         TUM.log("Creating wingmen...")
@@ -90,8 +152,13 @@ do
 
         local playerTypeName = player:getTypeName()
 
+        if not Library.aircraft[playerTypeName] then
+            TUM.log("Cannot spawn AI wingmen, aircraft \""..playerTypeName.."\" not found in the database.", TUM.logLevel.WARNING)
+            return
+        end
+
         local playerCategory = Group.Category.AIRPLANE
-        if player:hasAttribute("Helicopters") then playerCategory = Group.Category.HELICOPTER end
+        if player:hasAttribute("Helicopters") then playerCategory = Group.Category.HELICOPTER end -- Player is a helicopter
 
         local groupInfo = DCSEx.unitGroupMaker.create(
             TUM.settings.getPlayerCoalition(),
@@ -130,6 +197,7 @@ do
         local rootPath = missionCommands.addSubMenu("Flight")
 
         missionCommands.addCommand("Engage bandits", rootPath, doWingmenOrder, TUM.supportWingmen.orderID.ENGAGE_BANDITS)
+        missionCommands.addCommand("Report targets", rootPath, doWingmenCommandReportTargets, nil)
         missionCommands.addCommand("Orbit", rootPath, doWingmenOrder, TUM.supportWingmen.orderID.ORBIT)
         missionCommands.addCommand("Rejoin", rootPath, doWingmenOrder, TUM.supportWingmen.orderID.REJOIN)
     end
