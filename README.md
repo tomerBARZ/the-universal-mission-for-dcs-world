@@ -102,21 +102,20 @@ Please also note that PvP is not supported at the moment and that the mission wi
 
 ### VERY high priority
 
+- All new AI wingman system
 - New objectives: helicopter (drop/pickup units...), CAP, CAS, OCA (airbase attack)
-- New menu for enemy contacts report, allowing both to quiery AWACS reports and to ask other AI pilots about what they see in the air and on the ground
 - Support for Germany theater
+- Support for more factions and five different time periods (World War 2, Korea war, Vietnam war, late Cold war, Modern)
 
 ### High priority
 
 - Additional and better radio messages
   - More "flavor" radio messages ("fence in" when player approaches the AO, etc) so the world will feel more alive
-- All new AI wingman system
 - Better balancing of the player career awards and promotions
 - Better use of context for "ambient" radio messages (should only warn of a SAM launch if an AI pilot is there to witness it, etc)
 - Friendly air defenses
 - Laser designation of targets by JTAC
 - Support for all missing DCS World theaters
-- Support for more factions and five different time periods (World War 2, Korea war, Vietnam war, late Cold war, Modern)
 
 ### Medium priority
 
@@ -163,8 +162,6 @@ The core script is quite simple and small, I probably won't need too much help w
 
 - Feedback, feedback, feedback. Especially regarding bug (don't forget to write down the various script line numbers mentioned in the error message!) mission balancing and career progression.
   - You can contact me through GitHub or send me a mail at akaagarmail@gmail.com
-- Help with the Lua tables in the Database\Factions and Database\Aircraft directories. Adding missing aircraft, payload for various aircraft and unit lists for various time periods would be really helpful.
-- Complete the library of "unit human-readable names" in Script\Library\ObjectNames.lua
 - You can also [buy me a coffee](https://buymeacoffee.com/akaagar)!
 
 ## Version history
