@@ -150,15 +150,24 @@ do
         local player = world:getPlayer()
         if not player then return end
 
+        -- Retrive player unit type
         local playerTypeName = player:getTypeName()
-
         if not Library.aircraft[playerTypeName] then
             TUM.log("Cannot spawn AI wingmen, aircraft \""..playerTypeName.."\" not found in the database.", TUM.logLevel.WARNING)
             return
         end
-
         local playerCategory = Group.Category.AIRPLANE
         if player:hasAttribute("Helicopters") then playerCategory = Group.Category.HELICOPTER end -- Player is a helicopter
+
+        -- Generate wingman callsign
+        local wingmanCallsign = DCSEx.envMission.getPlayerGroups()[1].units[1].callsign
+        if type(wingmanCallsign) == "table" then
+            wingmanCallsign[3] = nil
+            wingmanCallsign["name"] = wingmanCallsign["name"]:sub(1, #wingmanCallsign["name"] - 1)
+            if wingmanCallsign[4] then wingmanCallsign[4] = wingmanCallsign["name"] end
+        else
+            wingmanCallsign = DCSEx.unitCallsignMaker.getCallsign(playerTypeName)
+        end
 
         local groupInfo = DCSEx.unitGroupMaker.create(
             TUM.settings.getPlayerCoalition(),
@@ -166,7 +175,8 @@ do
             DCSEx.math.randomPointInCircle(DCSEx.math.vec3ToVec2(player:getPoint()), 500, 250),
             { playerTypeName, playerTypeName },
             {
-                callsign = DCSEx.unitCallsignMaker.getNextGroupCallSign(player:getCallsign()),
+                callsign = wingmanCallsign,
+                callsignOffset = 1,
                 silenced = true,
                 taskFollow = DCSEx.dcs.getObjectIDAsNumber(player:getGroup()),
                 unlimitedFuel = true
