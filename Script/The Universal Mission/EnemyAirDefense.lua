@@ -72,7 +72,10 @@ do
         local units = Library.factions.getUnits(faction, unitFamily, 1)
         if not units or #units == 0 then return false end -- No valid units found
 
-        local groupInfo = DCSEx.unitGroupMaker.create(side, Group.Category.GROUND, point, units, { skill = getSkillLevel() })
+        local skill = getSkillLevel()
+        if unitFamily == DCSEx.enums.unitFamily.AIRDEFENSE_MANPADS then skill = "Average" end -- MANPADS are too good in DCS, nerf them a little
+
+        local groupInfo = DCSEx.unitGroupMaker.create(side, Group.Category.GROUND, point, units, { skill = skill })
         if not groupInfo then return false end -- Failed to create group
 
         local adGroup = {
@@ -139,7 +142,8 @@ do
     end
 
     local function createMANPADs(airDefenseLevel, side, faction, objectivesCenter, objectivesRadius)
-        local count = math.ceil(math.random(2, 3) * math.max(1, math.sqrt(objectivesRadius) / 120) * math.sqrt(airDefenseLevel))
+        -- local count = math.ceil(math.random(2, 3) * math.max(1, math.sqrt(objectivesRadius) / 120) * math.sqrt(airDefenseLevel))
+        local count = math.ceil(math.random(2, 3) * math.max(1, math.sqrt(objectivesRadius) / 250) * math.sqrt(airDefenseLevel))
 
         if count <= 0 then return end
 
