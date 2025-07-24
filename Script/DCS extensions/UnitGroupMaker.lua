@@ -448,18 +448,23 @@ do
                 end
 
                 if aircraftDB.pylons then
-                    -- TODO: pylons according to task
-                    if options.taskAttack and aircraftDB.pylons.attack then
-                        unitTable.payload.pylons = DCSEx.table.deepCopy(aircraftDB.pylons.attack)
-                    elseif options.taskCAP and aircraftDB.pylons.cap then
-                        unitTable.payload.pylons = DCSEx.table.deepCopy(aircraftDB.pylons.cap)
-                    elseif options.taskSEAD and aircraftDB.pylons.sead then
-                        unitTable.payload.pylons = DCSEx.table.deepCopy(aircraftDB.pylons.sead)
-                    elseif options.taskStrike and aircraftDB.pylons.strike then
-                        unitTable.payload.pylons = DCSEx.table.deepCopy(aircraftDB.pylons.strike)
-                    else
-                        unitTable.payload.pylons = DCSEx.table.deepCopy(aircraftDB.pylons.default)
+                    local payload = "attack" -- Default payload is "attack", because it's usually a good mix of A-G and A-A munitions
+
+                    if options.payload then -- A payload was specified
+                        payload = options.payload
+                    else -- No payload was specified, deduce payload from tasking
+                        if options.taskAntiship then
+                            payload = "antiship"
+                        elseif options.taskCAP then
+                            payload = "cap"
+                        elseif options.taskSEAD then
+                            payload = "sead"
+                        elseif options.taskStrike then
+                            payload = "strike"
+                        end
                     end
+
+                    unitTable.payload.pylons = DCSEx.table.deepCopy(aircraftDB.pylons[payload])
                 end
             end
 
