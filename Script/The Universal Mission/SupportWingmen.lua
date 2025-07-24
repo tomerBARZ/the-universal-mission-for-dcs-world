@@ -179,7 +179,7 @@ do
         end
 
         TUM.log("Spawned AI wingmen")
-        TUM.radio.playForAll("pilotWingmanRejoin", nil, "WINGMEN", false)
+        TUM.radio.playForAll("pilotWingmanRejoin", nil, "WINGMEN", true)
         wingmenGroupID = groupInfo.groupID
     end
 
