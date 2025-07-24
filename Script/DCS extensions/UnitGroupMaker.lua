@@ -176,7 +176,7 @@ do
             ["type"] = typeName,
             ["unitId"] = unitID,
             ["rate"] = 100,
-            ["name"] = "Static #"..tostring(unitID),
+            ["name"] = "Structure #"..tostring(unitID),
             ["category"] = "Fortifications",
             ["y"] = point2.y,
             ["x"] = point2.x,
@@ -366,8 +366,19 @@ do
             else
                 setAircraftTaskOrbit(groupTable, options)
             end
-            groupCallsign = DCSEx.unitCallsignMaker.getCallsign(unitTypes[1])
+
+            if options.callsign then
+                groupCallsign = options.callsign
+            else
+                groupCallsign = DCSEx.unitCallsignMaker.getCallsign(unitTypes[1])
+            end
+
             groupTable.name = groupCallsign.name
+        end
+
+        -- Group name already exists
+        while Group.getByName(groupTable.name) do
+            groupTable.name = groupTable.name.."-"
         end
 
         local unitsID = {}
@@ -419,9 +430,11 @@ do
                 unitTable.hardpoint_racks = true
                 unitTable.psi = 1.7703702498393
 
+                local callsignUnitIndex = i + (options.callsignOffset or 0)
                 unitTable.callsign = DCSEx.table.deepCopy(groupCallsign)
-                unitTable.callsign.name = unitTable.callsign.name..tostring(i)
-                unitTable.callsign[3] = i
+                unitTable.callsign.name = unitTable.callsign.name..tostring(callsignUnitIndex)
+                unitTable.callsign[3] = callsignUnitIndex
+                unitTable.callsign[4] = unitTable.callsign.name
                 unitTable.name = unitTable.callsign.name
 
                 -- Special properties for unit
@@ -448,6 +461,11 @@ do
                         unitTable.payload.pylons = DCSEx.table.deepCopy(aircraftDB.pylons.default)
                     end
                 end
+            end
+
+            -- Unit name already exists
+            while Unit.getByName(unitTable.name) do
+                unitTable.name = unitTable.name.."-"
             end
 
             table.insert(groupTable.units, unitTable)
