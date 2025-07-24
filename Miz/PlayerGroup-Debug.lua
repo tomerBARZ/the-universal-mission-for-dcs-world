@@ -205,7 +205,7 @@
 										["onboard_num"] = "010",
 										["y"] = __PLAYER_Y__,
 										["x"] = __PLAYER_X__,
-										["name"] = "Aerial-1-1",
+										["name"] = "Player-1",
 										["payload"] = 
 										{
 											["pylons"] = {},
@@ -253,7 +253,7 @@
 								},
 								["y"] = __PLAYER_Y__,
 								["x"] = __PLAYER_X__,
-								["name"] = "Aerial-1",
+								["name"] = "Player",
 								["communication"] = true,
 								["start_time"] = 0,
 								["frequency"] = 305,
