@@ -77,6 +77,7 @@ do
                 callsign = wingmanCallsign,
                 callsignOffset = 1,
                 payload = getWingmanPayloadForMission(),
+                prohibitJettison = true,
                 silenced = true,
                 skill = "Excellent",
                 taskFollow = DCSEx.dcs.getObjectIDAsNumber(player:getGroup()),

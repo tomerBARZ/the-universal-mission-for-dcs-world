@@ -361,9 +361,9 @@ do
 
         if isAirUnit then
             setOption(groupTable, AI.Option.Air.id.FORCED_ATTACK, true)
-            setOption(groupTable, AI.Option.Air.id.PROHIBIT_JETT, true)
             setOption(groupTable, AI.Option.Air.id.RTB_ON_BINGO, false)
-            -- setOption(groupTable, AI.Option.Air.id.RTB_ON_OUT_OF_AMMO, {})
+
+            if options.prohibitJettison then setOption(groupTable, AI.Option.Air.id.PROHIBIT_JETT, true) end
 
             if options.taskAwacs then setAircraftTaskAwacs(groupTable) end
             if options.taskCAP then setAircraftTaskCAP(groupTable) end
