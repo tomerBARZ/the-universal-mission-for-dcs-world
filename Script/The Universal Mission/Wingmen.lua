@@ -161,9 +161,16 @@ do
                         type = "unknown"
                     }
 
-                    groupInfo.type = Library.objectNames.getGenericGroup(g, distanceToGroup > detectionRange / 2)
-                    -- if gCateg == Group.Category.AIRPLANE or gCateg == Group.Category.HELICOPTER then
-                    -- end
+                    if gCateg == Group.Category.AIRPLANE or gCateg == Group.Category.HELICOPTER then
+                        if distanceToGroup < detectionRange / 2 then -- Return exact type when aircraft is close enough
+                            groupInfo.type = Library.objectNames.get(g:getUnit(1))
+                        else
+                            groupInfo.type = Library.objectNames.getGenericGroup(g)
+                        end
+                    else
+                        -- If above 2/3 max detection distance, return imprecise name ("vehicle" instead of "AAA"/"tank"/etc)
+                        groupInfo.type = Library.objectNames.getGenericGroup(g, distanceToGroup > 2 * detectionRange / 3)
+                    end
 
                     if not newContactsOnly or newGroup then
                         table.insert(detectedTargets, groupInfo)
