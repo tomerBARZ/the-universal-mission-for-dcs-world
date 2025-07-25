@@ -6,10 +6,12 @@
 TUM.wingmen = {}
 
 do
+    local CONTACT_REPORT_INTERVAL = 8 -- Called AT MOST every 15 seconds, so 6 means "AT MOST every two minutes"
     local DEFAULT_PAYLOAD = "attack" -- Default payload
 
     local knownGroupsID = {}
     local newGroupsID = {}
+    local ticksLeftBeforeContactReport = CONTACT_REPORT_INTERVAL
     local wingmenGroupID = nil
     local wingmenUnitID = {}
 
@@ -92,6 +94,7 @@ do
         -- Reinitialize list of known contacts and contact report interval
         knownGroupsID = {}
         newGroupsID = {}
+        ticksLeftBeforeContactReport = CONTACT_REPORT_INTERVAL
 
         TUM.log("Spawned AI wingmen")
 
@@ -269,7 +272,10 @@ do
             return true
         end
 
-        return false
+        ticksLeftBeforeContactReport = ticksLeftBeforeContactReport - 1
+        if ticksLeftBeforeContactReport > 0 then return false end
+
+        return TUM.wingmenTasking.commandReportContacts(nil, true, false)
     end
 
     -------------------------------------
