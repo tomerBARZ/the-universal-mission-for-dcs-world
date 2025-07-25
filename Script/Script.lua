@@ -113,7 +113,7 @@ do
         TUM.objectives.onEvent(event)
         TUM.playerScore.onEvent(event)
         TUM.mission.onEvent(event)
-        TUM.supportWingmen.onEvent(event)
+        TUM.wingmen.onEvent(event)
         TUM.mizCleaner.onEvent(event) -- Must be last, can remove units which could cause bugs in other onEvent methods
     end
 
@@ -141,12 +141,12 @@ do
             if TUM.mission.onClockTick() then return nextTickTime end
         elseif clockTick % 4 == 1 then
             if TUM.airForce.onClockTick(TUM.settings.getPlayerCoalition()) then return nextTickTime end
-            if TUM.supportWingmen.onClockTick() then return nextTickTime end
+            if TUM.wingmen.onClockTick() then return nextTickTime end
         elseif clockTick % 4 == 2 then
             if TUM.supportAWACS.onClockTick() then return nextTickTime end
         else
             if TUM.airForce.onClockTick(TUM.settings.getEnemyCoalition()) then return nextTickTime end
-            if TUM.supportWingmen.onClockTick() then return nextTickTime end
+            if TUM.wingmen.onClockTick() then return nextTickTime end
         end
 
         return nextTickTime

@@ -29,7 +29,7 @@ do
 
     local function closeMission(removeAllUnits)
         if removeAllUnits then
-            TUM.supportWingmen.removeAll()
+            TUM.wingmen.removeAll()
             TUM.airForce.removeAll()
             TUM.ambientWorld.removeAll()
             TUM.enemyAirDefense.removeAll()

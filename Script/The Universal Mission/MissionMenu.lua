@@ -46,7 +46,7 @@ do
             end
         end
 
-        TUM.supportWingmen.createMenu()
+        TUM.wingmenMenu.create()
         TUM.supportAWACS.createMenu()
 
         if not TUM.settings.getValue(TUM.settings.id.MULTIPLAYER) then -- If not multiplayer, add "show mission score" command
