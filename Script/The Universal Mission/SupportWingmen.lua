@@ -393,6 +393,7 @@ do
             DCSEx.math.randomPointInCircle(DCSEx.math.vec3ToVec2(player:getPoint()), 500, 250),
             { playerTypeName, playerTypeName },
             {
+                altitude = player:getPoint().y + 762.0, -- spawn at player altitude + 2500ft
                 callsign = wingmanCallsign,
                 callsignOffset = 1,
                 silenced = true,
