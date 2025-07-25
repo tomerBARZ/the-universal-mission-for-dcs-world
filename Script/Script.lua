@@ -87,6 +87,7 @@ do
         if not TUM.playerCareer.onStartUp() then return nil end
         if not TUM.intermission.onStartUp() then return nil end
         if not TUM.airForce.onStartUp() then return nil end
+        if not TUM.mizCleaner.onStartUp() then return nil end -- Must be called after TUM.settings.onStartUp()
 
         TUM.hasStarted = true
 
