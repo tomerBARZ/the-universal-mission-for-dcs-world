@@ -115,8 +115,6 @@ Library.radioMessages = {
     pilotWingmanGoToMarkerNoMarker = {
         "$1, negative on coords, say again?",
         "$1, copy, but I don't have the point. Confirm?",
-        "$1, missing the grid, need the mark.",
-        "$1, blind on the coordinates, request update.",
         "$1, can't push, no steerpoint."
     },
     pilotWingmanOrbit = {
