@@ -127,7 +127,7 @@ do
         noReportIfNoContacts = noReportIfNoContacts or false
         delayRadioAnswer = delayRadioAnswer or false
 
-        local reportString = TUM.wingmen.getContactsAsReportString(groupCategory, false, true)
+        local reportString = TUM.wingmen.getContactsAsReportString(groupCategory, true)
 
         if not reportString then
             if noReportIfNoContacts then return false end
