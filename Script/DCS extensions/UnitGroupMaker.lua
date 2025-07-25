@@ -101,7 +101,8 @@ do
         return groupTable
     end
 
-    local function setAircraftTaskFollow(groupTable, followedGroupID)
+    local function setAircraftTaskFollow(groupTable, followedGroupID, xyDistance)
+        xyDistance = xyDistance or 800
         groupTable.task = "Escort"
 
         table.insert(groupTable.route.points[1].task.params.tasks,
@@ -112,7 +113,7 @@ do
             ["number"] = #groupTable.route.points[1].task.params.tasks + 1,
             ["params"] = {
                 groupId = followedGroupID,
-                pos = { x = -100, y = 0, z = -100 },
+                pos = { x = -xyDistance, y = 0, z = -xyDistance },
                 lastWptIndexFlag  = false,
                 lastWptIndex = -1
              },
