@@ -57,9 +57,9 @@ Library.radioMessages = {
 
     pilotLaunchGuns = { "Guns!", "Guns, guns!" },
     pilotLaunchBruiser = "Bruiser!",
-    pilotLaunchFox1 = "Fox 1!",
-    pilotLaunchFox2 = "Fox 2!",
-    pilotLaunchFox3 = "Fox 3!",
+    pilotLaunchFox1 = { "Fox 1!", "Fox 1!", "Fox 1, tracking bandit." },
+    pilotLaunchFox2 = { "Fox 2!", "Fox 2!", "Fox 2, missile tracking." },
+    pilotLaunchFox3 = { "Fox 3!", "Fox 3!", "Fox 3, cranking now." },
     pilotLaunchMagnum = "Magnum!",
     pilotLaunchPickle = { "Pickle!", "Bomb away!" },
     pilotLaunchRifle = { "Rifle!", "Missile away!"},
