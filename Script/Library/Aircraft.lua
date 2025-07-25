@@ -4279,7 +4279,7 @@ Library.aircraft = {
                     ["CLSID"] = "{5CE2FF2A-645A-4197-B48D-8720AC69394F}"
                 },
                 [3] = {
-                    ["CLSID"] = "{BRU57_2*CBU-105}"
+                    ["CLSID"] = "{TER_9A_2R*GBU-12}"
                 },
                 [4] = {
                     ["CLSID"] = "{F376DBEE-4CAE-41BA-ADD9-B2910AC95DEC}"
@@ -4291,7 +4291,7 @@ Library.aircraft = {
                     ["CLSID"] = "{F376DBEE-4CAE-41BA-ADD9-B2910AC95DEC}"
                 },
                 [7] = {
-                    ["CLSID"] = "{BRU57_2*CBU-105}"
+                    ["CLSID"] = "{TER_9A_2R*GBU-12}"
                 },
                 [8] = {
                     ["CLSID"] = "{5CE2FF2A-645A-4197-B48D-8720AC69394F}"
