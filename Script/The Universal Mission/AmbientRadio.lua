@@ -22,6 +22,30 @@ TUM.ambientRadio = {}
 do
     local lastAmbientChatter = 0
 
+    local function getNearestFriendlyAircraft(point2)
+        local units = {}
+
+        local planeGroups = coalition.getGroups(TUM.settings.getPlayerCoalition(), Group.Category.AIRPLANE)
+        for _,g in ipairs(planeGroups) do
+            local groupUnits = g:getUnits()
+            for _,u in ipairs(groupUnits) do
+                table.insert(units, u)
+            end
+        end
+
+        local heloGroups = coalition.getGroups(TUM.settings.getPlayerCoalition(), Group.Category.HELICOPTER)
+        for _,g in ipairs(heloGroups) do
+            local groupUnits = g:getUnits()
+            for _,u in ipairs(groupUnits) do
+                table.insert(units, u)
+            end
+        end
+
+        if #units == 0 then return nil end
+
+        return DCSEx.dcs.getNearestObject(point2, units)
+    end
+
     -------------------------------------
     -- Plays an ambient radio message
     -------------------------------------
@@ -34,8 +58,17 @@ do
     -- @param maxRadiusInNM (optional) Maximum radius (in nm) beyond which units will not recieve the message
     -------------------------------------
     local function doAmbientChatter(messageID, replacements, callsign, minimumDelaySinceLastMessage, centerPoint, maxRadiusInNM)
+        if not callsign and centerPoint then
+            local nearestAircraft = getNearestFriendlyAircraft(centerPoint)
+            if nearestAircraft then
+                callsign = nearestAircraft:getCallsign()
+            else
+                callsign = "AIRCRAFT"
+            end
+        end
+
         -- Check parameters
-        callsign = callsign or "FLIGHT"
+        callsign = callsign or "AIRCRAFT"
         minimumDelaySinceLastMessage = minimumDelaySinceLastMessage or 1
         if maxRadiusInNM then maxRadiusInNM = DCSEx.converter.nmToMeters(maxRadiusInNM) end
 
@@ -157,6 +190,7 @@ do
             doAmbientChatter("pilotKillStrike", nil, killerName, 1)
         elseif Object.getCategory(event.target) == Object.Category.UNIT then
             local killUnitType = Library.objectNames.getGeneric(event.target)
+            local minMessageInterval = 2
 
             if targetDesc.category == Unit.Category.AIRPLANE then
                 killMessage = "pilotKillAir"
@@ -167,6 +201,7 @@ do
             elseif targetDesc.category == Unit.Category.GROUND_UNIT then
                 if event.target:hasAttribute("Infantry") then
                     killMessage = "pilotKillInfantry"
+                    minMessageInterval = 4
                 else
                     killMessage = "pilotKillGround"
                 end
@@ -176,7 +211,7 @@ do
                 killMessage = "pilotKillStrike"
             end
 
-            doAmbientChatter(killMessage, killUnitType, killerName, 1)
+            doAmbientChatter(killMessage, killUnitType, killerName, minMessageInterval)
         end
     end
 
@@ -243,7 +278,7 @@ do
 
         -- AAA
         if event.initiator:hasAttribute("AAA") and event.initiator:getCoalition() == TUM.settings.getEnemyCoalition() then
-            doAmbientChatter("pilotWarningAAA", nil, "Flight", 2)
+            doAmbientChatter("pilotWarningAAA", nil, nil, 2, event.initiator:getPoint(), 8)
             return
         end
     end
@@ -319,9 +354,9 @@ do
             elseif event.initiator:hasAttribute("IR Guided SAM") then
                 doAmbientChatter("pilotWarningSAMLaunch", nil, nil, 2, event.initiator:getPoint(), 12)
             elseif event.initiator:hasAttribute("SAM SR") then
-                doAmbientChatter("pilotWarningSAMLaunch", nil, nil, 2, event.initiator:getPoint(), 12)
+                doAmbientChatter("pilotWarningSAMLaunch", nil, nil, 2, event.initiator:getPoint(), 16)
             elseif event.initiator:hasAttribute("SAM") or event.initiator:hasAttribute("SAM LL") or event.initiator:hasAttribute("SAM CC") or event.initiator:hasAttribute("SAM LR") then
-                doAmbientChatter("pilotWarningSAMLaunch", nil, nil, 2, event.initiator:getPoint(), 24)
+                doAmbientChatter("pilotWarningSAMLaunch", nil, nil, 2, event.initiator:getPoint(), 32)
             end
         end
     end
