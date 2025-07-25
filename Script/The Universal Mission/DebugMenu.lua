@@ -72,6 +72,17 @@ do
         timer.scheduleFunction(TUM.onEvent, landingEvent, timer.getTime() + 1)
     end
 
+    local function doKillWingman()
+        local wingGroup = TUM.wingmen.getGroup()
+        if not wingGroup then return end
+
+        local units = wingGroup:getUnits()
+        for _,u in ipairs(units) do
+            trigger.action.explosion(u:getPoint(), 10)
+            return
+        end
+    end
+
     function TUM.debugMenu.createMenu()
         if not TUM.DEBUG_MODE then return end
 
@@ -79,6 +90,7 @@ do
         missionCommands.addCommand("Detonate \"boom\" map markers", rootMenu, doMarkersBoom, nil)
         missionCommands.addCommand("Detonate aircraft near \"airboom\" map markers", rootMenu, doMarkersAirBoom, nil)
         missionCommands.addCommand("Award 100 points and 1 objective", rootMenu, doAwardPointsAndObjectives, nil)
+        missionCommands.addCommand("Kill wingman", rootMenu, doKillWingman, nil)
         missionCommands.addCommand("Simulate player takeoff", rootMenu, doSimulatePlayerTakeOff, nil)
         missionCommands.addCommand("Simulate player landing", rootMenu, doSimulatePlayerLanding, nil)
         missionCommands.addCommand("Reset player stats", rootMenu, TUM.playerCareer.reset, nil)
