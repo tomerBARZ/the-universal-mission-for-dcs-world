@@ -625,8 +625,8 @@ do
                     return "vehicle"
                 end
             elseif objDesc.category == Unit.Category.SHIP then
-                if inaccurate then return "ship" end
                 if obj:getTypeName() == "speedboat" then return "speedboat" end
+                if inaccurate then return "ship" end
 
                 if obj:hasAttribute("Submarines") then
                     return "submarine"
