@@ -249,9 +249,9 @@ do
     function DCSEx.world.getMarkerByText(text, coalition)
         if not text then return nil end
         text = text:lower()
-        local markers = DCSEx.world.getMarkPanels()
+        local markers = world.getMarkPanels()
 
-        for _,m in pairs(markers) do
+        for _,m in ipairs(markers) do
             local markerText = m.text or ""
             markerText = markerText:lower()
             if markerText == text then
