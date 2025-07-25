@@ -6,7 +6,7 @@
 TUM.wingmenTasking = {}
 
 do
-    TUM.wingmenTasking.DEFAULT_MARKER_TEXT = "wingman"
+    TUM.wingmenTasking.DEFAULT_MARKER_TEXT = "flight"
 
     local mapMarkerMissingWarningAlreadyDisplayed = false -- Was the "map marker missing" warning already displayed during the mission?
     local targetPointMapMarker = nil
