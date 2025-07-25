@@ -48,6 +48,7 @@ do
                 message = message:gsub("$"..tostring(i), tostring(r))
             end
         end
+        message = DCSEx.string.firstToUpper(message)
 
         local duration = DCSEx.string.getReadingTime(message)
 
