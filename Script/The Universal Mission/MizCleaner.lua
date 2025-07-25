@@ -3,6 +3,7 @@
 -- ====================================================================================
 -- (local) removeAIWingmen()
 -- TUM.mizCleaner.onStartUp()
+-- TUM.mizCleaner.onEvent(event)
 -- ====================================================================================
 
 TUM.mizCleaner = {}
@@ -51,5 +52,19 @@ do
     function TUM.mizCleaner.onStartUp()
         removeAIWingmen()
         return true
+    end
+
+    -------------------------------------
+    -- Called when an event is raised
+    -- @param event The DCS World event
+    -------------------------------------
+    function TUM.mizCleaner.onEvent(event)
+        -- Remove AI aircraft when they land, so they "free room" (e.g. don't occupy an "enemy air force unit" slot) for new aircraft
+        if event.id ~= world.event.S_EVENT_LAND then return end
+        if not event.initiator then return end
+        if Object.getCategory(event.initiator) ~= Object.Category.UNIT then return end -- Not a unit
+        if event.initiator:getPlayerName() then return end -- Don't remove player aircraft, that would cause horrendous bugs
+
+        event.initiator:destroy()
     end
 end

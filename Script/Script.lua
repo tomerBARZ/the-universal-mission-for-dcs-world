@@ -114,6 +114,7 @@ do
         TUM.playerScore.onEvent(event)
         TUM.mission.onEvent(event)
         TUM.supportWingmen.onEvent(event)
+        TUM.mizCleaner.onEvent(event) -- Must be last, can remove units which could cause bugs in other onEvent methods
     end
 
     function TUM.onEvent(event)
