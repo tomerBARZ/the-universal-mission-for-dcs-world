@@ -65,107 +65,93 @@ do
     end
 
     local function getDetectedTargets(wingmanIndex, attributes, maxRangeInNM)
+        TUM.log("A")
+        attributes = attributes or {}
         local maxRange = DCSEx.converter.nmToMeters(maxRangeInNM or 1000)
 
-        local wingmenIndices = {}
+        TUM.log("B")
+        local searchPoints = {}
         if wingmanIndex then
-            wingmenIndices = { wingmanIndex }
+            if wingmanIndex < 1 or wingmanIndex > #wingmenUnitID then return {} end
+            local u = DCSEx.world.getUnitByID(wingmenUnitID[wingmanIndex])
+            if not u then return {} end
+            searchPoints = { DCSEx.math.vec3ToVec2(u:getPoint()) }
         else
-            for i=1,wingmanIndex do
-                table.insert(wingmenIndices, i)
+            for i=1,#wingmenUnitID do
+                local u = DCSEx.world.getUnitByID(wingmenUnitID[i])
+                if u then
+                    table.insert(searchPoints, DCSEx.math.vec3ToVec2(u:getPoint()))
+                end
             end
+
+            if #searchPoints == 0 then return {} end
         end
 
-        -- local wingmenGroup = getWingmenGroup()
-        -- trigger.action.outText("A", 1)
-        -- if not wingmenGroup then return {} end
+        -- Take into account better sensors (radars, TGPs...) in later periods
+        local detectionRangeMultiplier = 1.0
+        if TUM.settings.getValue(TUM.settings.id.TIME_PERIOD) == DCSEx.enums.timePeriod.MODERN then
+            detectionRangeMultiplier = 1.5
+        elseif TUM.settings.getValue(TUM.settings.id.TIME_PERIOD) == DCSEx.enums.timePeriod.COLD_WAR then
+            detectionRangeMultiplier = 1.25
+        end
 
-        -- trigger.action.outText("B", 1)
-        -- local detectedTargets = {}
-        -- for _,u in ipairs(wingmenGroup:getUnits()) do
-        --     trigger.action.outText("C", 1)
-        --     local ctrl = u:getController()
-        --     if ctrl then
-        --         trigger.action.outText("D", 1)
-        --         local targets = ctrl:getDetectedTargets() -- Controller.Detection.VISUAL, Controller.Detection.OPTIC, Controller.Detection.RADAR, Controller.Detection.RWR, Controller.Detection.IRST)
-        --         for _,t in ipairs(targets) do
-        --             trigger.action.outText("E", 1)
-        --             if isValidTarget(t, attributes) then
-        --                 trigger.action.outText("F", 1)
-        --                 table.insert(detectedTargets, t.object)
-        --             end
-        --         end
-        --     end
-        -- end
+        local knownGroups = {}
+        local detectedTargets = {}
+        local allGroups = coalition.getGroups(TUM.settings.getEnemyCoalition())
+        for _,g in ipairs(allGroups) do
+            local gID = g:getID()
+            if g:isExist() and g:getSize() > 0 and not DCSEx.table.contains(knownGroups, gID) then
+                local gPos = DCSEx.world.getGroupCenter(g)
+                local gCateg = Group.getCategory(g)
+
+                local detectionRange = DCSEx.converter.nmToMeters(20 * detectionRangeMultiplier)
+                if gCateg == Group.Category.AIRPLANE then
+                    detectionRange = DCSEx.converter.nmToMeters(50 * detectionRangeMultiplier)
+                elseif gCateg == Group.Category.SHIP then
+                    detectionRange = DCSEx.converter.nmToMeters(30 * detectionRangeMultiplier)
+                end
+
+                -- Check if at least one wingman is in detection range
+                local inRange = false
+                for _,p in ipairs(searchPoints) do
+                    if DCSEx.math.getDistance2D(gPos, p) <= detectionRange then
+                        inRange = true
+                        break
+                    end
+                end
+
+                if inRange then
+                    table.insert(knownGroups, gID)
+
+                    local groupInfo = {
+                        id = gID,
+                        point2 = gPos,
+                        size = g:getSize(),
+                        type = "unknown"
+                    }
+
+                    if gCateg == Group.Category.AIRPLANE then
+                        groupInfo.type = "aircraft"
+                    elseif gCateg == Group.Category.HELICOPTER then
+                        groupInfo.type = "helicopters"
+                    elseif gCateg == Group.Category.GROUND then
+                        if g:getUnits()[1]:hasAttribute("Infantry") then
+                            groupInfo.type = "infantry"
+                        else
+                            groupInfo.type = "vehicles"
+                        end
+                    elseif gCateg == Group.Category.SHIP then
+                        groupInfo.type = "ships"
+                    elseif gCateg == Group.Category.TRAIN then
+                        groupInfo.type = "trains"
+                    end
+
+                    table.insert(detectedTargets, groupInfo)
+                end
+            end
+        end
 
         return detectedTargets
-    end
-
-    local function doWingmenOrder(orderID)
-        local player = world:getPlayer()
-        if not player then return end
-
-        if orderID == TUM.supportWingmen.orderID.ORBIT then
-            TUM.radio.playForAll("playerWingmanOrbit", nil, player:getCallsign(), false)
-        elseif orderID == TUM.supportWingmen.orderID.REJOIN then
-            TUM.radio.playForAll("playerWingmanRejoin", nil, player:getCallsign(), false)
-        elseif orderID == TUM.supportWingmen.orderID.ENGAGE_BANDITS then
-            TUM.radio.playForAll("playerWingmanEngageBandits", nil, player:getCallsign(), false)
-        end
-
-        if not wingmenGroupID then return end
-        local wingmenGroup = DCSEx.world.getGroupByID(wingmenGroupID)
-        if not wingmenGroup then return end
-        if #wingmenGroup:getUnits() == 0 then return end
-        local wingmenCtrl = wingmenGroup:getController()
-        if not wingmenCtrl then return end
-
-        local wingmanCallsign = wingmenGroup:getUnit(1):getCallsign()
-
-        local taskTable = nil
-
-        if orderID == TUM.supportWingmen.orderID.ORBIT then
-            taskTable = {
-                id = "Orbit",
-                params = {
-                    pattern = "Circle",
-                    point = DCSEx.math.vec3ToVec2(player:getPoint()),
-                    altitude = player:getPoint().y
-                }
-            }
-            TUM.radio.playForAll("pilotWingmanOrbit", nil, wingmanCallsign, true)
-        elseif orderID == TUM.supportWingmen.orderID.REJOIN then
-            taskTable = {
-                id = "Follow",
-                params = {
-                    groupId = DCSEx.dcs.getObjectIDAsNumber(world:getPlayer():getGroup()),
-                    pos = { x = -100, y = 0, z = -100 },
-                    lastWptIndexFlag  = false,
-                    lastWptIndex = -1
-                }
-            }
-            TUM.radio.playForAll("pilotWingmanRejoin", nil, wingmanCallsign, true)
-        elseif orderID == TUM.supportWingmen.orderID.ENGAGE_BANDITS then
-            local banditGroups = coalition.getGroups(TUM.settings.getEnemyCoalition(), Group.Category.AIRPLANE)
-            if not banditGroups or #banditGroups == 0 then
-                TUM.radio.playForAll("pilotWingmanEngageNoTarget", nil, wingmanCallsign, true)
-                return
-            end
-            -- TODO: sort by nearest
-            local targetGroup = banditGroups[1]
-
-            taskTable = {
-                id = "AttackGroup",
-                params = {
-                    groupId = DCSEx.dcs.getObjectIDAsNumber(targetGroup),
-                }
-            }
-            TUM.radio.playForAll("pilotWingmanEngageBandits", nil, wingmanCallsign, true)
-        end
-
-        if not taskTable then return end
-
-        wingmenCtrl:setTask(taskTable)
     end
 
     local function getWingmanController(wingmanIndex)
@@ -274,15 +260,16 @@ do
         end
     end
 
-    local function doWingmenCommandReportTargets(attributes)
-        local detectedTargets = getDetectedTargets(attributes)
+
+    local function doWingmenCommandReportTargets(args)
+        local detectedTargets = getDetectedTargets(args.index, args.attributes)
 
         local reportText = "Detected targets:"
         if #detectedTargets == 0 then
             reportText = reportText.." none"
         else
             for _,t in ipairs(detectedTargets) do
-                reportText = reportText.."\n - "..Library.objectNames.get(t)
+                reportText = reportText.."\n - "..tostring(t.size).."x "..t.type..", "..DCSEx.dcs.getBRAA(t.point2, DCSEx.math.vec3ToVec2(world:getPlayer():getPoint()), false, false, false).." from you"
             end
         end
         trigger.action.outText(reportText, 5)
@@ -431,9 +418,6 @@ do
     local function createWingmanSubMenu(rootPath, wingmanIndex)
         local wingmanPath = missionCommands.addSubMenu(getWingmanNumberAsWord(wingmanIndex), rootPath)
 
-        -- missionCommands.addCommand("Engage bandits", wingmanPath, doWingmenOrder, TUM.supportWingmen.orderID.ENGAGE_BANDITS)
-        -- missionCommands.addCommand("Engage air defense", wingmanPath, doWingmenOrder, TUM.supportWingmen.orderID.ENGAGE_BANDITS)
-        -- missionCommands.addCommand("Engage ground targets", wingmanPath, doWingmenOrder, TUM.supportWingmen.orderID.ENGAGE_BANDITS)
         missionCommands.addCommand("Engage bandits", wingmanPath, doWingmenCommandEngage, { index = wingmanIndex, attributes = { "Battle airplanes" }, maxRange = 60, radioSuffix = "Bandits" })
         missionCommands.addCommand("Report targets", wingmanPath, doWingmenCommandReportTargets, { index = wingmanIndex })
         missionCommands.addCommand("Report status", wingmanPath, doWingmenCommandReportStatus, { index = wingmanIndex, noPlayerMessage = false } )
