@@ -67,8 +67,8 @@ do
         missionCommands.addCommand("Ground targets", engagePath, radioCommandEngage, { attributes = {"Tanks", "Trucks", "Artillery", "IFV", "APC"}, category = Group.Category.GROUND, radioMessageSuffix = "Ground" })
         missionCommands.addCommand("Ships", engagePath, radioCommandEngage, { attributes = nil, category = Group.Category.SHIP, radioMessageSuffix = "Ships" })
 
-        missionCommands.addCommand("Any contacts?", rootPath, radioCommandReportContacts, nil)
-        missionCommands.addCommand("Status report", rootPath, radioCommandReportStatus, nil)
+        missionCommands.addCommand("Report contacts", rootPath, radioCommandReportContacts, nil)
+        missionCommands.addCommand("Status", rootPath, radioCommandReportStatus, nil)
         missionCommands.addCommand("Go to map marker "..TUM.wingmenTasking.DEFAULT_MARKER_TEXT:upper(), rootPath, radioCommandGoToMapMarker, nil)
         missionCommands.addCommand("Hold", rootPath, radioCommandOrbit, nil)
         missionCommands.addCommand("Rejoin", rootPath, radioCommandRejoin, nil)
