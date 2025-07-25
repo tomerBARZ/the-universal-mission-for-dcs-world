@@ -164,8 +164,13 @@ do
                             groupInfo.type = Library.objectNames.getGenericGroup(g)
                         end
                     else
-                        --groupInfo.type = Library.objectNames.getGenericGroup(g, distanceToGroup > 2 * detectionRange / 3)  -- If above 2/3 max detection distance, return imprecise name ("vehicle" instead of "AAA"/"tank"/etc)
-                        groupInfo.type = Library.objectNames.getGenericGroup(g)
+                        if distanceToGroup > 2 * detectionRange / 3 then
+                            groupInfo.type = Library.objectNames.getGenericGroup(g, true)
+                        elseif distanceToGroup > detectionRange / 3 then
+                            groupInfo.type = Library.objectNames.getGenericGroup(g, false)
+                        else
+                            groupInfo.type = Library.objectNames.get(g:getUnit(1))
+                        end
                     end
 
                     table.insert(detectedTargets, groupInfo)
