@@ -84,12 +84,26 @@ Library.radioMessages = {
         "$1. Negative contact, unable to commit.",
         "$1. That's a no, not seeing any targets."
     },
+    pilotWingmanGoToMarker = {
+        "$1, copy. Pushing to waypoint now.",
+        "$1, on route to the coords, maintaining current alt.",
+        "$1, proceeding as briefed, on my way.",
+        "$1, moving to grid as planned.",
+        "$1's off, heading to the point."
+    },
+    pilotWingmanGoToMarkerNoMarker = {
+        "$1, negative on coords, say again?",
+        "$1. Copy, but I don’t have the point. Confirm?",
+        "$1, missing the grid, need the mark.",
+        "$1 blind on the coordinates, request update.",
+        "$1 can't push, no steerpoint."
+    },
     pilotWingmanOrbit = {
         "$1. Wilco, holding here.",
         "$1. Copy, orbiting now.",
         "$1. Roger, in the hold.",
         "$1. Affirm, setting up the orbit.",
-        "$1. Orbiting at your pos."
+        "$1. Orbiting at pos."
     },
     pilotWingmanRejoin = {
         "$1. Off the perch, rejoining your side.",
@@ -227,9 +241,16 @@ Library.radioMessages = {
         "$1, engage bandits, your discretion.",
         "$1, you're free to engage bandits."
     },
+    playerWingmanGoToMarker = {
+        "$1, proceed to waypoint.",
+        "$1, push to the hold point now.",
+        "$1, push to station and hold.",
+        "$1, set up in the assigned area.",
+        "$1, move to designated steerpoint."
+    },
     playerWingmanOrbit = {
-        "$1, orbit my position.",
-        "$1, set up an orbit on me.",
+        "$1, orbit your position.",
+        "$1, set up an orbit.",
         "$1, hold on me.",
         "$1, anchor on my current pos.",
         "$1, orbit overhead"

@@ -191,12 +191,20 @@ do
         local wingmenCtrl = getWingmanController(args.index)
         if not wingmenCtrl then return end
 
+        local point = nil
+
+        if args.index then
+            point = DCSEx.math.vec3ToVec2(DCSEx.world.getUnitByID(wingmenUnitID[args.index]):getPoint())
+        else
+            point = DCSEx.world.getGroupCenter(getWingmenGroup())
+        end
+
         local taskTable = {
             id = "Orbit",
             params = {
                 pattern = "Circle",
-                point = DCSEx.math.vec3ToVec2(player:getPoint()),
-                altitude = player:getPoint().y
+                point = point,
+                -- altitude = player:getPoint().y
             }
         }
         wingmenCtrl:setTask(taskTable)
@@ -238,7 +246,7 @@ do
 
         local targets = getDetectedTargets(args.index, args.attributes, args.maxRange)
         if not targets or #targets == 0 then
-            TUM.radio.playForAll("pilotWingmanEngageNoTarget", nil, getWingmanCallsign(args.index), true)
+            TUM.radio.playForAll("pilotWingmanEngageNoTarget", { getWingmanNumberAsWord(args.index) }, getWingmanCallsign(args.index), true)
             return
         end
 
@@ -379,7 +387,33 @@ do
         wingmenUnitID = DCSEx.table.deepCopy(groupInfo.unitsID)
 
         TUM.log("Spawned AI wingmen")
-        TUM.radio.playForAll("pilotWingmanRejoin", nil, getWingmanCallsign(), true)
+        TUM.radio.playForAll("pilotWingmanRejoin", { getWingmanNumberAsWord() }, getWingmanCallsign(), true)
+    end
+
+    local function doWingmenCommandGoToMapMarker(args)
+        local player = world:getPlayer()
+        if not player then return end
+
+        TUM.radio.playForAll("playerWingmanGoToMarker", { getWingmanNumberAsWord(args.index) }, player:getCallsign(), false)
+
+        local wingmenCtrl = getWingmanController(args.index)
+        if not wingmenCtrl then return end
+
+        local mapMarker = DCSEx.world.getMarkerByText("wingman")
+        if not mapMarker then
+            TUM.radio.playForAll("pilotWingmanGoToMarkerNoMarker", { getWingmanNumberAsWord(args.index) }, getWingmanCallsign(args.index), true)
+            return
+        end
+
+        local taskTable = {
+            id = "Orbit",
+            params = {
+                pattern = "Circle",
+                point = DCSEx.math.vec3ToVec2(mapMarker.pos),
+            }
+        }
+        wingmenCtrl:setTask(taskTable)
+        TUM.radio.playForAll("pilotWingmanGoToMarker", { getWingmanNumberAsWord(args.index) }, getWingmanCallsign(args.index), true)
     end
 
     function TUM.supportWingmen.removeAll()
@@ -403,7 +437,8 @@ do
         missionCommands.addCommand("Engage bandits", wingmanPath, doWingmenCommandEngage, { index = wingmanIndex, attributes = { "Battle airplanes" }, maxRange = 60, radioSuffix = "Bandits" })
         missionCommands.addCommand("Report targets", wingmanPath, doWingmenCommandReportTargets, { index = wingmanIndex })
         missionCommands.addCommand("Report status", wingmanPath, doWingmenCommandReportStatus, { index = wingmanIndex, noPlayerMessage = false } )
-        missionCommands.addCommand("Orbit", wingmanPath, doWingmenCommandOrbit, { index = wingmanIndex })
+        missionCommands.addCommand("Go to map marker WINGMAN", wingmanPath, doWingmenCommandGoToMapMarker, { index = wingmanIndex } )
+        missionCommands.addCommand("Orbit at position", wingmanPath, doWingmenCommandOrbit, { index = wingmanIndex })
         missionCommands.addCommand("Rejoin", wingmanPath, doWingmenCommandRejoin, { index = wingmanIndex })
     end
 
