@@ -117,6 +117,24 @@ Library.radioMessages = {
         "$1. Reporting.\n\n$2",
         "$1. Status report.\n\n$2",
     },
+    pilotWingmanReportTargets = {
+        "$1, tally contacts.$2",
+        "$1, tally groups, pushing details.$2",
+        "$1, visual on targets.$2",
+        "$1, eyes on units.$2",
+        "$1, contacts hot.$2",
+        "$1, eyes on possible targets.$2",
+        "$1, got activity out here.$2",
+        "$1, picking something up.$2",
+        "$1, contact confirmed.$2",
+    },
+    pilotWingmanReportTargetsNoJoy = {
+        "$1, negative contacts.",
+        "$1, clean all sectors.",
+        "$1, sensors are clean.",
+        "$1, nothing showing on my end.",
+        "$1, area looks clear.",
+    },
 
     atcSafeLanding = { "Be advised: $1 is wheels down at $2 and clear of runway.", "All aircraft, $1 has landed at $2 and vacated active. Runway is open for next inbound.", "Traffic, $1 is on deck at $2 and heading to parking. Runway clear.", "All flights, $1 just rolled out at $2 and cleared the active.", "Heads up, $1 landed at $2 and moving to the ramp. Runway available for next approach." },
     atcSafeLandingPlayer = { "$1, wheels on deck, welcome back. You may taxi to the parking area.", "$1, good copy on landing. Exit when able, proceed to the parking area.", "$1, touchdown confirmed. Continue to parking.", "$1, welcome home. Clear of runway and taxi to parking area.", "$1, nice landing. Taxi to parking when ready." },
@@ -269,6 +287,13 @@ Library.radioMessages = {
         "$1, report in.",
         "$1, status check.",
         "$1, talk me through your state."
+    },
+    playerWingmanReportTargets = {
+        "$1, you tally anything?",
+        "$1, you got any hits?",
+        "$1, eyes or sensors on anything?",
+        "$1, you see anything out there?",
+        "$1, any contacts your side?",
     },
     playerJTACSmoke = {
         "$1, request smoke on objective $2, over.",

@@ -139,10 +139,12 @@ do
             if TUM.mission.onClockTick() then return nextTickTime end
         elseif clockTick % 4 == 1 then
             if TUM.airForce.onClockTick(TUM.settings.getPlayerCoalition()) then return nextTickTime end
+            if TUM.supportWingmen.onClockTick() then return nextTickTime end
         elseif clockTick % 4 == 2 then
             if TUM.supportAWACS.onClockTick() then return nextTickTime end
         else
             if TUM.airForce.onClockTick(TUM.settings.getEnemyCoalition()) then return nextTickTime end
+            if TUM.supportWingmen.onClockTick() then return nextTickTime end
         end
 
         return nextTickTime

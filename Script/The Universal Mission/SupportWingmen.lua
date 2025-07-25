@@ -12,9 +12,14 @@ do
         ENGAGE_BANDITS = 3,
     }
 
+    local CONTACT_REPORT_INTERVAL = 4 -- onClockTick is called twice by minute, so multiply this by 30 seconds (CONTACT_REPORT_INTERVAL = 4 means "every 2 minutes")
+    local WINGMEN_COUNT = 2 -- TODO: load from setting
+
+    local knownContacts = {}
+    local newContacts = {}
+    local nextContactReport = CONTACT_REPORT_INTERVAL
     local wingmenGroupID = nil
     local wingmenUnitID = {}
-    local WINGMEN_COUNT = 2 -- TODO: load from setting
 
     local function getWingmenGroup()
         if TUM.settings.getValue(TUM.settings.id.MULTIPLAYER) then return nil end -- No wingmen in multiplayer
@@ -64,12 +69,9 @@ do
         return false
     end
 
-    local function getDetectedTargets(wingmanIndex, attributes, maxRangeInNM)
-        TUM.log("A")
+    local function getDetectedContacts(wingmanIndex, attributes, groupCategory)
         attributes = attributes or {}
-        local maxRange = DCSEx.converter.nmToMeters(maxRangeInNM or 1000)
 
-        TUM.log("B")
         local searchPoints = {}
         if wingmanIndex then
             if wingmanIndex < 1 or wingmanIndex > #wingmenUnitID then return {} end
@@ -97,18 +99,34 @@ do
 
         local knownGroups = {}
         local detectedTargets = {}
-        local allGroups = coalition.getGroups(TUM.settings.getEnemyCoalition())
+        local allGroups = coalition.getGroups(TUM.settings.getEnemyCoalition(), groupCategory)
         for _,g in ipairs(allGroups) do
             local gID = g:getID()
             if g:isExist() and g:getSize() > 0 and not DCSEx.table.contains(knownGroups, gID) then
                 local gPos = DCSEx.world.getGroupCenter(g)
                 local gCateg = Group.getCategory(g)
 
+                local specialGroupProperties = nil
+
                 local detectionRange = DCSEx.converter.nmToMeters(20 * detectionRangeMultiplier)
                 if gCateg == Group.Category.AIRPLANE then
                     detectionRange = DCSEx.converter.nmToMeters(50 * detectionRangeMultiplier)
                 elseif gCateg == Group.Category.SHIP then
                     detectionRange = DCSEx.converter.nmToMeters(30 * detectionRangeMultiplier)
+                elseif gCateg == Group.Category.GROUND then
+                    local allInfantry = true
+                    local airDefenseCount = 0
+                    for _,u in ipairs(g:getUnits()) do
+                        if not u:hasAttribute("Infantry") then allInfantry = false end
+                        if u:hasAttribute("Air Defence") then airDefenseCount = airDefenseCount + 1 end
+                    end
+
+                    if allInfantry then
+                        detectionRange = detectionRange / 8 -- Infantry is HARD to spot
+                        specialGroupProperties = "Infantry"
+                    elseif airDefenseCount >= g:getSize() / 1.5 then
+                        specialGroupProperties = "Air Defence"
+                    end
                 end
 
                 -- Check if at least one wingman is in detection range
@@ -123,6 +141,11 @@ do
                 if inRange then
                     table.insert(knownGroups, gID)
 
+                    if not DCSEx.table.contains(knownContacts) then
+                        table.insert(knownContacts, gID)
+                        table.insert(newContacts, gID)
+                    end
+
                     local groupInfo = {
                         id = gID,
                         point2 = gPos,
@@ -135,8 +158,10 @@ do
                     elseif gCateg == Group.Category.HELICOPTER then
                         groupInfo.type = "helicopters"
                     elseif gCateg == Group.Category.GROUND then
-                        if g:getUnits()[1]:hasAttribute("Infantry") then
+                        if specialGroupProperties == "Infantry" then
                             groupInfo.type = "infantry"
+                        elseif specialGroupProperties == "Air Defence" then
+                            groupInfo.type = "air defense"
                         else
                             groupInfo.type = "vehicles"
                         end
@@ -230,7 +255,7 @@ do
         local wingmenCtrl = getWingmanController(args.index)
         if not wingmenCtrl then return end
 
-        local targets = getDetectedTargets(args.index, args.attributes, args.maxRange)
+        local targets = getDetectedContacts(args.index, args.attributes, args.maxRange)
         if not targets or #targets == 0 then
             TUM.radio.playForAll("pilotWingmanEngageNoTarget", { getWingmanNumberAsWord(args.index) }, getWingmanCallsign(args.index), true)
             return
@@ -260,19 +285,30 @@ do
         end
     end
 
+    -- NOTE: returns true if a report was radioed, true if not
+    local function doWingmenCommandReportContacts(args)
+        args.noPlayerMessage = args.noPlayerMessage or false
+        local player = world:getPlayer()
+        if not player then return false end
 
-    local function doWingmenCommandReportTargets(args)
-        local detectedTargets = getDetectedTargets(args.index, args.attributes)
+        if not args.noPlayerMessage then
+            TUM.radio.playForAll("playerWingmanReportTargets", { getWingmanNumberAsWord(args.index) }, player:getCallsign(), false)
+        end
 
-        local reportText = "Detected targets:"
-        if #detectedTargets == 0 then
-            reportText = reportText.." none"
+        local detectedTargets = getDetectedContacts(args.index, args.attributes)
+
+        if not detectedTargets or #detectedTargets == 0 then
+            if args.noPlayerMessage then return false end -- No need to bother the player with "I don't have any contacts" spontaneous messages
+            TUM.radio.playForAll("pilotWingmanReportTargetsNoJoy", { getWingmanNumberAsWord(args.index) }, getWingmanCallsign(args.index), true)
+            return true
         else
+            local reportText = ""
             for _,t in ipairs(detectedTargets) do
                 reportText = reportText.."\n - "..tostring(t.size).."x "..t.type..", "..DCSEx.dcs.getBRAA(t.point2, DCSEx.math.vec3ToVec2(world:getPlayer():getPoint()), false, false, false).." from you"
             end
+            TUM.radio.playForAll("pilotWingmanReportTargets", { getWingmanNumberAsWord(args.index), reportText }, getWingmanCallsign(args.index), not args.noPlayerMessage)
+            return true
         end
-        trigger.action.outText(reportText, 5)
     end
 
     local function doWingmenCommandReportStatus(args)
@@ -373,6 +409,10 @@ do
         wingmenGroupID = groupInfo.groupID
         wingmenUnitID = DCSEx.table.deepCopy(groupInfo.unitsID)
 
+        knownContacts = {}
+        newContacts = {}
+        nextContactReport = CONTACT_REPORT_INTERVAL
+
         TUM.log("Spawned AI wingmen")
         TUM.radio.playForAll("pilotWingmanRejoin", { getWingmanNumberAsWord() }, getWingmanCallsign(), true)
     end
@@ -419,8 +459,8 @@ do
         local wingmanPath = missionCommands.addSubMenu(getWingmanNumberAsWord(wingmanIndex), rootPath)
 
         missionCommands.addCommand("Engage bandits", wingmanPath, doWingmenCommandEngage, { index = wingmanIndex, attributes = { "Battle airplanes" }, maxRange = 60, radioSuffix = "Bandits" })
-        missionCommands.addCommand("Report targets", wingmanPath, doWingmenCommandReportTargets, { index = wingmanIndex })
-        missionCommands.addCommand("Report status", wingmanPath, doWingmenCommandReportStatus, { index = wingmanIndex, noPlayerMessage = false } )
+        missionCommands.addCommand("Any contacts?", wingmanPath, doWingmenCommandReportContacts, { index = wingmanIndex, noPlayerMessage = false })
+        missionCommands.addCommand("Status report", wingmanPath, doWingmenCommandReportStatus, { index = wingmanIndex, noPlayerMessage = false } )
         missionCommands.addCommand("Go to map marker WINGMAN", wingmanPath, doWingmenCommandGoToMapMarker, { index = wingmanIndex } )
         missionCommands.addCommand("Orbit at position", wingmanPath, doWingmenCommandOrbit, { index = wingmanIndex })
         missionCommands.addCommand("Rejoin", wingmanPath, doWingmenCommandRejoin, { index = wingmanIndex })
@@ -436,6 +476,21 @@ do
         for i=1,WINGMEN_COUNT do
             createWingmanSubMenu(rootPath, i)
         end
+    end
+
+    ----------------------------------------------------------
+    -- Called on every mission update tick (every 10-20 seconds)
+    -- @return True if something was done this tick, false otherwise
+    ----------------------------------------------------------    
+    function TUM.supportWingmen.onClockTick()
+        if TUM.settings.getValue(TUM.settings.id.MULTIPLAYER) then return false end -- No wingmen in multiplayer
+        if TUM.mission.getStatus() == TUM.mission.status.NONE then return false end
+
+        nextContactReport = nextContactReport - 1
+        if nextContactReport > 0 then return false end
+        nextContactReport = CONTACT_REPORT_INTERVAL
+
+        return doWingmenCommandReportContacts({ index = nil, noPlayerMessage = true })
     end
 
     -------------------------------------
