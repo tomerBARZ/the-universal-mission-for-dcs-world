@@ -165,8 +165,11 @@ do
                 killMessage = "pilotKillAir"
                 killUnitType = Library.objectNames.get(event.target) -- Report exact unit type for aircraft
             elseif targetDesc.category == Unit.Category.GROUND_UNIT then
-                if event.target:hasAttribute("Infantry") then return end -- No kill message for infantry (yet?)
-                killMessage = "pilotKillGround"
+                if event.target:hasAttribute("Infantry") then
+                    killMessage = "pilotKillInfantry"
+                else
+                    killMessage = "pilotKillGround"
+                end
             elseif targetDesc.category == Unit.Category.SHIP then
                 killMessage = "pilotKillShip"
             elseif targetDesc.category == Unit.Category.STRUCTURE then

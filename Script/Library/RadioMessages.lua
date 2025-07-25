@@ -35,6 +35,13 @@ Library.radioMessages = {
         "Splash $1, good kill.",
         "$1's cooked, smoke's up."
     }, -- "$1" should be "vehicle" in audio version
+    pilotKillInfantry = {
+        "$1 neutralized.",
+        "Enemy $1 taken out.",
+        "Good effects on $1.",
+        "Confirmed hit, $1 down.",
+        "$1 position destroyed."
+    }, -- "$1" should be "infantry" in audio version
     pilotKillShip = {
         "Splash confirmed! Enemy $1 going under.",
         "Direct hit! $1 burning and breaking up.",
