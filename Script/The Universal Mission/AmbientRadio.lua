@@ -156,86 +156,23 @@ do
             killMessage = "pilotKillStrike"
             doAmbientChatter("pilotKillStrike", nil, killerName, 1)
         elseif Object.getCategory(event.target) == Object.Category.UNIT then
-            local killUnitType = "unit"
+            local killUnitType = Library.objectNames.getGeneric(event.target)
 
             if targetDesc.category == Unit.Category.AIRPLANE then
                 killMessage = "pilotKillAir"
-
-                if event.target:hasAttribute("AWACS") then
-                    killUnitType = "AWACS"
-                elseif event.target:hasAttribute("Tankers") then
-                    killUnitType = "tanker"
-                elseif event.target:hasAttribute("Transports") then
-                    killUnitType = "transport"
-                elseif event.target:hasAttribute("Bombers") then
-                    killUnitType = "bomber"
-                elseif event.target:hasAttribute("Multirole fighters") or event.target:hasAttribute("Fighters") then
-                    killUnitType = "fighter"
-                elseif event.target:hasAttribute("Interceptors") then
-                    killUnitType = "interceptor"
-                elseif event.target:hasAttribute("UAVs") then
-                    killUnitType = "UAV"
-                else
-                    killUnitType = "aircraft"
-                end
+                killUnitType = Library.objectNames.get(event.target) -- Report exact unit type for aircraft
             elseif targetDesc.category == Unit.Category.HELICOPTER then
                 killMessage = "pilotKillAir"
-                if event.target:hasAttribute("Attack helicopters") then
-                    killUnitType = "attack "
-                elseif event.target:hasAttribute("Transport helicopters") then
-                    killUnitType = "transport "
-                else
-                    killUnitType = ""
-                end
-                killUnitType = killUnitType.." "..DCSEx.table.getRandom({"helicopter", "helo", "chopper"})
+                killUnitType = Library.objectNames.get(event.target) -- Report exact unit type for aircraft
             elseif targetDesc.category == Unit.Category.GROUND_UNIT then
                 if event.target:hasAttribute("Infantry") then return end -- No kill message for infantry (yet?)
                 killMessage = "pilotKillGround"
-
-                if event.target:hasAttribute("MANPADS") then
-                    killUnitType = "MANPADS"
-                elseif event.target:hasAttribute("Infantry") then
-                    killUnitType = "infantry"
-                elseif event.target:hasAttribute("SR SAM") then
-                    killUnitType = "short-range SAM"
-                elseif event.target:hasAttribute("SAM SR") then
-                    killUnitType = "SAM search radar"
-                elseif event.target:hasAttribute("SAM TR") then
-                    killUnitType = "SAM tracking radar"
-                elseif event.target:hasAttribute("SAM LL") then
-                    killUnitType = "SAM launcher"
-                elseif event.target:hasAttribute("AAA") then
-                    killUnitType = "AAA"
-                elseif event.target:hasAttribute("Air Defence") then
-                    killUnitType = "air defense"
-                elseif event.target:hasAttribute("Artillery") then
-                    killUnitType = "artillery"
-                elseif event.target:hasAttribute("Armored vehicles") then
-                    killUnitType = "armor"
-                elseif event.target:hasAttribute("Trucks") then
-                    killUnitType = "truck"
-                else
-                    killUnitType = "vehicle"
-                end
             elseif targetDesc.category == Unit.Category.SHIP then
                 killMessage = "pilotKillShip"
-
-                if event.target:hasAttribute("Aircraft Carriers") then
-                    killUnitType = "carrier"
-                elseif event.target:hasAttribute("Heavy armed ships") then
-                    killUnitType = "warship"
-                elseif event.target:hasAttribute("Light armed ships") then
-                    killUnitType = "armed ship"
-                elseif event.target:hasAttribute("Unarmed ships") then
-                    killUnitType = "cargo ship"
-                else
-                    killUnitType = "ship"
-                end
             elseif targetDesc.category == Unit.Category.STRUCTURE then
                 killMessage = "pilotKillStrike"
             end
 
-            killUnitType = Library.objectNames.get(event.target)
             doAmbientChatter(killMessage, killUnitType, killerName, 1)
         end
     end

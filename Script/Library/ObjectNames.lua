@@ -548,4 +548,115 @@ do
         if not typeName then return "unknown" end
         return typeName
     end
+
+    function Library.objectNames.getGeneric(obj, inaccurate)
+        inaccurate = inaccurate or false
+        if not obj then return "nothing" end
+
+        if Object.getCategory(obj) == Object.Category.SCENERY then
+            return DCSEx.table.getRandom({"building", "structure"})
+        elseif Object.getCategory(obj) == Object.Category.STATIC then
+            return DCSEx.table.getRandom({"building", "structure"})
+        elseif Object.getCategory(obj) == Object.Category.UNIT then
+            local objDesc = obj:getDesc()
+
+            if objDesc.category == Unit.Category.AIRPLANE then
+                if inaccurate then return "aircraft" end
+
+                if obj:hasAttribute("AWACS") then
+                    return "AWACS"
+                elseif obj:hasAttribute("Tankers") then
+                    return "tanker"
+                elseif obj:hasAttribute("Transports") then
+                    return "transport"
+                elseif obj:hasAttribute("Bombers") then
+                    return "bomber"
+                elseif obj:hasAttribute("Multirole fighters") or obj:hasAttribute("Fighters") then
+                    return "fighter"
+                elseif obj:hasAttribute("Interceptors") then
+                    return "interceptor"
+                elseif obj:hasAttribute("UAVs") then
+                    return "UAV"
+                else
+                    return "aircraft"
+                end
+            elseif objDesc.category == Unit.Category.HELICOPTER then
+                if inaccurate then return "helicopter" end
+
+                if obj:hasAttribute("Attack helicopters") then
+                    return "attack helicopter"
+                elseif obj:hasAttribute("Transport helicopters") then
+                    return "transport helicopter"
+                else
+                    return "helicopter"
+                end
+            elseif objDesc.category == Unit.Category.GROUND_UNIT then
+                if inaccurate then
+                    if obj:hasAttribute("Infantry") then
+                        return "infantry"
+                    else
+                        return "vehicle"
+                    end
+                end
+
+                if obj:hasAttribute("MANPADS") then
+                    return "MANPADS"
+                elseif obj:hasAttribute("Infantry") then
+                    return "infantry"
+                elseif obj:hasAttribute("SR SAM") then
+                    return "short-range SAM"
+                elseif obj:hasAttribute("SAM SR") then
+                    return "SAM search radar"
+                elseif obj:hasAttribute("SAM TR") then
+                    return "SAM tracking radar"
+                elseif obj:hasAttribute("SAM LL") then
+                    return "SAM launcher"
+                elseif obj:hasAttribute("AAA") then
+                    return "AAA"
+                elseif obj:hasAttribute("Air Defence") then
+                    return "air defense"
+                elseif obj:hasAttribute("Artillery") then
+                    return "artillery"
+                elseif obj:hasAttribute("Armored vehicles") then
+                    return "armor"
+                elseif obj:hasAttribute("Trucks") then
+                    return "truck"
+                else
+                    return "vehicle"
+                end
+            elseif objDesc.category == Unit.Category.SHIP then
+                if inaccurate then return "ship" end
+                if obj:getTypeName() == "speedboat" then return "speedboat" end
+
+                if obj:hasAttribute("Submarines") then
+                    return "submarine"
+                elseif obj:hasAttribute("Aircraft Carriers") then
+                    return "carrier"
+                elseif obj:hasAttribute("Heavy armed ships") then
+                    return "warship"
+                elseif obj:hasAttribute("Light armed ships") then
+                    return "armed ship"
+                elseif obj:hasAttribute("Unarmed ships") then
+                    return "cargo ship"
+                else
+                    return "ship"
+                end
+            elseif objDesc.category == Unit.Category.STRUCTURE then
+                return DCSEx.table.getRandom({"building", "structure"})
+            end
+        end
+
+        return "unknown"
+    end
+
+    function Library.objectNames.getGenericGroup(grp, inaccurate)
+        if not grp then return "nothing" end
+
+        -- TODO: should not just take the first unit but pick the most relevant one (e.g. one SAM and 3 supply trucks should be reported as "SAM" not as "truck")
+        for _,u in ipairs(grp:getUnits()) do
+            return Library.objectNames.getGeneric(u, inaccurate)
+        end
+
+        return "unknown"
+    end
 end
