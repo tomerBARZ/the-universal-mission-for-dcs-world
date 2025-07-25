@@ -124,8 +124,8 @@ do
     end
 
     function TUM.wingmenTasking.commandReportContacts(groupCategory, noReportIfNoContacts, delayRadioAnswer)
-        delayRadioAnswer = delayRadioAnswer or false
         noReportIfNoContacts = noReportIfNoContacts or false
+        delayRadioAnswer = delayRadioAnswer or false
 
         local reportString = TUM.wingmen.getContactsAsReportString(groupCategory, false, true)
 
@@ -145,8 +145,10 @@ do
         local wingmenGroup = TUM.wingmen.getGroup()
         if not wingmenGroup then return end
 
+        local groupUnits = wingmenGroup:getUnits()
+
         local statusMsg = ""
-        for i,u in ipairs(wingmenGroup:getUnits()) do
+        for i,u in ipairs(groupUnits) do
             statusMsg = statusMsg..u:getCallsign():upper().."\n"
             if u:getLife() >= u:getLife0() then
                 statusMsg = statusMsg.."- No damage sustained, fuel green"
@@ -168,7 +170,7 @@ do
                 end
             end
 
-            if i < #wingmenGroup:getUnits() then statusMsg = statusMsg.."\n\n" end
+            if i < #groupUnits then statusMsg = statusMsg.."\n\n" end
         end
 
         TUM.radio.playForAll("pilotWingmanReportStatus", { TUM.wingmen.getFirstWingmanNumber(), statusMsg },  TUM.wingmen.getFirstWingmanCallsign(), delayRadioAnswer)

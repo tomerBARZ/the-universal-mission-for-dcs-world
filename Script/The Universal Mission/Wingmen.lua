@@ -9,7 +9,7 @@ do
     local CONTACT_REPORT_INTERVAL = 8 -- onClockTick is called four times by minute, so multiply this by 15 seconds (CONTACT_REPORT_INTERVAL = 8 means "every 2 minutes")
     local DEFAULT_PAYLOAD = "attack" -- Default payload
 
-    local knownContacts = {}
+    local knownGroupsID = {}
     local nextContactReportTick = CONTACT_REPORT_INTERVAL
     local wingmenGroupID = nil
     local wingmenUnitID = {}
@@ -91,7 +91,7 @@ do
         wingmenUnitID = DCSEx.table.deepCopy(groupInfo.unitsID)
 
         -- Reinitialize list of known contacts and contact report interval
-        knownContacts = {}
+        knownGroupsID = {}
         nextContactReportTick = CONTACT_REPORT_INTERVAL
 
         TUM.log("Spawned AI wingmen")
@@ -126,13 +126,16 @@ do
                 local gPos = DCSEx.world.getGroupCenter(g)
                 local gCateg = Group.getCategory(g)
 
-                local specialGroupProperties = nil
-
                 local detectionRange = DCSEx.converter.nmToMeters(20 * detectionRangeMultiplier)
                 if gCateg == Group.Category.AIRPLANE then
                     detectionRange = DCSEx.converter.nmToMeters(50 * detectionRangeMultiplier)
                 elseif gCateg == Group.Category.SHIP then
                     detectionRange = DCSEx.converter.nmToMeters(30 * detectionRangeMultiplier)
+                    local allSpeedboats = true
+                    for _,u in ipairs(g:getUnits()) do
+                        if not u:getTypeName() == "speedboat" then allSpeedboats = false end
+                    end
+                    if allSpeedboats then detectionRange = detectionRange / 8 end -- Speedboats are HARD to spot
                 elseif gCateg == Group.Category.GROUND then
                     local allInfantry = true
                     local airDefenseCount = 0
@@ -140,26 +143,14 @@ do
                         if not u:hasAttribute("Infantry") then allInfantry = false end
                         if u:hasAttribute("Air Defence") then airDefenseCount = airDefenseCount + 1 end
                     end
-
-                    if allInfantry then
-                        detectionRange = detectionRange / 8 -- Infantry is HARD to spot
-                        specialGroupProperties = "Infantry"
-                    elseif airDefenseCount >= g:getSize() / 1.5 then
-                        specialGroupProperties = "Air Defence"
-                    end
+                    if allInfantry then detectionRange = detectionRange / 8 end -- Infantry is HARD to spot
                 end
 
-                -- Check if at least one wingman is in detection range
-                local inRange = false
-                if DCSEx.math.getDistance2D(gPos, searchPoint) <= detectionRange then
-                    inRange = true
-                    break
-                end
-
-                if inRange then
+                local distanceToGroup = DCSEx.math.getDistance2D(gPos, searchPoint)
+                if distanceToGroup <= detectionRange then -- Check if wingman group is in detection range
                     local newGroup = false
-                    if not DCSEx.table.contains(knownContacts) then
-                        table.insert(knownContacts, gID)
+                    if not DCSEx.table.contains(knownGroupsID) then
+                        table.insert(knownGroupsID, gID)
                         newGroup = true
                     end
 
@@ -170,23 +161,9 @@ do
                         type = "unknown"
                     }
 
-                    if gCateg == Group.Category.AIRPLANE then
-                        groupInfo.type = "aircraft"
-                    elseif gCateg == Group.Category.HELICOPTER then
-                        groupInfo.type = "helicopters"
-                    elseif gCateg == Group.Category.GROUND then
-                        if specialGroupProperties == "Infantry" then
-                            groupInfo.type = "infantry"
-                        elseif specialGroupProperties == "Air Defence" then
-                            groupInfo.type = "air defense"
-                        else
-                            groupInfo.type = "vehicles"
-                        end
-                    elseif gCateg == Group.Category.SHIP then
-                        groupInfo.type = "ships"
-                    elseif gCateg == Group.Category.TRAIN then
-                        groupInfo.type = "trains"
-                    end
+                    groupInfo.type = Library.objectNames.getGenericGroup(g, distanceToGroup > detectionRange / 2)
+                    -- if gCateg == Group.Category.AIRPLANE or gCateg == Group.Category.HELICOPTER then
+                    -- end
 
                     if not newContactsOnly or newGroup then
                         table.insert(detectedTargets, groupInfo)
@@ -198,22 +175,20 @@ do
         return detectedTargets
     end
 
-    function TUM.wingmen.getContactsAsReportString(groupCategory, newContactsOnly, giveRelativePositionToPlayer)
-        giveRelativePositionToPlayer = giveRelativePositionToPlayer or false
+    function TUM.wingmen.getContactsAsReportString(groupCategory, newContactsOnly, giveRelativePosition)
+        if TUM.settings.getValue(TUM.settings.id.MULTIPLAYER) then return nil end -- No wingmen in multiplayer
+
+        giveRelativePosition = giveRelativePosition or false
         local contacts = TUM.wingmen.getContacts(groupCategory, newContactsOnly)
         if not contacts or #contacts == 0 then return nil end
 
-        local player = world:getPlayer()
-        local refPoint = nil
-        if player then
-            refPoint = DCSEx.math.vec3ToVec2(player:getPoint())
-        end
+        local refPoint = DCSEx.world.getGroupCenter(TUM.wingmen.getGroup())
 
         local reportText = ""
         for _,t in ipairs(contacts) do
             reportText = reportText.."\n - "..tostring(t.size).."x "..t.type
-            if refPoint and giveRelativePositionToPlayer then
-                reportText = reportText..", "..DCSEx.dcs.getBRAA(t.point2, refPoint, false, false, false).." from you"
+            if refPoint and giveRelativePosition then
+                reportText = reportText..", "..DCSEx.dcs.getBRAA(t.point2, refPoint, false, false, false)
             end
         end
         return reportText
@@ -278,11 +253,11 @@ do
         if TUM.mission.getStatus() == TUM.mission.status.NONE then return false end
 
         -- If new contacts are detected, report them immediately, no need to wait for next report tick
-        local newContactsReportString = TUM.wingmen.getContactsAsReportString(nil, true, true)
-        if newContactsReportString then
-            TUM.radio.playForAll("pilotWingmanReportContactsNew", { TUM.wingmen.getFirstWingmanNumber(), newContactsReportString }, TUM.wingmen.getFirstWingmanCallsign(), false)
-            return true
-        end
+        -- local newContactsReportString = TUM.wingmen.getContactsAsReportString(nil, true, true)
+        -- if newContactsReportString then
+        --     TUM.radio.playForAll("pilotWingmanReportContactsNew", { TUM.wingmen.getFirstWingmanNumber(), newContactsReportString }, TUM.wingmen.getFirstWingmanCallsign(), false)
+        --     return true
+        -- end
 
         nextContactReportTick = nextContactReportTick - 1
         if nextContactReportTick > 0 then return false end
