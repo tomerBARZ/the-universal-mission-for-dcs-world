@@ -16,7 +16,7 @@ DCSEx.string = {}
 -- @return A string, with the first letter cast to upper case
 -------------------------------------
 function DCSEx.string.firstToUpper(str)
-    return (str:gsub("^%l", DCSEx.string.upper))
+    return (str:gsub("^%l", string.upper))
 end
 
 -------------------------------------
