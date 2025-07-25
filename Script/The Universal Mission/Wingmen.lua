@@ -269,11 +269,15 @@ do
             local newContactsReportString = TUM.wingmen.getContactsAsReportString(nil, true, true)
             TUM.radio.playForAll("pilotWingmanReportContactsNew", { TUM.wingmen.getFirstWingmanNumber(), newContactsReportString }, TUM.wingmen.getFirstWingmanCallsign(), false)
             newGroupsID = {}
+            if ticksLeftBeforeContactReport < math.floor(CONTACT_REPORT_INTERVAL / 2) then
+                ticksLeftBeforeContactReport = math.floor(CONTACT_REPORT_INTERVAL / 2)
+            end
             return true
         end
 
         ticksLeftBeforeContactReport = ticksLeftBeforeContactReport - 1
         if ticksLeftBeforeContactReport > 0 then return false end
+        ticksLeftBeforeContactReport = CONTACT_REPORT_INTERVAL
 
         return TUM.wingmenTasking.commandReportContacts(nil, true, false)
     end
