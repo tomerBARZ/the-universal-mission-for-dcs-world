@@ -61,9 +61,8 @@ Library.radioMessages = {
     pilotLaunchFox2 = "Fox 2!",
     pilotLaunchFox3 = "Fox 3!",
     pilotLaunchMagnum = "Magnum!",
-    pilotLaunchMissile = "Missile away!",
     pilotLaunchPickle = { "Pickle!", "Bomb away!" },
-    pilotLaunchRifle = "Rifle!",
+    pilotLaunchRifle = { "Rifle!", "Missile away!"},
     pilotLaunchRocket = "Rockets!",
 
     pilotWarningAAA = { "Heads up, I'm seeing tracers. AAA fire.", "AAA lighting up, stay high.",  "Flight, we've got heavy flak incoming, break!", "AAA tracer fire, they've got our range, don't stay straight!", "AAA's hot under us. Stay fast, don't linger!" },

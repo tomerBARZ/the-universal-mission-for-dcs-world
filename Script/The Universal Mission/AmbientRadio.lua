@@ -335,7 +335,7 @@ do
                     elseif weaponDesc.guidance == Weapon.GuidanceType.RADAR_SEMI_ACTIVE then
                         doAmbientChatter("pilotLaunchFox1", nil, event.initiator:getCallsign(), 1)
                     else
-                        doAmbientChatter("pilotLaunchMissile", nil, event.initiator:getCallsign(), 1)
+                        doAmbientChatter("pilotLaunchRifle", nil, event.initiator:getCallsign(), 1)
                     end
                 elseif weaponDesc.missileCategory == Weapon.MissileCategory.ANTI_SHIP or weaponDesc.typeName == "weapons.missiles.AGM_84D" then
                     doAmbientChatter("pilotLaunchBruiser", nil, event.initiator:getCallsign(), 1)
