@@ -549,8 +549,8 @@ do
         return typeName
     end
 
-    function Library.objectNames.getGeneric(obj, inaccurate)
-        inaccurate = inaccurate or false
+    function Library.objectNames.getGeneric(obj, imprecise)
+        imprecise = imprecise or false
         if not obj then return "nothing" end
 
         if Object.getCategory(obj) == Object.Category.SCENERY then
@@ -561,7 +561,7 @@ do
             local objDesc = obj:getDesc()
 
             if objDesc.category == Unit.Category.AIRPLANE then
-                if inaccurate then return "aircraft" end
+                if imprecise then return "aircraft" end
 
                 if obj:hasAttribute("AWACS") then
                     return "AWACS"
@@ -581,7 +581,7 @@ do
                     return "aircraft"
                 end
             elseif objDesc.category == Unit.Category.HELICOPTER then
-                if inaccurate then return "helicopter" end
+                if imprecise then return "helicopter" end
 
                 if obj:hasAttribute("Attack helicopters") then
                     return "attack helicopter"
@@ -591,7 +591,7 @@ do
                     return "helicopter"
                 end
             elseif objDesc.category == Unit.Category.GROUND_UNIT then
-                if inaccurate then
+                if imprecise then
                     if obj:hasAttribute("Infantry") then
                         return "infantry"
                     else
@@ -626,7 +626,7 @@ do
                 end
             elseif objDesc.category == Unit.Category.SHIP then
                 if obj:getTypeName() == "speedboat" then return "speedboat" end
-                if inaccurate then return "ship" end
+                if imprecise then return "ship" end
 
                 if obj:hasAttribute("Submarines") then
                     return "submarine"
@@ -649,12 +649,12 @@ do
         return "unknown"
     end
 
-    function Library.objectNames.getGenericGroup(grp, inaccurate)
+    function Library.objectNames.getGenericGroup(grp, imprecise)
         if not grp then return "nothing" end
 
         -- TODO: should not just take the first unit but pick the most relevant one (e.g. one SAM and 3 supply trucks should be reported as "SAM" not as "truck")
         for _,u in ipairs(grp:getUnits()) do
-            return Library.objectNames.getGeneric(u, inaccurate)
+            return Library.objectNames.getGeneric(u, imprecise)
         end
 
         return "unknown"
