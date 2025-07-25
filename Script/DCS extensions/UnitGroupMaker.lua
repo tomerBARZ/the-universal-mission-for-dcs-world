@@ -305,7 +305,7 @@ do
         )
 
         if options.takeOff and (groupCategory == Group.Category.AIRPLANE or groupCategory == Group.Category.HELICOPTER) then
-            groupTable.route.points[1].alt = 250
+            groupTable.route.points[1].alt = 750
             groupTable.route.points[1].alt_type = "RADIO"
         end
 
