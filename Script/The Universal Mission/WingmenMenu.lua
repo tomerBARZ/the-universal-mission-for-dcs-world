@@ -14,7 +14,12 @@ do
         TUM.wingmenTasking.commandReportContacts(nil, false, true)
     end
 
-    local function radioCommandEngage(attributes)
+    local function radioCommandEngage(args)
+        local player = world:getPlayer()
+        if not player then return end
+
+        TUM.radio.playForAll("playerWingmanEngage"..args.radioMessageSuffix, nil, player:getCallsign(), false)
+        TUM.wingmenTasking.commandEngage(args.category, args.attributes, true)
     end
 
     local function radioCommandReportStatus()
@@ -56,10 +61,11 @@ do
         local rootPath = missionCommands.addSubMenu("Flight")
 
         local engagePath = missionCommands.addSubMenu("Engage", rootPath)
-        missionCommands.addCommand("Bandits", engagePath, radioCommandEngage, {})
-        missionCommands.addCommand("Air defense", engagePath, radioCommandEngage, {})
-        missionCommands.addCommand("Ground targets", engagePath, radioCommandEngage, {})
-        missionCommands.addCommand("Ships", engagePath, radioCommandEngage, {})
+        missionCommands.addCommand("Bandits", engagePath, radioCommandEngage, { attributes = nil, category = Group.Category.HELICOPTER, radioMessageSuffix = "Bandits" })
+        missionCommands.addCommand("Helicopters", engagePath, radioCommandEngage, { attributes = nil, category = Group.Category.HELICOPTER, radioMessageSuffix = "Helicopters" })
+        missionCommands.addCommand("Air defense", engagePath, radioCommandEngage, { attributes = { "Air Defence" }, category = Group.Category.GROUND, radioMessageSuffix = "AirDefense" })
+        missionCommands.addCommand("Ground targets", engagePath, radioCommandEngage, { attributes = {"Tanks", "Trucks", "Artillery", "IFV", "APC"}, category = Group.Category.GROUND, radioMessageSuffix = "Ground" })
+        missionCommands.addCommand("Ships", engagePath, radioCommandEngage, { attributes = nil, category = Group.Category.SHIP, radioMessageSuffix = "Ships" })
 
         missionCommands.addCommand("Any contacts?", rootPath, radioCommandReportContacts, nil)
         missionCommands.addCommand("Status report", rootPath, radioCommandReportStatus, nil)

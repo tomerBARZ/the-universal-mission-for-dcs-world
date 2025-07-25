@@ -9,6 +9,7 @@ do
     TUM.wingmenTasking.DEFAULT_MARKER_TEXT = "wingman"
 
     local mapMarkerMissingWarningAlreadyDisplayed = false -- Was the "map marker missing" warning already displayed during the mission?
+    local targetPointMapMarker = nil
 
     local function getOrbitTaskTable(point2)
         return {
@@ -22,46 +23,77 @@ do
         }
     end
 
-    -- local function doWingmenCommandEngage(args)
-    --     local player = world:getPlayer()
-    --     if not player then return end
+    function TUM.wingmenTasking.commandEngage(groupCategory, targetAttributes, delayRadioAnswer)
+        delayRadioAnswer = delayRadioAnswer or false
 
-    --     if args.radioSuffix then
-    --         TUM.radio.playForAll("playerWingmanEngage"..args.radioSuffix, { getWingmanNumberAsWord(args.index) }, player:getCallsign(), false)
-    --     end
+        if TUM.settings.getValue(TUM.settings.id.MULTIPLAYER) then return end -- No wingmen in multiplayer
 
-    --     local wingmenCtrl = getWingmanController(args.index)
-    --     if not wingmenCtrl then return end
+        local wingmenCtrl = TUM.wingmen.getController()
+        if not wingmenCtrl then return end
 
-    --     local targets = getDetectedContacts(args.index, args.attributes, args.maxRange)
-    --     if not targets or #targets == 0 then
-    --         TUM.radio.playForAll("pilotWingmanEngageNoTarget", { getWingmanNumberAsWord(args.index) }, getWingmanCallsign(args.index), true)
-    --         return
-    --     end
+        local detectedContacts = TUM.wingmen.getContacts(groupCategory)
+        local validTargets = {}
+        for _,c in ipairs(detectedContacts) do
+            local g = DCSEx.world.getGroupByID(c.id)
+            if g then
+                local gUnits = g:getUnits()
+                for _,u in ipairs(gUnits) do
+                    local isValid = false
+                    if not targetAttributes or #targetAttributes == 0 then
+                        isValid = true
+                    else
+                        for _,a in ipairs(targetAttributes) do
+                            if u:hasAttribute(a) then
+                                isValid = true
+                                break
+                            end
+                        end
+                    end
 
-    --     local taskTable = {
-    --         id = "AttackGroup",
-    --         params = {
-    --             groupId = DCSEx.dcs.getObjectIDAsNumber(targetGroup),
-    --         }
-    --     }
-    --     wingmenCtrl:setTask(taskTable)
+                    if isValid then table.insert(validTargets, u) end
+                end
+            end
+        end
 
-    --     -- Rejoin back once bandit has been shot down
-    --     local rejoinBackTable = {
-    --         id = "Follow",
-    --         params = {
-    --             groupId = DCSEx.dcs.getObjectIDAsNumber(player:getGroup()),
-    --             pos = { x = -100, y = 0, z = -100 },
-    --             lastWptIndexFlag  = false,
-    --             lastWptIndex = -1
-    --         }
-    --     }
-    --     wingmenCtrl:pushTask(rejoinBackTable)
-    --     if args.radioSuffix then
-    --         TUM.radio.playForAll("pilotWingmanEngage"..args.radioSuffix, { getWingmanNumberAsWord(args.index) }, getWingmanCallsign(args.index), true)
-    --     end
-    -- end
+        if #validTargets == 0 then
+            TUM.radio.playForAll("pilotWingmanEngageNoTarget", { TUM.wingmen.getFirstWingmanNumber() }, TUM.wingmen.getFirstWingmanCallsign(), true)
+            return
+        end
+
+        local wingmenPosition = DCSEx.world.getGroupCenter(TUM.wingmen.getGroup())
+
+        validTargets = DCSEx.dcs.getNearestObjects(wingmenPosition, validTargets, 1)
+        local target = validTargets[1]
+        local taskTable = {
+            id = "AttackGroup",
+            params = {
+                groupId = DCSEx.dcs.getGroupIDAsNumber(target:getGroup()),
+            }
+        }
+        wingmenCtrl:setTask(taskTable)
+
+        local targetInfo = nil
+        local messageSuffix = nil
+        if target:inAir() then
+            messageSuffix = "Air"
+            targetInfo = Library.objectNames.getGeneric(target)..", "
+            targetInfo = targetInfo..DCSEx.dcs.getBRAA(target:getPoint(), wingmenPosition, true)
+        else
+            messageSuffix = "Surface"
+            targetInfo = Library.objectNames.getGeneric(target)..", "
+            targetInfo = targetInfo..DCSEx.dcs.getBRAA(target:getPoint(), wingmenPosition, false)
+        end
+
+        if targetPointMapMarker then
+            trigger.action.removeMark(targetPointMapMarker)
+            targetPointMapMarker = nil
+        end
+
+        targetPointMapMarker = DCSEx.world.getNextMarkerID()
+        trigger.action.markToAll(targetPointMapMarker, "Last wingmen attack point", target:getPoint(), true)
+
+        TUM.radio.playForAll("pilotWingmanEngage"..messageSuffix, { TUM.wingmen.getFirstWingmanNumber(), targetInfo }, TUM.wingmen.getFirstWingmanCallsign(), true)
+    end
 
     function TUM.wingmenTasking.commandGoToMapMarker(markerText, delayRadioAnswer)
         markerText = markerText or TUM.wingmenTasking.DEFAULT_MARKER_TEXT

@@ -85,11 +85,11 @@ Library.radioMessages = {
     pilotWarningSAMLaunch = { "Spike! SAM just launched, break!", "SAM up! Defensive now!", "Launch! SAM, coming fast, pump chaff, go cold!", "SAM in the air, break hard!", "SAM fired, visual smoke! Extend, extend!" },
 
     pilotWingmanEngageAir = {
-        "$1, copy, engaging now.",
-        "$1, tally one, pressing.",
-        "$1, roger, comitting.",
-        "$1, confirm, going after him.",
-        "$1, affirm, moving in on bandits."
+        "$1, copy, engaging $2 now.",
+        "$1, tally one, pressing on $2.",
+        "$1, roger, comitting on $2.",
+        "$1, confirm, going after $2.",
+        "$1, affirm, moving in on $2."
     },
     pilotWingmanEngageNoTarget = {
         "$1, negative tally, unable engage.",
@@ -99,11 +99,11 @@ Library.radioMessages = {
         "$1, that's a no, not seeing any targets."
     },
     pilotWingmanEngageSurface = {
-        "$1, engaging surface threat.",
-        "$1, rolling in on enemy position.",
-        "$1, affirm, moving in on target.",
-        "$1, on target, commencing attack.",
-        "$1, weapons hot, engaging.",
+        "$1, engaging surface threat, $2.",
+        "$1, rolling in on enemy position, $2.",
+        "$1, affirm, moving in on target, $2.",
+        "$1, on target, commencing attack on $2.",
+        "$1, weapons hot, engaging $2.",
     },
     pilotWingmanGoToMarker = {
         "$1, copy. Pushing to waypoint now.",
@@ -261,7 +261,7 @@ Library.radioMessages = {
         "$1, you're good, mark is already on the target.",
         "$1, target already marked with smoke."
     },
- 
+
     playerAwacsBogeyDope = { "$1, request bogey dope.", "$1, bogey dope." },
     playerAwacsPicture = { "$1, request picture.", "$1, picture when able.", "$1, need a picture.", "$1, request full picture.", "$1, picture update." },
     playerCommandMissionStatus = {
@@ -279,12 +279,36 @@ Library.radioMessages = {
         "Command, pass coordinates for objective $1.",
         "Command, confirm grid on objective $1."
     },
+    playerWingmanEngageAirDefense = {
+        "Flight, prioritize air defense, engage now.",
+        "Flight, take down air defense systems.",
+        "Flight, suppress air defense threats.",
+        "Flight, air defense is yours, take it out.",
+        "Flight, eliminate air defense positions."
+    },
     playerWingmanEngageBandits = {
         "Flight, engage bandits.",
         "Flight, you're cleared hot bandits.",
         "Flight, commit on bandits when ready.",
         "Flight, engage bandits, your discretion.",
         "Flight, you're free to engage bandits."
+    },
+    playerWingmanEngageGround = {
+        "Flight, engage ground targets.",
+        "Flight, prosecute ground targets ahead.",
+        "Flight, engage all ground contacts.",
+        "Flight, strike vehicle positions.",
+        "Flight, take the lead on ground targets.",
+    },
+    playerWingmanEngageHelicopters = {
+        "Flight, you're cleared to prosecute helos.",
+        "Flight, engage helos at your discretion.",
+        "Flight, engage rotary contacts, break when done.",
+    },
+    playerWingmanEngageShips = {
+        "Flight, engage enemy vessels now.",
+        "Flight, strike ships in your sector.",
+        "Flight, take the lead on sea targets.",
     },
     playerWingmanGoToMarker = {
         "Flight, proceed to waypoint.",
