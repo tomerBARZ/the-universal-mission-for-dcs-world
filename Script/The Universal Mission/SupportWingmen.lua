@@ -26,10 +26,27 @@ do
         return wingmenGroup
     end
 
-    local function getWingmenCallsign()
-        local wingmenGroup = getWingmenGroup()
-        if not wingmenGroup then return "Wingmen" end
-        return wingmenGroup:getUnit(1):getCallsign()
+    local function getWingmanNumberAsWord(index)
+        if not index then return "Flight" end
+
+        return DCSEx.string.toStringNumber(index + 1, true)
+    end
+
+    local function getWingmanCallsign(wingmanIndex)
+        if wingmanIndex then
+            if wingmanIndex < 1 or wingmanIndex > #wingmenUnitID then return "Wingman" end
+
+            local wingmanUnit = DCSEx.world.getUnitByID(wingmenUnitID[wingmanIndex])
+            if not wingmanUnit then return "Wingman" end
+            return wingmanUnit:getCallsign()
+        end
+
+        for i=1,#wingmenUnitID do
+            local wingmanUnit = DCSEx.world.getUnitByID(wingmenUnitID[i])
+            if wingmanUnit then return wingmanUnit:getCallsign() end
+        end
+
+        return "Flight"
     end
 
     local function isValidTarget(detectedTarget, attributes)
@@ -89,11 +106,11 @@ do
         if not player then return end
 
         if orderID == TUM.supportWingmen.orderID.ORBIT then
-            TUM.radio.playForAll("playerFlightOrbit", nil, player:getCallsign(), false)
+            TUM.radio.playForAll("playerWingmanOrbit", nil, player:getCallsign(), false)
         elseif orderID == TUM.supportWingmen.orderID.REJOIN then
-            TUM.radio.playForAll("playerFlightRejoin", nil, player:getCallsign(), false)
+            TUM.radio.playForAll("playerWingmanRejoin", nil, player:getCallsign(), false)
         elseif orderID == TUM.supportWingmen.orderID.ENGAGE_BANDITS then
-            TUM.radio.playForAll("playerFlightEngageBandits", nil, player:getCallsign(), false)
+            TUM.radio.playForAll("playerWingmanEngageBandits", nil, player:getCallsign(), false)
         end
 
         if not wingmenGroupID then return end
@@ -169,7 +186,7 @@ do
         local player = world:getPlayer()
         if not player then return end
 
-        TUM.radio.playForAll("playerFlightOrbit", nil, player:getCallsign(), false)
+        TUM.radio.playForAll("playerWingmanOrbit", { getWingmanNumberAsWord(args.index) }, player:getCallsign(), false)
 
         local wingmenCtrl = getWingmanController(args.index)
         if not wingmenCtrl then return end
@@ -183,14 +200,14 @@ do
             }
         }
         wingmenCtrl:setTask(taskTable)
-        TUM.radio.playForAll("pilotWingmanOrbit", nil, getWingmenCallsign(), true)
+        TUM.radio.playForAll("pilotWingmanOrbit", { getWingmanNumberAsWord(args.index) }, getWingmanCallsign(args.index), true)
     end
 
     local function doWingmenCommandRejoin(args)
         local player = world:getPlayer()
         if not player then return end
 
-        TUM.radio.playForAll("playerFlightRejoin", nil, player:getCallsign(), false)
+        TUM.radio.playForAll("playerWingmanRejoin", { getWingmanNumberAsWord(args.index) }, player:getCallsign(), false)
 
         local wingmenCtrl = getWingmanController(args.index)
         if not wingmenCtrl then return end
@@ -205,11 +222,48 @@ do
             }
         }
         wingmenCtrl:setTask(taskTable)
-        TUM.radio.playForAll("pilotWingmanRejoin", nil, getWingmenCallsign(), true)
+        TUM.radio.playForAll("pilotWingmanRejoin", { getWingmanNumberAsWord(args.index) }, getWingmanCallsign(args.index), true)
     end
 
     local function doWingmenCommandEngage(args)
-        -- , { index = wingmanIndex, attributes = { "Battle airplanes" }, range = 60 }
+        local player = world:getPlayer()
+        if not player then return end
+
+        if args.radioSuffix then
+            TUM.radio.playForAll("playerWingmanEngage"..args.radioSuffix, { getWingmanNumberAsWord(args.index) }, player:getCallsign(), false)
+        end
+
+        local wingmenCtrl = getWingmanController(args.index)
+        if not wingmenCtrl then return end
+
+        local targets = getDetectedTargets(args.index, args.attributes, args.maxRange)
+        if not targets or #targets == 0 then
+            TUM.radio.playForAll("pilotWingmanEngageNoTarget", nil, getWingmanCallsign(args.index), true)
+            return
+        end
+
+        local taskTable = {
+            id = "AttackGroup",
+            params = {
+                groupId = DCSEx.dcs.getObjectIDAsNumber(targetGroup),
+            }
+        }
+        wingmenCtrl:setTask(taskTable)
+
+        -- Rejoin back once bandit has been shot down
+        local rejoinBackTable = {
+            id = "Follow",
+            params = {
+                groupId = DCSEx.dcs.getObjectIDAsNumber(player:getGroup()),
+                pos = { x = -100, y = 0, z = -100 },
+                lastWptIndexFlag  = false,
+                lastWptIndex = -1
+            }
+        }
+        wingmenCtrl:pushTask(rejoinBackTable)
+        if args.radioSuffix then
+            TUM.radio.playForAll("pilotWingmanEngage"..args.radioSuffix, { getWingmanNumberAsWord(args.index) }, getWingmanCallsign(args.index), true)
+        end
     end
 
     local function doWingmenCommandReportTargets(attributes)
@@ -232,7 +286,7 @@ do
         if not player then return end
 
         if not args.noPlayerMessage then
-            TUM.radio.playForAll("playerFlightReportStatus", nil, player:getCallsign(), false)
+            TUM.radio.playForAll("playerWingmanReportStatus", { getWingmanNumberAsWord(args.index) }, player:getCallsign(), false)
         end
         local wingmenGroup = getWingmenGroup()
         if not wingmenGroup then return end
@@ -242,11 +296,11 @@ do
         for i,u in ipairs(wingmenGroup:getUnits()) do
             if not args.index or args.index == i then
                 atLeastOneUnit = true
-                statusMsg = statusMsg..u:getCallsign():upper()
+                if not args.index then statusMsg = statusMsg..u:getCallsign():upper().."\n" end
                 if u:getLife() >= u:getLife0() then
-                    statusMsg = statusMsg.."\n- No damage sustained"
+                    statusMsg = statusMsg.."- No damage sustained, fuel green"
                 else
-                    statusMsg = statusMsg.."\n- Aircraft suffered damage"
+                    statusMsg = statusMsg.."- Aircraft suffered damage, fuel green"
                 end
                 statusMsg = statusMsg.."\n- BRAA from you: "..DCSEx.dcs.getBRAA(u:getPoint(), DCSEx.math.vec3ToVec2(player:getPoint()), true)
                 statusMsg = statusMsg.."\n- Armament: "
@@ -273,7 +327,7 @@ do
             statusMsg = statusMsg:sub(1, #statusMsg - 2)
         end
 
-        TUM.radio.playForAll("pilotWingmanReportStatus", { statusMsg }, getWingmenCallsign(), not args.noPlayerMessage)
+        TUM.radio.playForAll("pilotWingmanReportStatus", { getWingmanNumberAsWord(args.index), statusMsg }, getWingmanCallsign(args.index), not args.noPlayerMessage)
     end
 
     local function createWingmen()
@@ -325,7 +379,7 @@ do
         wingmenUnitID = DCSEx.table.deepCopy(groupInfo.unitsID)
 
         TUM.log("Spawned AI wingmen")
-        TUM.radio.playForAll("pilotWingmanRejoin", nil, getWingmenCallsign(), true)
+        TUM.radio.playForAll("pilotWingmanRejoin", nil, getWingmanCallsign(), true)
     end
 
     function TUM.supportWingmen.removeAll()
@@ -341,17 +395,12 @@ do
     end
 
     local function createWingmanSubMenu(rootPath, wingmanIndex)
-        local wingmanName = "Flight"
-        if wingmanIndex then
-            wingmanName = DCSEx.string.toStringNumber(wingmanIndex + 1, true)
-        end
-
-        local wingmanPath = missionCommands.addSubMenu(wingmanName, rootPath)
+        local wingmanPath = missionCommands.addSubMenu(getWingmanNumberAsWord(wingmanIndex), rootPath)
 
         -- missionCommands.addCommand("Engage bandits", wingmanPath, doWingmenOrder, TUM.supportWingmen.orderID.ENGAGE_BANDITS)
         -- missionCommands.addCommand("Engage air defense", wingmanPath, doWingmenOrder, TUM.supportWingmen.orderID.ENGAGE_BANDITS)
         -- missionCommands.addCommand("Engage ground targets", wingmanPath, doWingmenOrder, TUM.supportWingmen.orderID.ENGAGE_BANDITS)
-        missionCommands.addCommand("Engage bandits", wingmanPath, doWingmenCommandEngage, { index = wingmanIndex, attributes = { "Battle airplanes" }, range = 60 })
+        missionCommands.addCommand("Engage bandits", wingmanPath, doWingmenCommandEngage, { index = wingmanIndex, attributes = { "Battle airplanes" }, maxRange = 60, radioSuffix = "Bandits" })
         missionCommands.addCommand("Report targets", wingmanPath, doWingmenCommandReportTargets, { index = wingmanIndex })
         missionCommands.addCommand("Report status", wingmanPath, doWingmenCommandReportStatus, { index = wingmanIndex, noPlayerMessage = false } )
         missionCommands.addCommand("Orbit", wingmanPath, doWingmenCommandOrbit, { index = wingmanIndex })

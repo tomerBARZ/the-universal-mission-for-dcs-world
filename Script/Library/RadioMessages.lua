@@ -71,37 +71,37 @@ Library.radioMessages = {
     pilotWarningSAMLaunch = { "Spike! SAM just launched, break!", "SAM up! Defensive now!", "Launch! SAM, coming fast, pump chaff, go cold!", "SAM in the air, break hard!", "SAM fired, visual smoke! Extend, extend!" },
 
     pilotWingmanEngageBandits = {
-        "Copy, engaging now.",
-        "Tally one, pressing.",
-        "Roger, comitting.",
-        "Confirm, going after him.",
-        "Affirm, moving in on bandits."
+        "$1. Copy, engaging now.",
+        "$1. Tally one, pressing.",
+        "$1. Roger, comitting.",
+        "$1. Confirm, going after him.",
+        "$1. Affirm, moving in on bandits."
     },
     pilotWingmanEngageNoTarget = {
-        "Negative tally, unable engage.",
-        "Cannot comply, blind on target.",
-        "No joy on targets, cannot proceed.",
-        "Negative contact, unable to commit.",
-        "That's a no, not seeing any targets."
+        "$1. Negative tally, unable engage.",
+        "$1. Cannot comply, blind on target.",
+        "$1. No joy on targets, cannot proceed.",
+        "$1. Negative contact, unable to commit.",
+        "$1. That's a no, not seeing any targets."
     },
     pilotWingmanOrbit = {
-        "Wilco, holding here.",
-        "Copy, orbiting now.",
-        "Roger, in the hold.",
-        "Affirm, setting up the orbit.",
-        "Orbiting at your pos."
+        "$1. Wilco, holding here.",
+        "$1. Copy, orbiting now.",
+        "$1. Roger, in the hold.",
+        "$1. Affirm, setting up the orbit.",
+        "$1. Orbiting at your pos."
     },
     pilotWingmanRejoin = {
-        "Off the perch, rejoining your side.",
-        "Tally visual, coming to you.",
-        "Clear, rejoining to route.",
-        "Pushing up to formation.",
-        "Visual, sliding back into position."
+        "$1. Off the perch, rejoining your side.",
+        "$1. Tally visual, coming to you.",
+        "$1. Clear, rejoining to route.",
+        "$1. Pushing up to formation.",
+        "$1. Visual, sliding back into position."
     },
     pilotWingmanReportStatus = {
-        "Flight, checking in.\n\n$1",
-        "Flight, reporting.\n\n$1",
-        "Flight, status report.\n\n$1",
+        "$1. Checking in.\n\n$2",
+        "$1. Reporting.\n\n$2",
+        "$1. Status report.\n\n$2",
     },
 
     atcSafeLanding = { "Be advised: $1 is wheels down at $2 and clear of runway.", "All aircraft, $1 has landed at $2 and vacated active. Runway is open for next inbound.", "Traffic, $1 is on deck at $2 and heading to parking. Runway clear.", "All flights, $1 just rolled out at $2 and cleared the active.", "Heads up, $1 landed at $2 and moving to the ramp. Runway available for next approach." },
@@ -220,34 +220,34 @@ Library.radioMessages = {
         "Command, pass coordinates for objective $1.",
         "Command, confirm grid on objective $1."
     },
-    playerFlightEngageBandits = {
-        "Flight, engage bandits.",
-        "Flight, you're cleared hot bandits.",
-        "Flight, commit on bandits when ready.",
-        "Flight, engage bandits, your discretion.",
-        "Flight, you're free to engage bandits."
+    playerWingmanEngageBandits = {
+        "$1, engage bandits.",
+        "$1, you're cleared hot bandits.",
+        "$1, commit on bandits when ready.",
+        "$1, engage bandits, your discretion.",
+        "$1, you're free to engage bandits."
     },
-    playerFlightOrbit = {
-        "Flight, orbit my position.",
-        "Flight, set up an orbit on me.",
-        "Flight, hold on me.",
-        "Flight, anchor on my current pos.",
-        "Flight, orbit overhead"
+    playerWingmanOrbit = {
+        "$1, orbit my position.",
+        "$1, set up an orbit on me.",
+        "$1, hold on me.",
+        "$1, anchor on my current pos.",
+        "$1, orbit overhead"
     },
-    playerFlightRejoin =
+    playerWingmanRejoin =
     {
-        "Flight, rejoin my side",
-        "Flight, push it up, rejoin formation.",
-        "Flight, come back to route.",
-        "Flight, tighten it up.",
-        "Flight, rejoin tactical."
+        "$1, rejoin my side",
+        "$1, push it up, rejoin formation.",
+        "$1, come back to route.",
+        "$1, tighten it up.",
+        "$1, rejoin tactical."
     },
-    playerFlightReportStatus = {
-        "Flight, confirm you're set.",
-        "Flight, how are you looking?",
-        "Flight, report in.",
-        "Flight, status check.",
-        "Flight, talk me through your state."
+    playerWingmanReportStatus = {
+        "$1, confirm you're set.",
+        "$1, how are you looking?",
+        "$1, report in.",
+        "$1, status check.",
+        "$1, talk me through your state."
     },
     playerJTACSmoke = {
         "$1, request smoke on objective $2, over.",
