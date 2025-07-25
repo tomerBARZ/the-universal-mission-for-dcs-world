@@ -58,7 +58,7 @@ do
         if TUM.settings.getValue(TUM.settings.id.MULTIPLAYER) then return end -- No wingmen in multiplayer
         -- TODO: if WINGMEN_COUNT == 0 then return end
 
-        local rootPath = missionCommands.addSubMenu("Flight")
+        local rootPath = missionCommands.addSubMenu("✈ Flight")
 
         local engagePath = missionCommands.addSubMenu("Engage", rootPath)
         missionCommands.addCommand("Bandits", engagePath, radioCommandEngage, { attributes = nil, category = Group.Category.HELICOPTER, radioMessageSuffix = "Bandits" })

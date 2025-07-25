@@ -92,7 +92,7 @@ do
     function TUM.supportAWACS.createMenu()
         if not awacsGroupID then return end -- No AWACS
 
-        local rootPath = missionCommands.addSubMenu("✈ Awacs")
+        local rootPath = missionCommands.addSubMenu("⌾ Awacs")
         missionCommands.addCommand("Bogey dope", rootPath, doCommandBogeyDope, nil)
         missionCommands.addCommand("Picture", rootPath, doCommandPicture, nil)
     end
