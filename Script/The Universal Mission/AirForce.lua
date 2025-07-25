@@ -116,7 +116,7 @@ do
                 local abInfo = launchAirbase:getName()
                 abInfo = abInfo.." ("..DCSEx.dcs.getBRAA(launchAirbase:getPoint(), p:getPoint(), false, false, true).." from you)"
 
-                TUM.radio.playForUnit(DCSEx.dcs.getObjectIDAsNumber(p), "commandNewEnemyAircraft", { tostring(groupSize), abInfo }, "Command")
+                TUM.radio.playForUnit(DCSEx.dcs.getObjectIDAsNumber(p), "commandNewEnemyAircraft", { DCSEx.string.toStringNumber(groupSize), abInfo }, "Command")
             end
         end
 
