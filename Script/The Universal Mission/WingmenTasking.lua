@@ -127,18 +127,14 @@ do
         delayRadioAnswer = delayRadioAnswer or false
         noReportIfNoContacts = noReportIfNoContacts or false
 
-        local detectedTargets = TUM.wingmen.getContacts(groupCategory)
+        local reportString = TUM.wingmen.getContactsAsReportString(groupCategory, false, true)
 
-        if not detectedTargets or #detectedTargets == 0 then
+        if not reportString then
             if noReportIfNoContacts then return false end
             TUM.radio.playForAll("pilotWingmanReportContactsNoJoy", { TUM.wingmen.getFirstWingmanNumber() }, TUM.wingmen.getFirstWingmanCallsign(), true)
             return true
         else
-            local reportText = ""
-            for _,t in ipairs(detectedTargets) do
-                reportText = reportText.."\n - "..tostring(t.size).."x "..t.type..", "..DCSEx.dcs.getBRAA(t.point2, DCSEx.math.vec3ToVec2(world:getPlayer():getPoint()), false, false, false).." from you"
-            end
-            TUM.radio.playForAll("pilotWingmanReportContacts", { TUM.wingmen.getFirstWingmanNumber(), reportText }, TUM.wingmen.getFirstWingmanCallsign(), delayRadioAnswer)
+            TUM.radio.playForAll("pilotWingmanReportContacts", { TUM.wingmen.getFirstWingmanNumber(), reportString }, TUM.wingmen.getFirstWingmanCallsign(), delayRadioAnswer)
             return true
         end
     end

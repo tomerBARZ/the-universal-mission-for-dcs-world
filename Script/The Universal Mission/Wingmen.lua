@@ -6,13 +6,11 @@
 TUM.wingmen = {}
 
 do
-    local CONTACT_REPORT_INTERVAL = 4 -- onClockTick is called twice by minute, so multiply this by 30 seconds (CONTACT_REPORT_INTERVAL = 4 means "every 2 minutes")
+    local CONTACT_REPORT_INTERVAL = 8 -- onClockTick is called four times by minute, so multiply this by 15 seconds (CONTACT_REPORT_INTERVAL = 8 means "every 2 minutes")
     local DEFAULT_PAYLOAD = "attack" -- Default payload
-    local WINGMEN_COUNT = 2 -- TODO: load from setting
 
     local knownContacts = {}
-    local newContacts = {}
-    local nextContactReport = CONTACT_REPORT_INTERVAL
+    local nextContactReportTick = CONTACT_REPORT_INTERVAL
     local wingmenGroupID = nil
     local wingmenUnitID = {}
 
@@ -68,14 +66,13 @@ do
         end
 
         -- Select proper payload for mission
-
         local groupInfo = DCSEx.unitGroupMaker.create(
             TUM.settings.getPlayerCoalition(),
             playerCategory,
             DCSEx.math.randomPointInCircle(DCSEx.math.vec3ToVec2(player:getPoint()), 500, 250),
             { playerTypeName, playerTypeName },
             {
-                altitude = player:getPoint().y + 762.0, -- spawn at player altitude + 2500ft
+                altitude = math.min(player:getPoint().y + 1524, 3048), -- spawn at player altitude + 5,000ft, up to a max of 10,000ft (to avoid crashes into nearby hills)
                 callsign = wingmanCallsign,
                 callsignOffset = 1,
                 payload = getWingmanPayloadForMission(),
@@ -93,9 +90,9 @@ do
         wingmenGroupID = groupInfo.groupID
         wingmenUnitID = DCSEx.table.deepCopy(groupInfo.unitsID)
 
+        -- Reinitialize list of known contacts and contact report interval
         knownContacts = {}
-        newContacts = {}
-        nextContactReport = CONTACT_REPORT_INTERVAL
+        nextContactReportTick = CONTACT_REPORT_INTERVAL
 
         TUM.log("Spawned AI wingmen")
 
@@ -103,20 +100,15 @@ do
         TUM.radio.playForAll("pilotWingmanRejoin", { TUM.wingmen.getFirstWingmanNumber() }, TUM.wingmen.getFirstWingmanCallsign(), true)
     end
 
-    function TUM.wingmen.getContacts(groupCategory)
+    function TUM.wingmen.getContacts(groupCategory, newContactsOnly)
+        newContactsOnly = newContactsOnly or false
+
         if TUM.settings.getValue(TUM.settings.id.MULTIPLAYER) then return {} end -- No wingmen in multiplayer
         if TUM.mission.getStatus() == TUM.mission.status.NONE then return {} end
-        if #wingmenUnitID == 0 then return {} end
+        local wingmenGroup = TUM.wingmen.getGroup()
+        if not wingmenGroup then return {} end
 
-        -- Build a list of all wingmen coordinates, from which the search will take place
-        local searchPoints = {}
-        for i=1,#wingmenUnitID do
-            local u = DCSEx.world.getUnitByID(wingmenUnitID[i])
-            if u then
-                table.insert(searchPoints, DCSEx.math.vec3ToVec2(u:getPoint()))
-            end
-        end
-        if #searchPoints == 0 then return {} end
+        local searchPoint = DCSEx.world.getGroupCenter(wingmenGroup)
 
         -- Take into account better sensors (radars, TGPs...) in later periods
         local detectionRangeMultiplier = 1.0
@@ -126,12 +118,11 @@ do
             detectionRangeMultiplier = 1.25
         end
 
-        local knownGroups = {}
         local detectedTargets = {}
         local allGroups = coalition.getGroups(TUM.settings.getEnemyCoalition(), groupCategory)
         for _,g in ipairs(allGroups) do
             local gID = g:getID()
-            if g:isExist() and g:getSize() > 0 and not DCSEx.table.contains(knownGroups, gID) then
+            if g:isExist() and g:getSize() > 0 then
                 local gPos = DCSEx.world.getGroupCenter(g)
                 local gCateg = Group.getCategory(g)
 
@@ -160,19 +151,16 @@ do
 
                 -- Check if at least one wingman is in detection range
                 local inRange = false
-                for _,p in ipairs(searchPoints) do
-                    if DCSEx.math.getDistance2D(gPos, p) <= detectionRange then
-                        inRange = true
-                        break
-                    end
+                if DCSEx.math.getDistance2D(gPos, searchPoint) <= detectionRange then
+                    inRange = true
+                    break
                 end
 
                 if inRange then
-                    table.insert(knownGroups, gID)
-
+                    local newGroup = false
                     if not DCSEx.table.contains(knownContacts) then
                         table.insert(knownContacts, gID)
-                        table.insert(newContacts, gID)
+                        newGroup = true
                     end
 
                     local groupInfo = {
@@ -200,12 +188,35 @@ do
                         groupInfo.type = "trains"
                     end
 
-                    table.insert(detectedTargets, groupInfo)
+                    if not newContactsOnly or newGroup then
+                        table.insert(detectedTargets, groupInfo)
+                    end
                 end
             end
         end
 
         return detectedTargets
+    end
+
+    function TUM.wingmen.getContactsAsReportString(groupCategory, newContactsOnly, giveRelativePositionToPlayer)
+        giveRelativePositionToPlayer = giveRelativePositionToPlayer or false
+        local contacts = TUM.wingmen.getContacts(groupCategory, newContactsOnly)
+        if not contacts or #contacts == 0 then return nil end
+
+        local player = world:getPlayer()
+        local refPoint = nil
+        if player then
+            refPoint = DCSEx.math.vec3ToVec2(player:getPoint())
+        end
+
+        local reportText = ""
+        for _,t in ipairs(contacts) do
+            reportText = reportText.."\n - "..tostring(t.size).."x "..t.type
+            if refPoint and giveRelativePositionToPlayer then
+                reportText = reportText..", "..DCSEx.dcs.getBRAA(t.point2, refPoint, false, false, false).." from you"
+            end
+        end
+        return reportText
     end
 
     function TUM.wingmen.getController()
@@ -237,7 +248,8 @@ do
         if not wingmenGroupID then return nil end
         local wingmenGroup = DCSEx.world.getGroupByID(wingmenGroupID)
         if not wingmenGroup then return nil end
-        if #wingmenGroup:getUnits() == 0 then return nil end
+        -- if #wingmenGroup:getUnits() <= 0 then return nil end
+        if wingmenGroup:getSize() <= 0 then return nil end
 
         return wingmenGroup
     end
@@ -252,6 +264,11 @@ do
         wingmenUnitID = {}
     end
 
+    function TUM.wingmen.updateContacts()
+        if TUM.settings.getValue(TUM.settings.id.MULTIPLAYER) then return nil end -- No wingmen in multiplayer
+        if not wingmenGroupID then return end
+    end
+
     ----------------------------------------------------------
     -- Called on every mission update tick (every 10-20 seconds)
     -- @return True if something was done this tick, false otherwise
@@ -260,9 +277,16 @@ do
         if TUM.settings.getValue(TUM.settings.id.MULTIPLAYER) then return false end -- No wingmen in multiplayer
         if TUM.mission.getStatus() == TUM.mission.status.NONE then return false end
 
-        nextContactReport = nextContactReport - 1
-        if nextContactReport > 0 then return false end
-        nextContactReport = CONTACT_REPORT_INTERVAL
+        -- If new contacts are detected, report them immediately, no need to wait for next report tick
+        local newContactsReportString = TUM.wingmen.getContactsAsReportString(nil, true, true)
+        if newContactsReportString then
+            TUM.radio.playForAll("pilotWingmanReportContactsNew", { TUM.wingmen.getFirstWingmanNumber(), newContactsReportString }, TUM.wingmen.getFirstWingmanCallsign(), false)
+            return true
+        end
+
+        nextContactReportTick = nextContactReportTick - 1
+        if nextContactReportTick > 0 then return false end
+        nextContactReportTick = CONTACT_REPORT_INTERVAL
 
         return TUM.wingmenTasking.commandReportContacts(nil, true, false)
     end
