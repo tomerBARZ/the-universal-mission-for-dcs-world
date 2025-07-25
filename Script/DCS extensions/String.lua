@@ -46,6 +46,20 @@ function DCSEx.string.join(table, separator)
 end
 
 -- TODO: description, file header
+function DCSEx.string.toStringNumber(number, firstToUpper)
+    firstToUpper = firstToUpper or false
+    local NUMBERS = { "zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "eleven", "twelve", "thirteen", "fourteen", "fifteen", "sixteen", "seventeen", "eighteen", "nineteen", "twenty" }
+
+    if number + 1 <= #NUMBERS then
+        local str = NUMBERS[number + 1]
+        if firstToUpper then str = DCSEx.string.firstToUpper(str) end
+        return str
+    end
+
+    return DCSEx.string.toStringThousandsSeparator(number)
+end
+
+-- TODO: description, file header
 -- Code from https://stackoverflow.com/questions/10989788/format-integer-in-lua
 function DCSEx.string.toStringThousandsSeparator(number)
   local i, j, minus, int, fraction = tostring(number):find('([-]?)(%d+)([.]?%d*)')
