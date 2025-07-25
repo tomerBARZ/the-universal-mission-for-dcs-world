@@ -360,7 +360,7 @@ do
         return sceneries
     end
 
-    -- TODO: description
+    -- TODO: description, update file header
     function DCSEx.world.getTerrainHeightDiff(coord, searchRadius)
 		local samples = {}
         searchRadius = searchRadius or 5
@@ -385,6 +385,12 @@ do
         return tMax - tMin
 	end
 
+    -- TODO: description, update file header
+    function DCSEx.world.getGroupCenter(group)
+        return DCSEx.world.getUnitsCenter(group:getUnits())
+    end
+
+    -- TODO: description, update file header
     function DCSEx.world.getUnitsCenter(units)
         if not units or #units == 0 then return { x = 0, y = 0 } end
 
