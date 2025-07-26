@@ -149,7 +149,7 @@ do
             if TUM.airForce.onClockTick(TUM.settings.getEnemyCoalition()) then return nextTickTime end
         end
 
-        if TUM.wingmen.onClockTick() then return nextTickTime end
+        if TUM.wingmenContacts.onClockTick() then return nextTickTime end -- Called every tick if no other action has taken place
 
         return nextTickTime
     end

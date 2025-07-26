@@ -55,7 +55,7 @@ do
 
         allowWeaponUse(wingmenCtrl, true)
 
-        local detectedContacts = TUM.wingmen.getContacts(groupCategory)
+        local detectedContacts = TUM.wingmenContacts.getContacts(groupCategory)
         local validTargets = {}
         for _,c in ipairs(detectedContacts) do
             local g = DCSEx.world.getGroupByID(c.id)
@@ -188,7 +188,7 @@ do
         delayRadioAnswer = delayRadioAnswer or false
         if TUM.settings.getValue(TUM.settings.id.MULTIPLAYER) then return end -- No wingmen in multiplayer
 
-        local reportString = TUM.wingmen.getContactsAsReportString(groupCategory, true)
+        local reportString = TUM.wingmenContacts.getContactsAsReportString(groupCategory, true)
 
         if not reportString then
             if noReportIfNoContacts then return false end
