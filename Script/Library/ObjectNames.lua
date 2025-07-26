@@ -1,6 +1,50 @@
 Library.objectNames = {}
 
 do
+    local GROUP_PRIORITY = { -- lower in the list means higher priority
+        "carrier",
+        "submarine",
+        "warship",
+        "missile boat",
+        "armed ship",
+        "cargo ship",
+        "speedboat",
+        "ship",
+
+        "interceptor",
+        "fighter",
+        "bomber",
+        "AWACS",
+        "tanker",
+        "transport",
+        "UAV",
+        "aircraft",
+
+        "attack helicopter",
+        "transport helicopter",
+        "helicopter",
+
+        "SAM tracking radar",
+        "SAM launcher",
+        "SAM search radar",
+        "short-range SAM",
+        "AAA",
+        "air defense",
+
+        "artillery",
+        "armor",
+        "truck",
+        "vehicle",
+
+        "MANPADS",
+        "infantry",
+
+        "structure",
+        "building",
+
+        "unknown"
+    }
+
     local namesTable = {
         ["1L13 EWR"] = "EWR 1L13",
         ["2B11 mortar"] = "Mortar 2B11 120mm",
@@ -635,7 +679,11 @@ do
                 elseif obj:hasAttribute("Heavy armed ships") then
                     return "warship"
                 elseif obj:hasAttribute("Light armed ships") then
-                    return "armed ship"
+                    if (TUM.settings.getValue(TUM.settings.id.TIME_PERIOD, DCSEx.enums.timePeriod.WORLD_WAR_2)) then
+                        return "armed ship"
+                    else
+                        return "missile boat"
+                    end
                 elseif obj:hasAttribute("Unarmed ships") then
                     return "cargo ship"
                 else
@@ -652,11 +700,27 @@ do
     function Library.objectNames.getGenericGroup(grp, imprecise)
         if not grp then return "nothing" end
 
-        -- TODO: should not just take the first unit but pick the most relevant one (e.g. one SAM and 3 supply trucks should be reported as "SAM" not as "truck")
+        -- Establish a list of all unit names
+        local unitNames = {}
         for _,u in ipairs(grp:getUnits()) do
-            return Library.objectNames.getGeneric(u, imprecise)
+            table.insert(unitNames, Library.objectNames.getGeneric(u, imprecise))
+        end
+        if #unitNames == 0 then return "unknown" end
+
+        -- Pick the unit name highest in priority
+        local groupName = nil
+        for _,n in ipairs(GROUP_PRIORITY) do
+            if DCSEx.table.contains(unitNames) then
+                groupName = n
+                break
+            end
+        end
+        if not groupName then return "unknown" end
+
+        if groupName == "SAM search radar" or groupName == "SAM launcher" or groupName == "SAM tracking radar" then
+            return "SAM vehicle"
         end
 
-        return "unknown"
+        return groupName
     end
 end
