@@ -29,8 +29,8 @@ do
         -- elseif taskingID == DCSEx.enums.taskFamily.OCA then
         elseif taskingID == DCSEx.enums.taskFamily.SEAD then
             return "sead"
-        elseif taskingID == DCSEx.enums.taskFamily.STRIKE then
-            return "strike"
+        -- elseif taskingID == DCSEx.enums.taskFamily.STRIKE then
+        --     return "strike"
         end
 
         return DEFAULT_PAYLOAD
