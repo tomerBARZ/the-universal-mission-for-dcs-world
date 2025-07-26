@@ -23,9 +23,22 @@ do
         }
     end
 
+    local function getRejoinTaskTable(formationDistance)
+        formationDistance = formationDistance or 800
+
+        return {
+            id = "Follow",
+            params = {
+                groupId = DCSEx.dcs.getObjectIDAsNumber(world.getPlayer():getGroup()),
+                lastWptIndexFlag  = false,
+                lastWptIndex = -1,
+                pos = { x = -formationDistance, y = 0, z = -formationDistance }
+            }
+        }
+    end
+
     function TUM.wingmenTasking.commandEngage(groupCategory, targetAttributes, delayRadioAnswer)
         delayRadioAnswer = delayRadioAnswer or false
-
         if TUM.settings.getValue(TUM.settings.id.MULTIPLAYER) then return end -- No wingmen in multiplayer
 
         local wingmenCtrl = TUM.wingmen.getController()
@@ -71,6 +84,7 @@ do
             }
         }
         wingmenCtrl:setTask(taskTable)
+        wingmenCtrl:setTask(getRejoinTaskTable()) -- Makes sure wingmen rejoin with the player after attack
 
         local targetInfo = nil
         local messageSuffix = nil
@@ -91,14 +105,12 @@ do
 
         targetPointMapMarker = DCSEx.world.getNextMarkerID()
         trigger.action.markToAll(targetPointMapMarker, "Last wingmen attack point", target:getPoint(), true)
-
         TUM.radio.playForAll("pilotWingmanEngage"..messageSuffix, { TUM.wingmen.getFirstWingmanNumber(), targetInfo }, TUM.wingmen.getFirstWingmanCallsign(), true)
     end
 
     function TUM.wingmenTasking.commandGoToMapMarker(markerText, delayRadioAnswer)
         markerText = markerText or TUM.wingmenTasking.DEFAULT_MARKER_TEXT
         delayRadioAnswer = delayRadioAnswer or false
-
         if TUM.settings.getValue(TUM.settings.id.MULTIPLAYER) then return end -- No wingmen in multiplayer
 
         local mapMarker = DCSEx.world.getMarkerByText(markerText)
@@ -121,6 +133,7 @@ do
 
     function TUM.wingmenTasking.commandOrbit(delayRadioAnswer)
         delayRadioAnswer = delayRadioAnswer or false
+        if TUM.settings.getValue(TUM.settings.id.MULTIPLAYER) then return end -- No wingmen in multiplayer
 
         if TUM.settings.getValue(TUM.settings.id.MULTIPLAYER) then return end -- No wingmen in multiplayer
 
@@ -132,32 +145,23 @@ do
     end
 
     function TUM.wingmenTasking.commandRejoin(formationDistance, delayRadioAnswer)
-        formationDistance = formationDistance or 800
         delayRadioAnswer = delayRadioAnswer or false
-
         if TUM.settings.getValue(TUM.settings.id.MULTIPLAYER) then return end -- No wingmen in multiplayer
+
         local player = world:getPlayer()
         if not player then return end
 
         local wingmenCtrl = TUM.wingmen.getController()
         if not wingmenCtrl then return end
 
-        local taskTable = {
-            id = "Follow",
-            params = {
-                groupId = DCSEx.dcs.getObjectIDAsNumber(player:getGroup()),
-                lastWptIndexFlag  = false,
-                lastWptIndex = -1,
-                pos = { x = -formationDistance, y = 0, z = -formationDistance }
-            }
-        }
-        wingmenCtrl:setTask(taskTable)
+        wingmenCtrl:setTask(getRejoinTaskTable(formationDistance))
         TUM.radio.playForAll("pilotWingmanRejoin", { TUM.wingmen.getFirstWingmanNumber() }, TUM.wingmen.getFirstWingmanCallsign(), delayRadioAnswer)
     end
 
     function TUM.wingmenTasking.commandReportContacts(groupCategory, noReportIfNoContacts, delayRadioAnswer)
         noReportIfNoContacts = noReportIfNoContacts or false
         delayRadioAnswer = delayRadioAnswer or false
+        if TUM.settings.getValue(TUM.settings.id.MULTIPLAYER) then return end -- No wingmen in multiplayer
 
         local reportString = TUM.wingmen.getContactsAsReportString(groupCategory, true)
 
@@ -173,6 +177,7 @@ do
 
     function TUM.wingmenTasking.commandReportStatus(delayRadioAnswer)
         delayRadioAnswer = delayRadioAnswer or false
+        if TUM.settings.getValue(TUM.settings.id.MULTIPLAYER) then return end -- No wingmen in multiplayer
 
         local wingmenGroup = TUM.wingmen.getGroup()
         if not wingmenGroup then return end
