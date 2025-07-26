@@ -81,22 +81,24 @@ do
         local engageSubPath = nil
 
         -- Aircraft -- (radioTargetName must be plural)
-        missionCommands.addCommand("Any aircraft", engagePath, radioCommandEngage, { attributes = nil, category = Group.Category.AIRPLANE, radioMessageSuffix = "Bandits", radioTargetName = "bandits" })
-        engageSubPath = missionCommands.addSubMenu("Aircraft", rootPath)
+        engageSubPath = missionCommands.addSubMenu("Aircraft", engagePath)
+        missionCommands.addCommand("Any aircraft", engageSubPath, radioCommandEngage, { attributes = nil, category = Group.Category.AIRPLANE, radioMessageSuffix = "Bandits", radioTargetName = "bandits" })
         missionCommands.addCommand("Fighters", engageSubPath, radioCommandEngage, { attributes = { "Fighters", "Interceptors", "Multirole fighters" }, category = Group.Category.AIRPLANE, radioMessageSuffix = "Bandits", radioTargetName = "fighters" })
         missionCommands.addCommand("Bombers and transports", engageSubPath, radioCommandEngage, { attributes = nil, category = Group.Category.AIRPLANE, radioMessageSuffix = "Bandits", radioTargetName = "strategic aircraft" })
-        if not isWW2 then missionCommands.addCommand("Helicopters", engageSubPath, radioCommandEngage, { attributes = nil, category = Group.Category.HELICOPTER, radioMessageSuffix = "Bandits", radioTargetName = "helos" }) end
+        if not isWW2 then
+            missionCommands.addCommand("Helicopters", engageSubPath, radioCommandEngage, { attributes = nil, category = Group.Category.HELICOPTER, radioMessageSuffix = "Bandits", radioTargetName = "helos" })
+        end
 
         -- Ground -- (radioTargetName must be singular)
-        missionCommands.addCommand("Any ground", engagePath, radioCommandEngage, { attributes = {"Tanks", "Trucks", "Artillery", "IFV", "APC"}, category = Group.Category.GROUND, radioMessageSuffix = "Ground", radioTargetName = "ground" })
-        engageSubPath = missionCommands.addSubMenu("Ground", rootPath)
+        engageSubPath = missionCommands.addSubMenu("Ground", engagePath)
+        missionCommands.addCommand("Any ground", engageSubPath, radioCommandEngage, { attributes = {"Tanks", "Trucks", "Artillery", "IFV", "APC"}, category = Group.Category.GROUND, radioMessageSuffix = "Ground", radioTargetName = "ground" })
         missionCommands.addCommand("Armor", engageSubPath, radioCommandEngage, { attributes = {"Tanks", "IFV", "APC"}, category = Group.Category.GROUND, radioMessageSuffix = "Ground", radioTargetName = "armor" })
         missionCommands.addCommand("Artillery", engageSubPath, radioCommandEngage, { attributes = {"Artillery"}, category = Group.Category.GROUND, radioMessageSuffix = "Ground", radioTargetName = "artillery" })
         missionCommands.addCommand("Trucks", engageSubPath, radioCommandEngage, { attributes = {"Trucks"}, category = Group.Category.GROUND, radioMessageSuffix = "Ground", radioTargetName = "unarmed" })
 
         -- Air defense -- (radioTargetName must be singular)
-        missionCommands.addCommand("Any air defense", engagePath, radioCommandEngage, { attributes = { "Air Defence" }, category = Group.Category.GROUND, radioMessageSuffix = "AirDefense", radioTargetName = "air defense" })
-        engageSubPath = missionCommands.addSubMenu("Air defense", rootPath)
+        engageSubPath = missionCommands.addSubMenu("Air defense", engagePath)
+        missionCommands.addCommand("Any air defense", engageSubPath, radioCommandEngage, { attributes = { "Air Defence" }, category = Group.Category.GROUND, radioMessageSuffix = "AirDefense", radioTargetName = "air defense" })
         missionCommands.addCommand("AAA", engageSubPath, radioCommandEngage, { attributes = { "AAA" }, category = Group.Category.GROUND, radioMessageSuffix = "AirDefense", radioTargetName = "AAA" })
         if not isWW2 then
             missionCommands.addCommand("MANPADS", engageSubPath, radioCommandEngage, { attributes = { "SR SAM", "IR Guided SAM" }, category = Group.Category.GROUND, radioMessageSuffix = "AirDefense", radioTargetName = "MANPADS" })
@@ -105,8 +107,8 @@ do
         end
 
         -- Ships -- (radioTargetName must be plural)
-        missionCommands.addCommand("Any ship", engagePath, radioCommandEngage, { attributes = nil, category = Group.Category.SHIP, radioMessageSuffix = "Ships", radioTargetName = "ships" })
-        engageSubPath = missionCommands.addSubMenu("Ships", rootPath)
+        engageSubPath = missionCommands.addSubMenu("Ships", engagePath)
+        missionCommands.addCommand("Any ship", engageSubPath, radioCommandEngage, { attributes = nil, category = Group.Category.SHIP, radioMessageSuffix = "Ships", radioTargetName = "ships" })
         missionCommands.addCommand("Armed ships", engageSubPath, radioCommandEngage, { attributes = { "Armed ships" }, category = Group.Category.SHIP, radioMessageSuffix = "Ships", radioTargetName = "armed ships" })
         missionCommands.addCommand("Cargo ships", engageSubPath, radioCommandEngage, { attributes = { "Unarmed ships" }, category = Group.Category.SHIP, radioMessageSuffix = "Ships", radioTargetName = "cargo ships" })
         ------------------------------------------------------
