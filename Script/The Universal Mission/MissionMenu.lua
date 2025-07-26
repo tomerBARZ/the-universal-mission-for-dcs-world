@@ -36,7 +36,7 @@ do
         missionCommands.removeItem() -- Clear the menu
         missionCommands.addCommand("☱ Mission status", nil, doCommandMissionStatus, nil)
 
-        local objectivesMenuRoot = missionCommands.addSubMenu("Objectives")
+        local objectivesMenuRoot = missionCommands.addSubMenu("❖ Objectives")
         for i=1,TUM.objectives.getCount() do
             local obj = TUM.objectives.getObjective(i)
             if obj then
