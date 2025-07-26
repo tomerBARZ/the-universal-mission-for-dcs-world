@@ -206,7 +206,6 @@ do
         -- Setup options
         options = options or {}
         --options.heading = nil
-        options.altitude = options.altitude or 0
         options.altitudeType = options.altitudeType or "BARO"
         options.hidden = hidden
         options.isMoving = false
@@ -360,9 +359,8 @@ do
         local groupCallsign = nil
 
         if isAirUnit then
-            setOption(groupTable, AI.Option.Air.id.FORCED_ATTACK, true)
-            setOption(groupTable, AI.Option.Air.id.RTB_ON_BINGO, false)
-
+            -- setOption(groupTable, AI.Option.Air.id.FORCED_ATTACK, true)
+            -- setOption(groupTable, AI.Option.Air.id.RTB_ON_BINGO, false)
             if options.prohibitJettison then setOption(groupTable, AI.Option.Air.id.PROHIBIT_JETT, true) end
 
             if options.taskAwacs then setAircraftTaskAwacs(groupTable) end
