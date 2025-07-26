@@ -56,6 +56,11 @@ do
             multiplayer = false
         }
 
+        if not net or not net.dostring_in then
+            TUM.log("Mission failed to execute. Please copy the provided \"autoexec.cfg\" file to the [Saved Games]\\DCS\\Config directory.\nThe file can be downloaded from github.com/akaAgar/the-universal-mission-for-dcs-world", TUM.logLevel.ERROR)
+            return nil
+        end
+
         if #DCSEx.envMission.getPlayerGroups() == 0 then
             TUM.log("No \"Player\" or \"Client\" aircraft slots have been found. Please fix this problem in the mission editor.", TUM.logLevel.ERROR)
             return nil
