@@ -163,8 +163,9 @@ do
         TUM.radio.playForAll("pilotWingmanOrbit", { TUM.wingmen.getFirstWingmanNumber() }, TUM.wingmen.getFirstWingmanCallsign(), delayRadioAnswer)
     end
 
-    function TUM.wingmenTasking.commandRejoin(formationDistance, delayRadioAnswer)
+    function TUM.wingmenTasking.commandRejoin(formationDistance, delayRadioAnswer, silent)
         delayRadioAnswer = delayRadioAnswer or false
+        silent = silent or false
         if TUM.settings.getValue(TUM.settings.id.MULTIPLAYER) then return end -- No wingmen in multiplayer
 
         local player = world:getPlayer()
@@ -177,7 +178,9 @@ do
 
         currentTargetedGroupID = nil
         wingmenCtrl:setTask(getRejoinTaskTable(formationDistance))
-        TUM.radio.playForAll("pilotWingmanRejoin", { TUM.wingmen.getFirstWingmanNumber() }, TUM.wingmen.getFirstWingmanCallsign(), delayRadioAnswer)
+        if not silent then
+            TUM.radio.playForAll("pilotWingmanRejoin", { TUM.wingmen.getFirstWingmanNumber() }, TUM.wingmen.getFirstWingmanCallsign(), delayRadioAnswer)
+        end
     end
 
     function TUM.wingmenTasking.commandReportContacts(groupCategory, noReportIfNoContacts, delayRadioAnswer)
