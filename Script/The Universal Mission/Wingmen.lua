@@ -99,8 +99,8 @@ do
 
         TUM.log("Spawned AI wingmen")
 
-        -- Play a "rejoining" radio message to let player know that wingmen are here
-        TUM.radio.playForAll("pilotWingmanRejoin", { TUM.wingmen.getFirstWingmanNumber() }, TUM.wingmen.getFirstWingmanCallsign(), true)
+        -- Tasking the new wingmen to rejoin
+        TUM.wingmenTasking.commandRejoin(nil, true)
     end
 
     function TUM.wingmen.getContacts(groupCategory)
