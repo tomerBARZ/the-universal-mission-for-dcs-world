@@ -136,6 +136,8 @@ do
         local nextTickTime = time + math.random(10, 20)
         clockTick = clockTick + 1
 
+        TUM.wingmenTasking.onClockTick() -- No need to check the function return, it's just here to check if wingmen target is still alive
+
         if clockTick % 4 == 0 then
             if TUM.playerScore.onClockTick() then return nextTickTime end
             if TUM.mission.onClockTick() then return nextTickTime end
