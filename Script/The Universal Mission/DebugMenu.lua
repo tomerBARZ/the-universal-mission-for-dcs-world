@@ -72,6 +72,10 @@ do
         timer.scheduleFunction(TUM.onEvent, landingEvent, timer.getTime() + 1)
     end
 
+    local function doSendWingmenToMarker()
+        TUM.wingmenTasking.commandGoToMapMarker(nil, false)
+    end
+
     local function doKillWingman()
         local wingGroup = TUM.wingmen.getGroup()
         if not wingGroup then return end
@@ -87,12 +91,13 @@ do
         if not TUM.DEBUG_MODE then return end
 
         local rootMenu = missionCommands.addSubMenu("[DEBUG]")
-        missionCommands.addCommand("Detonate \"boom\" map markers", rootMenu, doMarkersBoom, nil)
-        missionCommands.addCommand("Detonate aircraft near \"airboom\" map markers", rootMenu, doMarkersAirBoom, nil)
-        missionCommands.addCommand("Award 100 points and 1 objective", rootMenu, doAwardPointsAndObjectives, nil)
-        missionCommands.addCommand("Kill wingman", rootMenu, doKillWingman, nil)
-        missionCommands.addCommand("Simulate player takeoff", rootMenu, doSimulatePlayerTakeOff, nil)
-        missionCommands.addCommand("Simulate player landing", rootMenu, doSimulatePlayerLanding, nil)
-        missionCommands.addCommand("Reset player stats", rootMenu, TUM.playerCareer.reset, nil)
+        missionCommands.addCommand("Detonate - \"boom\" map markers", rootMenu, doMarkersBoom, nil)
+        missionCommands.addCommand("Detonate - \"airboom\" map markers", rootMenu, doMarkersAirBoom, nil)
+        missionCommands.addCommand("Wingman - kill", rootMenu, doKillWingman, nil)
+        missionCommands.addCommand("Wingman - go to \"flight\" marker", rootMenu, doSendWingmenToMarker, nil)
+        missionCommands.addCommand("Player - simulate takeoff", rootMenu, doSimulatePlayerTakeOff, nil)
+        missionCommands.addCommand("Player - simulate landing", rootMenu, doSimulatePlayerLanding, nil)
+        missionCommands.addCommand("Scoring - award 100 points and 1 objective", rootMenu, doAwardPointsAndObjectives, nil)
+        missionCommands.addCommand("Scoring - reset flight log", rootMenu, TUM.playerCareer.reset, nil)
     end
 end
