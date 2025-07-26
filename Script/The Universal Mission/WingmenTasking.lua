@@ -11,6 +11,15 @@ do
     local mapMarkerMissingWarningAlreadyDisplayed = false -- Was the "map marker missing" warning already displayed during the mission?
     local targetPointMapMarker = nil
 
+    local currentTargetedGroupID = nil
+
+    local function allowWeaponUse(wingmenCtrl, allowUse)
+        allowUse = allowUse or false
+        wingmenCtrl:setOption(AI.Option.Air.id.REACTION_ON_THREAT, AI.Option.Air.val.REACTION_ON_THREAT.EVADE_FIRE)
+        wingmenCtrl:setOption(AI.Option.Air.id.PROHIBIT_AA, not allowUse)
+        wingmenCtrl:setOption(AI.Option.Air.id.PROHIBIT_AG, not allowUse)
+    end
+
     local function getOrbitTaskTable(point2)
         return {
             id = "Orbit",
@@ -43,6 +52,8 @@ do
 
         local wingmenCtrl = TUM.wingmen.getController()
         if not wingmenCtrl then return end
+
+        allowWeaponUse(wingmenCtrl, true)
 
         local detectedContacts = TUM.wingmen.getContacts(groupCategory)
         local validTargets = {}
@@ -77,14 +88,15 @@ do
 
         validTargets = DCSEx.dcs.getNearestObjects(wingmenPosition, validTargets, 1)
         local target = validTargets[1]
+        currentTargetedGroupID = DCSEx.dcs.getGroupIDAsNumber(target:getGroup())
         local taskTable = {
             id = "AttackGroup",
             params = {
-                groupId = DCSEx.dcs.getGroupIDAsNumber(target:getGroup()),
+                groupId = currentTargetedGroupID,
             }
         }
         wingmenCtrl:setTask(taskTable)
-        wingmenCtrl:setTask(getRejoinTaskTable()) -- Makes sure wingmen rejoin with the player after attack
+        -- wingmenCtrl:pushTask(getRejoinTaskTable()) -- Makes sure wingmen rejoin with the player after attack
 
         local targetInfo = nil
         local messageSuffix = nil
@@ -98,13 +110,16 @@ do
             targetInfo = targetInfo..DCSEx.dcs.getBRAA(target:getPoint(), wingmenPosition, false)
         end
 
-        if targetPointMapMarker then
-            trigger.action.removeMark(targetPointMapMarker)
-            targetPointMapMarker = nil
+        -- Mark the last targeted point in debug mode
+        if TUM.DEBUG_MODE then
+            if targetPointMapMarker then
+                trigger.action.removeMark(targetPointMapMarker)
+                targetPointMapMarker = nil
+            end
+            targetPointMapMarker = DCSEx.world.getNextMarkerID()
+            trigger.action.markToAll(targetPointMapMarker, "Last wingmen attack point", target:getPoint(), true)
         end
 
-        targetPointMapMarker = DCSEx.world.getNextMarkerID()
-        trigger.action.markToAll(targetPointMapMarker, "Last wingmen attack point", target:getPoint(), true)
         TUM.radio.playForAll("pilotWingmanEngage"..messageSuffix, { TUM.wingmen.getFirstWingmanNumber(), targetInfo }, TUM.wingmen.getFirstWingmanCallsign(), true)
     end
 
@@ -122,11 +137,14 @@ do
         local wingmenCtrl = TUM.wingmen.getController()
         if not wingmenCtrl then return end
 
+        allowWeaponUse(wingmenCtrl, false)
+
         if not mapMarker then
             TUM.radio.playForAll("pilotWingmanGoToMarkerNoMarker", { TUM.wingmen.getFirstWingmanNumber() }, TUM.wingmen.getFirstWingmanCallsign(), true)
             return
         end
 
+        currentTargetedGroupID = nil
         wingmenCtrl:setTask(getOrbitTaskTable(DCSEx.math.vec3ToVec2(mapMarker.pos)))
         TUM.radio.playForAll("pilotWingmanGoToMarker", { TUM.wingmen.getFirstWingmanNumber() }, TUM.wingmen.getFirstWingmanCallsign(), true)
     end
@@ -135,11 +153,12 @@ do
         delayRadioAnswer = delayRadioAnswer or false
         if TUM.settings.getValue(TUM.settings.id.MULTIPLAYER) then return end -- No wingmen in multiplayer
 
-        if TUM.settings.getValue(TUM.settings.id.MULTIPLAYER) then return end -- No wingmen in multiplayer
-
         local wingmenCtrl = TUM.wingmen.getController()
         if not wingmenCtrl then return end
 
+        allowWeaponUse(wingmenCtrl, false)
+
+        currentTargetedGroupID = nil
         wingmenCtrl:setTask(getOrbitTaskTable(DCSEx.world.getGroupCenter(TUM.wingmen.getGroup())))
         TUM.radio.playForAll("pilotWingmanOrbit", { TUM.wingmen.getFirstWingmanNumber() }, TUM.wingmen.getFirstWingmanCallsign(), delayRadioAnswer)
     end
@@ -154,6 +173,9 @@ do
         local wingmenCtrl = TUM.wingmen.getController()
         if not wingmenCtrl then return end
 
+        allowWeaponUse(wingmenCtrl, false)
+
+        currentTargetedGroupID = nil
         wingmenCtrl:setTask(getRejoinTaskTable(formationDistance))
         TUM.radio.playForAll("pilotWingmanRejoin", { TUM.wingmen.getFirstWingmanNumber() }, TUM.wingmen.getFirstWingmanCallsign(), delayRadioAnswer)
     end
@@ -211,5 +233,19 @@ do
         end
 
         TUM.radio.playForAll("pilotWingmanReportStatus", { TUM.wingmen.getFirstWingmanNumber(), statusMsg },  TUM.wingmen.getFirstWingmanCallsign(), delayRadioAnswer)
+    end
+
+    ----------------------------------------------------------
+    -- Called on every mission update tick (every 10-20 seconds)
+    ----------------------------------------------------------    
+    function TUM.wingmenTasking.onClockTick()
+        -- Targeted group is dead? Mark group as nil and rejoin leader
+        if currentTargetedGroupID then
+            local tgtGroup = DCSEx.world.getGroupByID(currentTargetedGroupID)
+            if not tgtGroup or tgtGroup:getSize() == 0 then
+                TUM.wingmenTasking.commandRejoin(nil, false)
+                tgtGroup = nil
+            end
+        end
     end
 end
