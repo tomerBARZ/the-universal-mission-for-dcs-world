@@ -231,7 +231,7 @@ do
         end
 
         if TUM.settings.getValue(TUM.settings.id.MULTIPLAYER) or not event.initiator:getPlayerName() then
-            doAmbientChatter("atcSafeLanding", {event.initiator:getCallsign()}, baseName.." ATC", 1)
+            doAmbientChatter("atcSafeLanding", {event.initiator:getCallsign(), baseName}, baseName.." ATC", 1)
         end
     end
 
