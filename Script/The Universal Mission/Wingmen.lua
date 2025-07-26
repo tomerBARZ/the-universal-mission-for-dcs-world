@@ -99,8 +99,8 @@ do
 
         TUM.log("Spawned AI wingmen")
 
-        -- Tasking the new wingmen to rejoin
-        TUM.wingmenTasking.commandRejoin(nil, true)
+        TUM.radio.playForAll("pilotWingmanTakeOff", { TUM.wingmen.getFirstWingmanNumber() }, TUM.wingmen.getFirstWingmanCallsign(), true)
+        TUM.wingmenTasking.commandRejoin(nil, true, true) -- Task the new wingmen to rejoin
     end
 
     function TUM.wingmen.getContacts(groupCategory)

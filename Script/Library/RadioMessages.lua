@@ -167,6 +167,13 @@ Library.radioMessages = {
         "$1, pushing current status.\n\n$2",
         "$1, copy, reporting in.\n\n$2"
     },
+    pilotWingmanTakeOff = {
+        "$1, wheels up, coming to join on your six.",
+        "$1 airborne, joining on your side.",
+        "$1 just lifted, moving to formation.",
+        "$1, off the strip, coming to your wing.",
+        "$1, off the deck, forming up now."
+    },
 
     atcSafeLanding = { "Be advised: $1 is wheels down at $2 and clear of runway.", "All aircraft, $1 has landed at $2 and vacated active. Runway is open for next inbound.", "Traffic, $1 is on deck at $2 and heading to parking. Runway clear.", "All flights, $1 just rolled out at $2 and cleared the active.", "Heads up, $1 landed at $2 and moving to the ramp. Runway available for next approach." },
     atcSafeLandingPlayer = { "$1, wheels on deck, welcome back. You may taxi to the parking area.", "$1, good copy on landing. Exit when able, proceed to the parking area.", "$1, touchdown confirmed. Continue to parking.", "$1, welcome home. Clear of runway and taxi to parking area.", "$1, nice landing. Taxi to parking when ready." },
