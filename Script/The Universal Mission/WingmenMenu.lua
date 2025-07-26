@@ -25,13 +25,13 @@ do
         TUM.wingmenTasking.commandEngage(args.category, args.attributes, true)
     end
 
-    local function radioCommandGoToMapMarker()
-        local player = world:getPlayer()
-        if not player then return end
-        TUM.radio.playForAll("playerWingmanGoToMarker", nil, player:getCallsign(), false)
+    -- local function radioCommandGoToMapMarker()
+    --     local player = world:getPlayer()
+    --     if not player then return end
+    --     TUM.radio.playForAll("playerWingmanGoToMarker", nil, player:getCallsign(), false)
 
-        TUM.wingmenTasking.commandGoToMapMarker(TUM.wingmenTasking.DEFAULT_MARKER_TEXT, true)
-    end
+    --     TUM.wingmenTasking.commandGoToMapMarker(TUM.wingmenTasking.DEFAULT_MARKER_TEXT, true)
+    -- end
 
     local function radioCommandOrbit()
         local player = world:getPlayer()
@@ -67,7 +67,6 @@ do
 
     function TUM.wingmenMenu.create()
         if TUM.settings.getValue(TUM.settings.id.MULTIPLAYER) then return end -- No wingmen in multiplayer
-        -- TODO: if WINGMEN_COUNT == 0 then return end
 
         local rootPath = missionCommands.addSubMenu("✈ Flight")
         missionCommands.addCommand("Cover me!", rootPath, radioCommandCoverMe, nil)
@@ -113,10 +112,10 @@ do
         missionCommands.addCommand("Cargo ships", engageSubPath, radioCommandEngage, { attributes = { "Unarmed ships" }, category = Group.Category.SHIP, radioMessageSuffix = "Ships", radioTargetName = "cargo ships" })
         ------------------------------------------------------
 
+        -- missionCommands.addCommand("Go to map marker "..TUM.wingmenTasking.DEFAULT_MARKER_TEXT:upper(), rootPath, radioCommandGoToMapMarker, nil)
         missionCommands.addCommand("Report contacts", rootPath, radioCommandReportContacts, nil)
-        missionCommands.addCommand("Status", rootPath, radioCommandReportStatus, nil)
-        missionCommands.addCommand("Go to map marker "..TUM.wingmenTasking.DEFAULT_MARKER_TEXT:upper(), rootPath, radioCommandGoToMapMarker, nil)
-        missionCommands.addCommand("Hold", rootPath, radioCommandOrbit, nil)
+        missionCommands.addCommand("Hold position", rootPath, radioCommandOrbit, nil)
         missionCommands.addCommand("Rejoin", rootPath, radioCommandRejoin, nil)
+        missionCommands.addCommand("Status", rootPath, radioCommandReportStatus, nil)
     end
 end

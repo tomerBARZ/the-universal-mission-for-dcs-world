@@ -105,18 +105,18 @@ Library.radioMessages = {
         "$1, on target, commencing attack on $2.",
         "$1, weapons hot, engaging $2.",
     },
-    pilotWingmanGoToMarker = {
-        "$1, copy. Pushing to waypoint now.",
-        "$1, on route to the coords, maintaining current alt.",
-        "$1, proceeding as briefed, on my way.",
-        "$1, moving to grid as planned.",
-        "$1, heading to the point."
-    },
-    pilotWingmanGoToMarkerNoMarker = {
-        "$1, negative on coords, say again?",
-        "$1, copy, but I don't have the point. Confirm?",
-        "$1, can't push, no steerpoint."
-    },
+    -- pilotWingmanGoToMarker = {
+    --     "$1, copy. Pushing to waypoint now.",
+    --     "$1, on route to the coords, maintaining current alt.",
+    --     "$1, proceeding as briefed, on my way.",
+    --     "$1, moving to grid as planned.",
+    --     "$1, heading to the point."
+    -- },
+    -- pilotWingmanGoToMarkerNoMarker = {
+    --     "$1, negative on coords, say again?",
+    --     "$1, copy, but I don't have the point. Confirm?",
+    --     "$1, can't push, no steerpoint."
+    -- },
     pilotWingmanOrbit = {
         "$1. Wilco, holding here.",
         "$1. Copy, orbiting now.",
@@ -310,13 +310,13 @@ Library.radioMessages = {
         "Flight, strike $1 in your sector.",
         "Flight, take the lead on enemy $1.",
     }, -- "$1" should be "ships" in audio version
-    playerWingmanGoToMarker = {
-        "Flight, proceed to waypoint.",
-        "Flight, push to the hold point now.",
-        "Flight, push to station and hold.",
-        "Flight, set up in the assigned area.",
-        "Flight, move to designated steerpoint."
-    },
+    -- playerWingmanGoToMarker = {
+    --     "Flight, proceed to waypoint.",
+    --     "Flight, push to the hold point now.",
+    --     "Flight, push to station and hold.",
+    --     "Flight, set up in the assigned area.",
+    --     "Flight, move to designated steerpoint."
+    -- },
     playerWingmanOrbit = {
         "Flight, orbit your position.",
         "Flight, set up an orbit.",
