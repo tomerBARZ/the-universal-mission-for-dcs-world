@@ -6,28 +6,23 @@
 TUM.wingmenMenu = {}
 
 do
-    local function radioCommandReportContacts()
+    local function radioCommandCoverMe(args)
         local player = world:getPlayer()
-        if not player then return false end
-        TUM.radio.playForAll("playerWingmanReportContacts", nil, player:getCallsign(), false)
+        if not player then return end
 
-        TUM.wingmenTasking.commandReportContacts(nil, false, true)
+        TUM.radio.playForAll("playerWingmanCoverMe"..args.radioMessageSuffix, nil, player:getCallsign(), false)
+
+        TUM.wingmenTasking.commandEngage(Group.Category.AIRPLANE, { "Fighters", "Interceptors", "Multirole fighters" } , true)
     end
 
     local function radioCommandEngage(args)
         local player = world:getPlayer()
         if not player then return end
 
-        TUM.radio.playForAll("playerWingmanEngage"..args.radioMessageSuffix, nil, player:getCallsign(), false)
+        args.radioTargetName = args.radioTargetName or "hostile"
+
+        TUM.radio.playForAll("playerWingmanEngage"..args.radioMessageSuffix, { args.radioTargetName }, player:getCallsign(), false)
         TUM.wingmenTasking.commandEngage(args.category, args.attributes, true)
-    end
-
-    local function radioCommandReportStatus()
-        local player = world:getPlayer()
-        if not player then return end
-        TUM.radio.playForAll("playerWingmanReportStatus", nil, player:getCallsign(), false)
-
-        TUM.wingmenTasking.commandReportStatus(true)
     end
 
     local function radioCommandGoToMapMarker()
@@ -54,18 +49,67 @@ do
         TUM.wingmenTasking.commandRejoin(nil, true)
     end
 
+    local function radioCommandReportContacts()
+        local player = world:getPlayer()
+        if not player then return false end
+        TUM.radio.playForAll("playerWingmanReportContacts", nil, player:getCallsign(), false)
+
+        TUM.wingmenTasking.commandReportContacts(nil, false, true)
+    end
+
+    local function radioCommandReportStatus()
+        local player = world:getPlayer()
+        if not player then return end
+        TUM.radio.playForAll("playerWingmanReportStatus", nil, player:getCallsign(), false)
+
+        TUM.wingmenTasking.commandReportStatus(true)
+    end
+
     function TUM.wingmenMenu.create()
         if TUM.settings.getValue(TUM.settings.id.MULTIPLAYER) then return end -- No wingmen in multiplayer
         -- TODO: if WINGMEN_COUNT == 0 then return end
 
         local rootPath = missionCommands.addSubMenu("✈ Flight")
+        missionCommands.addCommand("Cover me!", rootPath, radioCommandCoverMe, nil)
 
+        local isWW2 = (TUM.settings.getValue(TUM.settings) == DCSEx.enums.timePeriod.WORLD_WAR_2)
+
+        ------------------------------------------------------
+        -- "Engage targets" submenu
+        ------------------------------------------------------
         local engagePath = missionCommands.addSubMenu("Engage", rootPath)
-        missionCommands.addCommand("Bandits", engagePath, radioCommandEngage, { attributes = nil, category = Group.Category.HELICOPTER, radioMessageSuffix = "Bandits" })
-        missionCommands.addCommand("Helicopters", engagePath, radioCommandEngage, { attributes = nil, category = Group.Category.HELICOPTER, radioMessageSuffix = "Helicopters" })
-        missionCommands.addCommand("Air defense", engagePath, radioCommandEngage, { attributes = { "Air Defence" }, category = Group.Category.GROUND, radioMessageSuffix = "AirDefense" })
-        missionCommands.addCommand("Ground targets", engagePath, radioCommandEngage, { attributes = {"Tanks", "Trucks", "Artillery", "IFV", "APC"}, category = Group.Category.GROUND, radioMessageSuffix = "Ground" })
-        missionCommands.addCommand("Ships", engagePath, radioCommandEngage, { attributes = nil, category = Group.Category.SHIP, radioMessageSuffix = "Ships" })
+        local engageSubPath = nil
+
+        -- Aircraft -- (radioTargetName must be plural)
+        missionCommands.addCommand("Any aircraft", engagePath, radioCommandEngage, { attributes = nil, category = Group.Category.AIRPLANE, radioMessageSuffix = "Bandits", radioTargetName = "bandits" })
+        engageSubPath = missionCommands.addSubMenu("Aircraft", rootPath)
+        missionCommands.addCommand("Fighters", engageSubPath, radioCommandEngage, { attributes = { "Fighters", "Interceptors", "Multirole fighters" }, category = Group.Category.AIRPLANE, radioMessageSuffix = "Bandits", radioTargetName = "fighters" })
+        missionCommands.addCommand("Bombers and transports", engageSubPath, radioCommandEngage, { attributes = nil, category = Group.Category.AIRPLANE, radioMessageSuffix = "Bandits", radioTargetName = "strategic aircraft" })
+        if not isWW2 then missionCommands.addCommand("Helicopters", engageSubPath, radioCommandEngage, { attributes = nil, category = Group.Category.HELICOPTER, radioMessageSuffix = "Bandits", radioTargetName = "helos" }) end
+
+        -- Ground -- (radioTargetName must be singular)
+        missionCommands.addCommand("Any ground", engagePath, radioCommandEngage, { attributes = {"Tanks", "Trucks", "Artillery", "IFV", "APC"}, category = Group.Category.GROUND, radioMessageSuffix = "Ground", radioTargetName = "ground" })
+        engageSubPath = missionCommands.addSubMenu("Ground", rootPath)
+        missionCommands.addCommand("Armor", engageSubPath, radioCommandEngage, { attributes = {"Tanks", "IFV", "APC"}, category = Group.Category.GROUND, radioMessageSuffix = "Ground", radioTargetName = "armor" })
+        missionCommands.addCommand("Artillery", engageSubPath, radioCommandEngage, { attributes = {"Artillery"}, category = Group.Category.GROUND, radioMessageSuffix = "Ground", radioTargetName = "artillery" })
+        missionCommands.addCommand("Trucks", engageSubPath, radioCommandEngage, { attributes = {"Trucks"}, category = Group.Category.GROUND, radioMessageSuffix = "Ground", radioTargetName = "unarmed" })
+
+        -- Air defense -- (radioTargetName must be singular)
+        missionCommands.addCommand("Any air defense", engagePath, radioCommandEngage, { attributes = { "Air Defence" }, category = Group.Category.GROUND, radioMessageSuffix = "AirDefense", radioTargetName = "air defense" })
+        engageSubPath = missionCommands.addSubMenu("Air defense", rootPath)
+        missionCommands.addCommand("AAA", engageSubPath, radioCommandEngage, { attributes = { "AAA" }, category = Group.Category.GROUND, radioMessageSuffix = "AirDefense", radioTargetName = "AAA" })
+        if not isWW2 then
+            missionCommands.addCommand("MANPADS", engageSubPath, radioCommandEngage, { attributes = { "SR SAM", "IR Guided SAM" }, category = Group.Category.GROUND, radioMessageSuffix = "AirDefense", radioTargetName = "MANPADS" })
+            missionCommands.addCommand("Short range SAMs", engageSubPath, radioCommandEngage, { attributes = { "SR SAM", "IR Guided SAM" }, category = Group.Category.GROUND, radioMessageSuffix = "AirDefense", radioTargetName = "SHORAD" })
+            missionCommands.addCommand("Long-range SAMs", engageSubPath, radioCommandEngage, { attributes = { "LR SAM", "MR SAM" }, category = Group.Category.GROUND, radioMessageSuffix = "AirDefense", radioTargetName = "HIMAD" })
+        end
+
+        -- Ships -- (radioTargetName must be plural)
+        missionCommands.addCommand("Any ship", engagePath, radioCommandEngage, { attributes = nil, category = Group.Category.SHIP, radioMessageSuffix = "Ships", radioTargetName = "ships" })
+        engageSubPath = missionCommands.addSubMenu("Ships", rootPath)
+        missionCommands.addCommand("Armed ships", engageSubPath, radioCommandEngage, { attributes = { "Armed ships" }, category = Group.Category.SHIP, radioMessageSuffix = "Ships", radioTargetName = "armed ships" })
+        missionCommands.addCommand("Cargo ships", engageSubPath, radioCommandEngage, { attributes = { "Unarmed ships" }, category = Group.Category.SHIP, radioMessageSuffix = "Ships", radioTargetName = "cargo ships" })
+        ------------------------------------------------------
 
         missionCommands.addCommand("Report contacts", rootPath, radioCommandReportContacts, nil)
         missionCommands.addCommand("Status", rootPath, radioCommandReportStatus, nil)

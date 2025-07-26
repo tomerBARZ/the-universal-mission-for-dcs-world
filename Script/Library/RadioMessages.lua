@@ -278,36 +278,38 @@ Library.radioMessages = {
         "Command, confirm grid on objective $1."
     },
     playerWingmanEngageAirDefense = {
-        "Flight, prioritize air defense, engage now.",
-        "Flight, take down air defense systems.",
-        "Flight, suppress air defense threats.",
-        "Flight, air defense is yours, take it out.",
-        "Flight, eliminate air defense positions."
-    },
+        "Flight, prioritize $1, engage now.",
+        "Flight, take down $1 systems.",
+        "Flight, suppress $1 threats.",
+        "Flight, $1 is yours, take it out.",
+        "Flight, eliminate $1 positions."
+    }, -- "$1" should be "air defense" in audio version
     playerWingmanEngageBandits = {
-        "Flight, engage bandits.",
-        "Flight, you're cleared hot bandits.",
-        "Flight, commit on bandits when ready.",
-        "Flight, engage bandits, your discretion.",
-        "Flight, you're free to engage bandits."
+        "Flight, engage $1.",
+        "Flight, you're cleared hot on $1.",
+        "Flight, commit on $1 when ready.",
+        "Flight, engage $1, your discretion.",
+        "Flight, you're free to engage $1."
+    }, -- "$1" should be "bandits" in audio version
+    playerWingmanCoverMe = {
+        "Flight, need cover now.",
+        "Flight, keep my six clean.",
+        "Flight, engaged defensive, cover me!",
+        "Flight, break off and clear my tail.",
+        "Flight, keep bandits off me."
     },
     playerWingmanEngageGround = {
-        "Flight, engage ground targets.",
-        "Flight, prosecute ground targets ahead.",
-        "Flight, engage all ground contacts.",
-        "Flight, strike vehicle positions.",
-        "Flight, take the lead on ground targets.",
-    },
-    playerWingmanEngageHelicopters = {
-        "Flight, you're cleared to prosecute helos.",
-        "Flight, engage helos at your discretion.",
-        "Flight, engage rotary contacts, break when done.",
-    },
+        "Flight, engage $1 targets.",
+        "Flight, prosecute $1 targets ahead.",
+        "Flight, engage all $1 contacts.",
+        "Flight, strike $1 positions.",
+        "Flight, take the lead on $1 targets.",
+    }, -- "$1" should be "ground" in audio version
     playerWingmanEngageShips = {
-        "Flight, engage enemy vessels now.",
-        "Flight, strike ships in your sector.",
-        "Flight, take the lead on sea targets.",
-    },
+        "Flight, engage enemy $1 now.",
+        "Flight, strike $1 in your sector.",
+        "Flight, take the lead on enemy $1.",
+    }, -- "$1" should be "ships" in audio version
     playerWingmanGoToMarker = {
         "Flight, proceed to waypoint.",
         "Flight, push to the hold point now.",
