@@ -198,7 +198,7 @@ do
         local groupID = getNextGroupID() -- Get a new unique ID for the group
         local isAirUnit = false
 
-        local hidden = false
+        local hidden = options.hidden or false
         if not TUM.DEBUG_MODE and coalitionID ~= TUM.settings.getPlayerCoalition() then
             hidden = true
         end
