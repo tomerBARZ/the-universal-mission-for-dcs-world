@@ -73,7 +73,11 @@ do
     end
 
     local function doSendWingmenToMarker()
-        TUM.wingmenTasking.commandGoToMapMarker(nil, false)
+        if TUM.wingmenTasking.commandGoToMapMarker(nil, false) then
+            TUM.log("Wingmen moving FLIGHT to marker")
+        else
+            TUM.log("Failed to move wingmen to FLIGHT marker")
+        end
     end
 
     local function doKillWingman()
@@ -91,10 +95,10 @@ do
         if not TUM.DEBUG_MODE then return end
 
         local rootMenu = missionCommands.addSubMenu("[DEBUG]")
-        missionCommands.addCommand("Detonate - \"boom\" map markers", rootMenu, doMarkersBoom, nil)
-        missionCommands.addCommand("Detonate - \"airboom\" map markers", rootMenu, doMarkersAirBoom, nil)
+        missionCommands.addCommand("Detonate - BOOM map markers", rootMenu, doMarkersBoom, nil)
+        missionCommands.addCommand("Detonate - AIRBOOM map markers", rootMenu, doMarkersAirBoom, nil)
         missionCommands.addCommand("Wingman - kill", rootMenu, doKillWingman, nil)
-        missionCommands.addCommand("Wingman - go to \"flight\" marker", rootMenu, doSendWingmenToMarker, nil)
+        missionCommands.addCommand("Wingman - go to FLIGHT marker", rootMenu, doSendWingmenToMarker, nil)
         missionCommands.addCommand("Player - simulate takeoff", rootMenu, doSimulatePlayerTakeOff, nil)
         missionCommands.addCommand("Player - simulate landing", rootMenu, doSimulatePlayerLanding, nil)
         missionCommands.addCommand("Scoring - award 100 points and 1 objective", rootMenu, doAwardPointsAndObjectives, nil)
