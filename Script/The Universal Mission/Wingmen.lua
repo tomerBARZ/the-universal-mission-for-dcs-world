@@ -112,13 +112,22 @@ do
         return "Flight"
     end
 
+    function TUM.wingmen.getFirstWingmanUnit()
+        for i=1,#wingmenUnitID do
+            local wingmanUnit = DCSEx.world.getUnitByID(wingmenUnitID[i])
+            if wingmanUnit then return wingmanUnit end
+        end
+
+        return nil
+    end
+
     function TUM.wingmen.getFirstWingmanNumber()
         for i=1,#wingmenUnitID do
             local wingmanUnit = DCSEx.world.getUnitByID(wingmenUnitID[i])
             if wingmanUnit then return DCSEx.string.toStringNumber(i + 1, true) end
         end
 
-        return "Two"
+        return "Flight"
     end
 
     function TUM.wingmen.getGroup()
