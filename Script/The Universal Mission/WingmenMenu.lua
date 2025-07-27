@@ -90,17 +90,18 @@ do
 
         -- Ground -- (radioTargetName must be singular)
         engageSubPath = missionCommands.addSubMenu("Ground", engagePath)
-        missionCommands.addCommand("Any ground", engageSubPath, radioCommandEngage, { attributes = {"Tanks", "Trucks", "Artillery", "IFV", "APC"}, category = Group.Category.GROUND, radioMessageSuffix = "Ground", radioTargetName = "ground" })
+        missionCommands.addCommand("Any vehicles", engageSubPath, radioCommandEngage, { attributes = {"Tanks", "Trucks", "Artillery", "IFV", "APC"}, category = Group.Category.GROUND, radioMessageSuffix = "Ground", radioTargetName = "ground" })
         missionCommands.addCommand("Armor", engageSubPath, radioCommandEngage, { attributes = {"Tanks", "IFV", "APC"}, category = Group.Category.GROUND, radioMessageSuffix = "Ground", radioTargetName = "armor" })
         missionCommands.addCommand("Artillery", engageSubPath, radioCommandEngage, { attributes = {"Artillery"}, category = Group.Category.GROUND, radioMessageSuffix = "Ground", radioTargetName = "artillery" })
-        missionCommands.addCommand("Trucks", engageSubPath, radioCommandEngage, { attributes = {"Trucks"}, category = Group.Category.GROUND, radioMessageSuffix = "Ground", radioTargetName = "unarmed" })
+        missionCommands.addCommand("Infantry", engageSubPath, radioCommandEngage, { attributes = {"Infantry"}, category = Group.Category.GROUND, radioMessageSuffix = "Ground", radioTargetName = "infantry" })
+        missionCommands.addCommand("Trucks", engageSubPath, radioCommandEngage, { attributes = {"Trucks"}, category = Group.Category.GROUND, radioMessageSuffix = "Ground", radioTargetName = "truck" })
 
         -- Air defense -- (radioTargetName must be singular)
         engageSubPath = missionCommands.addSubMenu("Air defense", engagePath)
         missionCommands.addCommand("Any air defense", engageSubPath, radioCommandEngage, { attributes = { "Air Defence" }, category = Group.Category.GROUND, radioMessageSuffix = "AirDefense", radioTargetName = "air defense" })
         missionCommands.addCommand("AAA", engageSubPath, radioCommandEngage, { attributes = { "AAA" }, category = Group.Category.GROUND, radioMessageSuffix = "AirDefense", radioTargetName = "AAA" })
         if not isWW2 then
-            missionCommands.addCommand("MANPADS", engageSubPath, radioCommandEngage, { attributes = { "SR SAM", "IR Guided SAM" }, category = Group.Category.GROUND, radioMessageSuffix = "AirDefense", radioTargetName = "MANPADS" })
+            missionCommands.addCommand("MANPADS", engageSubPath, radioCommandEngage, { attributes = { "MANPADS" }, category = Group.Category.GROUND, radioMessageSuffix = "AirDefense", radioTargetName = "MANPADS" })
             missionCommands.addCommand("Short range SAMs", engageSubPath, radioCommandEngage, { attributes = { "SR SAM", "IR Guided SAM" }, category = Group.Category.GROUND, radioMessageSuffix = "AirDefense", radioTargetName = "SHORAD" })
             missionCommands.addCommand("Long-range SAMs", engageSubPath, radioCommandEngage, { attributes = { "LR SAM", "MR SAM" }, category = Group.Category.GROUND, radioMessageSuffix = "AirDefense", radioTargetName = "HIMAD" })
         end
@@ -110,6 +111,9 @@ do
         missionCommands.addCommand("Any ship", engageSubPath, radioCommandEngage, { attributes = nil, category = Group.Category.SHIP, radioMessageSuffix = "Ships", radioTargetName = "ships" })
         missionCommands.addCommand("Armed ships", engageSubPath, radioCommandEngage, { attributes = { "Armed ships" }, category = Group.Category.SHIP, radioMessageSuffix = "Ships", radioTargetName = "armed ships" })
         missionCommands.addCommand("Cargo ships", engageSubPath, radioCommandEngage, { attributes = { "Unarmed ships" }, category = Group.Category.SHIP, radioMessageSuffix = "Ships", radioTargetName = "cargo ships" })
+
+        -- Structures
+        missionCommands.addCommand("Structures", engagePath, radioCommandEngage, { attributes = nil, category = "strike", radioMessageSuffix = "Strike", radioTargetName = "building" })
         ------------------------------------------------------
 
         -- missionCommands.addCommand("Go to map marker "..TUM.wingmenTasking.DEFAULT_MARKER_TEXT:upper(), rootPath, radioCommandGoToMapMarker, nil)

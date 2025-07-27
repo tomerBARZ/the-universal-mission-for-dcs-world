@@ -11,13 +11,84 @@ do
     local mapMarkerMissingWarningAlreadyDisplayed = false -- Was the "map marker missing" warning already displayed during the mission?
     local targetPointMapMarker = nil
 
-    local currentTargetedGroupID = nil
+    local currentTargetIDorPoint = nil -- ID for groups/statics, point2 for scenery objects
+    local currentTargetType = nil
 
     local function allowWeaponUse(wingmenCtrl, allowUse)
         allowUse = allowUse or false
         wingmenCtrl:setOption(AI.Option.Air.id.REACTION_ON_THREAT, AI.Option.Air.val.REACTION_ON_THREAT.EVADE_FIRE)
         wingmenCtrl:setOption(AI.Option.Air.id.PROHIBIT_AA, not allowUse)
         wingmenCtrl:setOption(AI.Option.Air.id.PROHIBIT_AG, not allowUse)
+    end
+
+    local function doCommandEngageStrikeTargets()
+        -- Not a strike mission, so no strike targets
+        if TUM.settings.getValue(TUM.settings.id.TASKING) ~= DCSEx.enums.taskFamily.STRIKE then return nil end
+
+        local wingmenCtrl = TUM.wingmen.getController()
+        if not wingmenCtrl then return nil end
+
+        local wingmenPosition = DCSEx.world.getGroupCenter(TUM.wingmen.getGroup())
+
+        -- Look for nearest strike target
+        local nearestDistance = 9999999999
+        local nearestTarget = nil
+        local nearestTargetType = nil
+
+        for i=1,TUM.objectives.getCount() do
+            local obj = TUM.objectives.getObjective(i)
+            if obj and not obj.completed then
+                -- TODO: check distance
+                local objectiveDB = Library.tasks[obj.taskID]
+                if objectiveDB.targetFamilies and #objectiveDB.targetFamilies > 0 then
+                    allowWeaponUse(wingmenCtrl, true)
+
+                    local distanceFromTarget = DCSEx.math.getDistance2D(wingmenPosition, obj.point2)
+
+                    if distanceFromTarget < nearestDistance then -- TODO: distanceFromTarget < maxSearchDist
+                        if objectiveDB.targetFamilies[1] == DCSEx.enums.unitFamily.STATIC_SCENERY then
+                            nearestDistance = distanceFromTarget
+                            nearestTargetType = "scenery"
+                            nearestTarget = obj.point2
+                        elseif obj.unitsID and #obj.unitsID >= 1 then
+                            nearestDistance = distanceFromTarget
+                            nearestTargetType = "static"
+                            nearestTarget = obj.unitsID[1]
+                        end
+                    end
+                end
+            end
+        end
+
+        if not nearestTarget or not nearestTargetType then return nil end
+
+        if nearestTargetType == "static" then
+            currentTargetType = nearestTargetType
+            currentTargetIDorPoint = nearestTarget
+            local taskTable = {
+                id = "AttackUnit",
+                params = {
+                    groupAttack = true,
+                    unitId = nearestTarget,
+                }
+            }
+            wingmenCtrl:setTask(taskTable)
+            return DCSEx.world.getStaticObjectByID(nearestTarget):getPoint()
+        elseif nearestTargetType == "scenery" then
+            currentTargetType = nearestTargetType
+            currentTargetIDorPoint = nearestTarget
+            local taskTable = {
+                id = "AttackMapObject",
+                params = {
+                    groupAttack = true,
+                    point = nearestTarget,
+                }
+            }
+            wingmenCtrl:setTask(taskTable)
+            return DCSEx.math.vec2ToVec3(nearestTarget, "land")
+        end
+
+        return nil
     end
 
     local function getOrbitTaskTable(point2)
@@ -53,7 +124,17 @@ do
         local wingmenCtrl = TUM.wingmen.getController()
         if not wingmenCtrl then return end
 
-        allowWeaponUse(wingmenCtrl, true)
+        -- Strike targets are handled differently
+        if groupCategory == "strike" then
+            local targetPoint3 = doCommandEngageStrikeTargets()
+
+            if targetPoint3 then
+                TUM.radio.playForAll("pilotWingmanEngageStrike", { TUM.wingmen.getFirstWingmanNumber(), DCSEx.dcs.getBRAA(targetPoint3, DCSEx.world.getGroupCenter(TUM.wingmen.getGroup()), false) }, TUM.wingmen.getFirstWingmanCallsign(), delayRadioAnswer)
+            else
+                TUM.radio.playForAll("pilotWingmanEngageNoTarget", { TUM.wingmen.getFirstWingmanNumber() }, TUM.wingmen.getFirstWingmanCallsign(), delayRadioAnswer)
+            end
+            return
+        end
 
         local detectedContacts = TUM.wingmenContacts.getContacts(groupCategory)
         local validTargets = {}
@@ -80,34 +161,47 @@ do
         end
 
         if #validTargets == 0 then
-            TUM.radio.playForAll("pilotWingmanEngageNoTarget", { TUM.wingmen.getFirstWingmanNumber() }, TUM.wingmen.getFirstWingmanCallsign(), true)
+            TUM.radio.playForAll("pilotWingmanEngageNoTarget", { TUM.wingmen.getFirstWingmanNumber() }, TUM.wingmen.getFirstWingmanCallsign(), delayRadioAnswer)
             return
         end
 
         local wingmenPosition = DCSEx.world.getGroupCenter(TUM.wingmen.getGroup())
 
+
         validTargets = DCSEx.dcs.getNearestObjects(wingmenPosition, validTargets, 1)
         local target = validTargets[1]
-        currentTargetedGroupID = DCSEx.dcs.getGroupIDAsNumber(target:getGroup())
+        currentTargetIDorPoint = DCSEx.dcs.getGroupIDAsNumber(target:getGroup())
+        currentTargetType = "group"
+
+        -- If target is tough, make everyone attack it. Else, only one aircraft attack to save ammo
+        local allWingmenShouldAttack = false
+        if target:hasAttribute("Heavy armed ships") then
+            allWingmenShouldAttack = true
+        elseif (target:hasAttribute("MR SAM") or target:hasAttribute("MR SAM")) and target:hasAttribute("SAM TR") then
+            allWingmenShouldAttack = true
+        end
+
         local taskTable = {
             id = "AttackGroup",
             params = {
-                groupId = currentTargetedGroupID,
+                groupAttack = allWingmenShouldAttack,
+                groupId = currentTargetIDorPoint,
             }
         }
+        allowWeaponUse(wingmenCtrl, true)
         wingmenCtrl:setTask(taskTable)
-        -- wingmenCtrl:pushTask(getRejoinTaskTable()) -- Makes sure wingmen rejoin with the player after attack
 
+        local targetBRAA = ""
         local targetInfo = nil
         local messageSuffix = nil
         if target:inAir() then
             messageSuffix = "Air"
-            targetInfo = Library.objectNames.getGeneric(target)..", "
-            targetInfo = targetInfo..DCSEx.dcs.getBRAA(target:getPoint(), wingmenPosition, true)
+            targetInfo = Library.objectNames.getGeneric(target)
+            targetBRAA = targetInfo..DCSEx.dcs.getBRAA(target:getPoint(), wingmenPosition, true)
         else
             messageSuffix = "Surface"
-            targetInfo = Library.objectNames.getGeneric(target)..", "
-            targetInfo = targetInfo..DCSEx.dcs.getBRAA(target:getPoint(), wingmenPosition, false)
+            targetInfo = Library.objectNames.getGeneric(target)
+            targetBRAA = targetInfo..DCSEx.dcs.getBRAA(target:getPoint(), wingmenPosition, false)
         end
 
         -- Mark the last targeted point in debug mode
@@ -120,7 +214,7 @@ do
             trigger.action.markToAll(targetPointMapMarker, "Last wingmen attack point", target:getPoint(), true)
         end
 
-        TUM.radio.playForAll("pilotWingmanEngage"..messageSuffix, { TUM.wingmen.getFirstWingmanNumber(), targetInfo }, TUM.wingmen.getFirstWingmanCallsign(), true)
+        TUM.radio.playForAll("pilotWingmanEngage"..messageSuffix, { TUM.wingmen.getFirstWingmanNumber(), targetInfo, targetBRAA }, TUM.wingmen.getFirstWingmanCallsign(), delayRadioAnswer)
     end
 
     function TUM.wingmenTasking.commandGoToMapMarker(markerText, delayRadioAnswer)
@@ -137,16 +231,16 @@ do
         local wingmenCtrl = TUM.wingmen.getController()
         if not wingmenCtrl then return end
 
-        allowWeaponUse(wingmenCtrl, false)
 
         if not mapMarker then
-            -- TUM.radio.playForAll("pilotWingmanGoToMarkerNoMarker", { TUM.wingmen.getFirstWingmanNumber() }, TUM.wingmen.getFirstWingmanCallsign(), true)
+            -- TUM.radio.playForAll("pilotWingmanGoToMarkerNoMarker", { TUM.wingmen.getFirstWingmanNumber() }, TUM.wingmen.getFirstWingmanCallsign(), delayRadioAnswer)
             return
         end
 
-        currentTargetedGroupID = nil
+        currentTargetIDorPoint = nil
+        allowWeaponUse(wingmenCtrl, false)
         wingmenCtrl:setTask(getOrbitTaskTable(DCSEx.math.vec3ToVec2(mapMarker.pos)))
-        -- TUM.radio.playForAll("pilotWingmanGoToMarker", { TUM.wingmen.getFirstWingmanNumber() }, TUM.wingmen.getFirstWingmanCallsign(), true)
+        -- TUM.radio.playForAll("pilotWingmanGoToMarker", { TUM.wingmen.getFirstWingmanNumber() }, TUM.wingmen.getFirstWingmanCallsign(), delayRadioAnswer)
     end
 
     function TUM.wingmenTasking.commandOrbit(delayRadioAnswer)
@@ -158,7 +252,7 @@ do
 
         allowWeaponUse(wingmenCtrl, false)
 
-        currentTargetedGroupID = nil
+        currentTargetIDorPoint = nil
         wingmenCtrl:setTask(getOrbitTaskTable(DCSEx.world.getGroupCenter(TUM.wingmen.getGroup())))
         TUM.radio.playForAll("pilotWingmanOrbit", { TUM.wingmen.getFirstWingmanNumber() }, TUM.wingmen.getFirstWingmanCallsign(), delayRadioAnswer)
     end
@@ -174,9 +268,8 @@ do
         local wingmenCtrl = TUM.wingmen.getController()
         if not wingmenCtrl then return end
 
+        currentTargetIDorPoint = nil
         allowWeaponUse(wingmenCtrl, false)
-
-        currentTargetedGroupID = nil
         wingmenCtrl:setTask(getRejoinTaskTable(formationDistance))
         if not silent then
             TUM.radio.playForAll("pilotWingmanRejoin", { TUM.wingmen.getFirstWingmanNumber() }, TUM.wingmen.getFirstWingmanCallsign(), delayRadioAnswer)
@@ -192,7 +285,7 @@ do
 
         if not reportString then
             if noReportIfNoContacts then return false end
-            TUM.radio.playForAll("pilotWingmanReportContactsNoJoy", { TUM.wingmen.getFirstWingmanNumber() }, TUM.wingmen.getFirstWingmanCallsign(), true)
+            TUM.radio.playForAll("pilotWingmanReportContactsNoJoy", { TUM.wingmen.getFirstWingmanNumber() }, TUM.wingmen.getFirstWingmanCallsign(), delayRadioAnswer)
             return true
         else
             TUM.radio.playForAll("pilotWingmanReportContacts", { TUM.wingmen.getFirstWingmanNumber(), reportString }, TUM.wingmen.getFirstWingmanCallsign(), delayRadioAnswer)
@@ -242,12 +335,26 @@ do
     -- Called on every mission update tick (every 10-20 seconds)
     ----------------------------------------------------------    
     function TUM.wingmenTasking.onClockTick()
-        -- Targeted group is dead? Mark group as nil and rejoin leader
-        if currentTargetedGroupID then
-            local tgtGroup = DCSEx.world.getGroupByID(currentTargetedGroupID)
+        if not currentTargetIDorPoint then return end
+
+        -- Targeted object is dead? Mark currentTargetID as nil and rejoin leader
+        if currentTargetType == "group" then
+            local tgtGroup = DCSEx.world.getGroupByID(currentTargetIDorPoint)
             if not tgtGroup or tgtGroup:getSize() == 0 then
                 TUM.wingmenTasking.commandRejoin(nil, false)
-                tgtGroup = nil
+                currentTargetIDorPoint = nil
+            end
+        elseif currentTargetType == "static" then
+            local tgtStatic = DCSEx.world.getStaticObjectByID(currentTargetIDorPoint)
+            if not tgtStatic then
+                TUM.wingmenTasking.commandRejoin(nil, false)
+                currentTargetIDorPoint = nil
+            end
+        elseif currentTargetType == "scenery" then
+            local sceneriesInZone = DCSEx.world.getSceneriesInZone(currentTargetIDorPoint, 5)
+            if not sceneriesInZone or #sceneriesInZone == 0 or sceneriesInZone[1]:getLife() < 1 then
+                TUM.wingmenTasking.commandRejoin(nil, false)
+                currentTargetIDorPoint = nil
             end
         end
     end
