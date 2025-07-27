@@ -136,6 +136,13 @@ Library.radioMessages = {
         "$1, pushing up to formation.",
         "$1, visual, sliding back into position."
     },
+    pilotWingmanRejoinTaskComplete = {
+        "Tasking complete, moving to your wing.",
+        "Task done, closing back on you.",
+        "Work's done, moving to rejoin.",
+        "Finished here, rejoining formation.",
+        "Tasking handled, rejoining now."
+    },
     pilotWingmanReportContacts = {
         "$1, tally contacts.$2",
         "$1, tally groups, pushing details.$2",
