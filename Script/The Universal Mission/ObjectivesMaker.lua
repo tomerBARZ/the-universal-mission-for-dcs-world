@@ -51,35 +51,39 @@ do
         end
         local objectiveDB = Library.tasks[taskID]
 
-        local spawnPoint = nil
+        local spawnPoint2 = nil
+        local spawnPoint3 = nil
         local isSceneryTarget = false
 
         if DCSEx.table.contains(objectiveDB.flags, DCSEx.enums.taskFlag.SCENERY_TARGET) then
-            local validSceneries = DCSEx.world.getSceneriesInZone(zone, DCSEx.zones.getRadius(zone), 100)
+            local validSceneries = DCSEx.world.getSceneriesInZone(zone, DCSEx.zones.getRadius(zone), 250)
             if not validSceneries or #validSceneries == 0 then
                 TUM.log("Failed to find a valid scenery object to use as target.", TUM.logLevel.WARNING)
                 return nil
             end
 
             local pickedScenery = DCSEx.table.getRandom(validSceneries)
-            spawnPoint = pickedScenery:getPoint()
+            spawnPoint3 = DCSEx.table.deepCopy(pickedScenery:getPoint())
+            spawnPoint2 = DCSEx.math.vec3ToVec2(spawnPoint3)
             isSceneryTarget = true
         elseif objectiveDB.surfaceType == land.SurfaceType.WATER then
-            spawnPoint = pickWaterPoint(zone)
-            if not spawnPoint then
-                spawnPoint = DCSEx.world.getSpawnPoint(zone, objectiveDB.surfaceType, objectiveDB.safeRadius)
+            spawnPoint2 = pickWaterPoint(zone)
+            if not spawnPoint2 then
+                spawnPoint2 = DCSEx.world.getSpawnPoint(zone, objectiveDB.surfaceType, objectiveDB.safeRadius)
             end
         else
-            spawnPoint = DCSEx.world.getSpawnPoint(zone, objectiveDB.surfaceType, objectiveDB.safeRadius)
+            spawnPoint2 = DCSEx.world.getSpawnPoint(zone, objectiveDB.surfaceType, objectiveDB.safeRadius)
         end
 
-        if not spawnPoint then
+        if not spawnPoint2 then
             TUM.log("Failed to find a spawn point for objective.", TUM.logLevel.WARNING)
             return nil
         end
 
+        if not spawnPoint3 then spawnPoint3 = DCSEx.math.vec2ToVec3(spawnPoint2, "land") end
+
         if DCSEx.table.contains(objectiveDB.flags, DCSEx.enums.taskFlag.ON_ROADS) then
-            spawnPoint = DCSEx.world.getClosestPointOnRoadsVec2(spawnPoint)
+            spawnPoint2 = DCSEx.world.getClosestPointOnRoadsVec2(spawnPoint2)
         end
 
         local objective = {
@@ -89,8 +93,8 @@ do
             markerID = DCSEx.world.getNextMarkerID(),
             markerTextID = DCSEx.world.getNextMarkerID(),
             name = Library.objectiveNames.get():upper(),
-            point2 = DCSEx.table.deepCopy(spawnPoint),
-            point3 = DCSEx.math.vec2ToVec3(spawnPoint, "land"),
+            point2 = DCSEx.table.deepCopy(spawnPoint2),
+            point3 = DCSEx.table.deepCopy(spawnPoint3),
             preciseCoordinates = objectiveDB.waypointInaccuracy <= 0,
             taskID = taskID,
             unitsID = {}
