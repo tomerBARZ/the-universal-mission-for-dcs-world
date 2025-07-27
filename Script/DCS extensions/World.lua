@@ -12,6 +12,7 @@
 -- DCSEx.world.getGroupByID(groupID)
 -- DCSEx.world.getNextMarkerID()
 -- DCSEx.world.getSceneriesInZone(center, radius, minHealth)
+-- DCSEx.world.getStaticObjectByID(staticID)
 -- DCSEx.world.getTerrainHeightDiff(coord, searchRadius)
 -- DCSEx.world.getUnitByID(unitID)
 -- DCSEx.world.isGroupAlive(g, unitsMustBeInAir)
@@ -342,7 +343,7 @@ do
 
         local scenerySearchvolume = {
             id = world.VolumeType.SPHERE,
-            params = { point = { x = center.x, y = 0, z = center.y }, radius = radius }
+            params = { point = DCSEx.math.vec2ToVec3(center, "land"), radius = radius }
         }
 
         local function ifSceneryFound(foundScenery, val)
@@ -358,6 +359,23 @@ do
         world.searchObjects(Object.Category.SCENERY, scenerySearchvolume, ifSceneryFound)
 
         return sceneries
+    end
+
+    -------------------------------------
+    -- Searches and return a static object by its ID
+    -- @param staticID ID of the static object
+    -- @return An unit, or nil if no static object with this ID was found
+    -------------------------------------
+    function DCSEx.world.getStaticObjectByID(staticID)
+        for coalitionID = 1, 2 do
+            for _, s in pairs(coalition.getStaticObjects(coalitionID)) do
+                if DCSEx.dcs.getObjectIDAsNumber(s) == staticID then
+                    return s
+                end
+            end
+        end
+
+        return nil
     end
 
     -- TODO: description, update file header
