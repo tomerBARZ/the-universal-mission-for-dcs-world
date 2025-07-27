@@ -16,11 +16,12 @@ do
     local currentTargetIDorPoint = nil -- ID for groups/statics, point2 for scenery objects
     local currentTargetType = nil
 
-    local function allowWeaponUse(wingmenCtrl, allowUse)
-        allowUse = allowUse or false
+    local function allowWeaponUse(wingmenCtrl, allowAA, allowAG)
+        allowAA = allowAA or false
+        allowAG = allowAG or false
         wingmenCtrl:setOption(AI.Option.Air.id.REACTION_ON_THREAT, AI.Option.Air.val.REACTION_ON_THREAT.EVADE_FIRE)
-        wingmenCtrl:setOption(AI.Option.Air.id.PROHIBIT_AA, not allowUse)
-        wingmenCtrl:setOption(AI.Option.Air.id.PROHIBIT_AG, not allowUse)
+        wingmenCtrl:setOption(AI.Option.Air.id.PROHIBIT_AA, not allowAA)
+        wingmenCtrl:setOption(AI.Option.Air.id.PROHIBIT_AG, not allowAG)
     end
 
     local function doCommandEngageStrikeTargets()
@@ -42,8 +43,6 @@ do
             if obj and not obj.completed then
                 local objectiveDB = Library.tasks[obj.taskID]
                 if objectiveDB.targetFamilies and #objectiveDB.targetFamilies > 0 then
-                    allowWeaponUse(wingmenCtrl, true)
-
                     local distanceFromTarget = DCSEx.math.getDistance2D(wingmenPosition, obj.point2)
 
                     if distanceFromTarget < nearestDistance and distanceFromTarget < MAX_STRUCTURE_ENGAGEMENT_RANGE then
@@ -73,6 +72,7 @@ do
                     unitId = nearestTarget,
                 }
             }
+            allowWeaponUse(wingmenCtrl, false, true)
             wingmenCtrl:setTask(taskTable)
             return DCSEx.world.getStaticObjectByID(nearestTarget):getPoint()
         elseif nearestTargetType == "scenery" then
@@ -85,6 +85,7 @@ do
                     point = nearestTarget,
                 }
             }
+            allowWeaponUse(wingmenCtrl, false, true)
             wingmenCtrl:setTask(taskTable)
             return DCSEx.math.vec2ToVec3(nearestTarget, "land")
         end
@@ -182,7 +183,6 @@ do
 
         local wingmenPosition = DCSEx.world.getGroupCenter(TUM.wingmen.getGroup())
 
-
         validTargets = DCSEx.dcs.getNearestObjects(wingmenPosition, validTargets, 1)
         local target = validTargets[1]
         currentTargetIDorPoint = DCSEx.dcs.getGroupIDAsNumber(target:getGroup())
@@ -203,13 +203,15 @@ do
                 groupId = currentTargetIDorPoint,
             }
         }
-        allowWeaponUse(wingmenCtrl, true)
+
+        local targetInAir = target:inAir()
+        allowWeaponUse(wingmenCtrl, targetInAir, not targetInAir)
         wingmenCtrl:setTask(taskTable)
 
         local targetBRAA = "distance unknown"
         local targetInfo = nil
         local messageSuffix = nil
-        if target:inAir() then
+        if targetInAir then
             messageSuffix = "Air"
             targetInfo = Library.objectNames.get(target) -- Library.objectNames.getGeneric(target)
             targetBRAA = DCSEx.dcs.getBRAA(target:getPoint(), wingmenPosition, true)
@@ -253,7 +255,7 @@ do
         end
 
         currentTargetIDorPoint = nil
-        allowWeaponUse(wingmenCtrl, false)
+        allowWeaponUse(wingmenCtrl, false, false)
         wingmenCtrl:setTask(getOrbitTaskTable(DCSEx.math.vec3ToVec2(mapMarker.pos)))
         -- TUM.radio.playForAll("pilotWingmanGoToMarker", { TUM.wingmen.getFirstWingmanNumber() }, TUM.wingmen.getFirstWingmanCallsign(), delayRadioAnswer)
     end
@@ -265,16 +267,16 @@ do
         local wingmenCtrl = TUM.wingmen.getController()
         if not wingmenCtrl then return end
 
-        allowWeaponUse(wingmenCtrl, false)
-
+        allowWeaponUse(wingmenCtrl, false, false)
         currentTargetIDorPoint = nil
         wingmenCtrl:setTask(getOrbitTaskTable(DCSEx.world.getGroupCenter(TUM.wingmen.getGroup())))
         TUM.radio.playForAll("pilotWingmanOrbit", { TUM.wingmen.getFirstWingmanNumber() }, TUM.wingmen.getFirstWingmanCallsign(), delayRadioAnswer)
     end
 
-    function TUM.wingmenTasking.commandRejoin(formationDistance, delayRadioAnswer, silent)
+    function TUM.wingmenTasking.commandRejoin(formationDistance, delayRadioAnswer, silent, taskingComplete)
         delayRadioAnswer = delayRadioAnswer or false
         silent = silent or false
+        taskingComplete = taskingComplete or false
         if TUM.settings.getValue(TUM.settings.id.MULTIPLAYER) then return end -- No wingmen in multiplayer
 
         local player = world:getPlayer()
@@ -284,10 +286,12 @@ do
         if not wingmenCtrl then return end
 
         currentTargetIDorPoint = nil
-        allowWeaponUse(wingmenCtrl, false)
+        allowWeaponUse(wingmenCtrl, false, false)
         wingmenCtrl:setTask(getRejoinTaskTable(formationDistance))
         if not silent then
-            TUM.radio.playForAll("pilotWingmanRejoin", { TUM.wingmen.getFirstWingmanNumber() }, TUM.wingmen.getFirstWingmanCallsign(), delayRadioAnswer)
+            local msgID = "pilotWingmanRejoin"
+            if taskingComplete then msgID = "pilotWingmanRejoinTaskComplete" end
+            TUM.radio.playForAll(msgID, { TUM.wingmen.getFirstWingmanNumber() }, TUM.wingmen.getFirstWingmanCallsign(), delayRadioAnswer)
         end
     end
 
@@ -350,26 +354,30 @@ do
     -- Called on every mission update tick (every 10-20 seconds)
     ----------------------------------------------------------    
     function TUM.wingmenTasking.onClockTick()
+        -- No tasking? Rejoin leader
+        local wingmenCtrl = TUM.wingmen:getController()
+        if wingmenCtrl and not wingmenCtrl:hasTask() then
+            TUM.wingmenTasking.commandRejoin(nil, false)
+            return
+        end
+
         if not currentTargetIDorPoint then return end
 
-        -- Targeted object is dead? Mark currentTargetID as nil and rejoin leader
+        -- Targeted object is dead? Rejoin leader
         if currentTargetType == "group" then
             local tgtGroup = DCSEx.world.getGroupByID(currentTargetIDorPoint)
             if not tgtGroup or tgtGroup:getSize() == 0 then
-                TUM.wingmenTasking.commandRejoin(nil, false)
-                currentTargetIDorPoint = nil
+                TUM.wingmenTasking.commandRejoin(nil, false, false, true)
             end
         elseif currentTargetType == "static" then
             local tgtStatic = DCSEx.world.getStaticObjectByID(currentTargetIDorPoint)
             if not tgtStatic then
-                TUM.wingmenTasking.commandRejoin(nil, false)
-                currentTargetIDorPoint = nil
+                TUM.wingmenTasking.commandRejoin(nil, false, false, true)
             end
         elseif currentTargetType == "scenery" then
             local sceneriesInZone = DCSEx.world.getSceneriesInZone(currentTargetIDorPoint, 5)
             if not sceneriesInZone or #sceneriesInZone == 0 or sceneriesInZone[1]:getLife() < 1 then
-                TUM.wingmenTasking.commandRejoin(nil, false)
-                currentTargetIDorPoint = nil
+                TUM.wingmenTasking.commandRejoin(nil, false, false, true)
             end
         end
     end
