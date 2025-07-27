@@ -191,17 +191,17 @@ do
         allowWeaponUse(wingmenCtrl, true)
         wingmenCtrl:setTask(taskTable)
 
-        local targetBRAA = ""
+        local targetBRAA = "distance unknown"
         local targetInfo = nil
         local messageSuffix = nil
         if target:inAir() then
             messageSuffix = "Air"
-            targetInfo = Library.objectNames.getGeneric(target)
-            targetBRAA = targetInfo..DCSEx.dcs.getBRAA(target:getPoint(), wingmenPosition, true)
+            targetInfo = Library.objectNames.get(target) -- Library.objectNames.getGeneric(target)
+            targetBRAA = DCSEx.dcs.getBRAA(target:getPoint(), wingmenPosition, true)
         else
             messageSuffix = "Surface"
-            targetInfo = Library.objectNames.getGeneric(target)
-            targetBRAA = targetInfo..DCSEx.dcs.getBRAA(target:getPoint(), wingmenPosition, false)
+            targetInfo = Library.objectNames.get(target) -- Library.objectNames.getGeneric(target)
+            targetBRAA = DCSEx.dcs.getBRAA(target:getPoint(), wingmenPosition, false)
         end
 
         -- Mark the last targeted point in debug mode

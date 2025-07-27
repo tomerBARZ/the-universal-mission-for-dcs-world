@@ -90,7 +90,7 @@ do
 
         -- Ground -- (radioTargetName must be singular)
         engageSubPath = missionCommands.addSubMenu("Ground", engagePath)
-        missionCommands.addCommand("Any vehicles", engageSubPath, radioCommandEngage, { attributes = {"Tanks", "Trucks", "Artillery", "IFV", "APC"}, category = Group.Category.GROUND, radioMessageSuffix = "Ground", radioTargetName = "ground" })
+        missionCommands.addCommand("Any ground vehicles", engageSubPath, radioCommandEngage, { attributes = {"Tanks", "Trucks", "Artillery", "IFV", "APC"}, category = Group.Category.GROUND, radioMessageSuffix = "Ground", radioTargetName = "ground" })
         missionCommands.addCommand("Armor", engageSubPath, radioCommandEngage, { attributes = {"Tanks", "IFV", "APC"}, category = Group.Category.GROUND, radioMessageSuffix = "Ground", radioTargetName = "armor" })
         missionCommands.addCommand("Artillery", engageSubPath, radioCommandEngage, { attributes = {"Artillery"}, category = Group.Category.GROUND, radioMessageSuffix = "Ground", radioTargetName = "artillery" })
         missionCommands.addCommand("Infantry", engageSubPath, radioCommandEngage, { attributes = {"Infantry"}, category = Group.Category.GROUND, radioMessageSuffix = "Ground", radioTargetName = "infantry" })

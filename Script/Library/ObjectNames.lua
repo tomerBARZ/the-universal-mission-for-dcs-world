@@ -711,7 +711,7 @@ do
         -- Pick the unit name highest in priority
         local groupName = nil
         for _,n in ipairs(GROUP_PRIORITY) do
-            if DCSEx.table.contains(unitNames) then
+            if DCSEx.table.contains(unitNames, n) then
                 groupName = n
                 break
             end
@@ -719,7 +719,7 @@ do
         if not groupName then return "unknown" end
 
         if groupName == "SAM search radar" or groupName == "SAM launcher" or groupName == "SAM tracking radar" then
-            return "SAM vehicle"
+            return "SAM element"
         end
 
         return groupName
