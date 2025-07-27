@@ -4291,7 +4291,7 @@ Library.aircraft = {
                     ["CLSID"] = "{F376DBEE-4CAE-41BA-ADD9-B2910AC95DEC}"
                 },
                 [7] = {
-                    ["CLSID"] = "{TER_9A_2R*GBU-12}"
+                    ["CLSID"] = "{E6A6262A-CA08-4B3D-B030-E1A993B98453}"
                 },
                 [8] = {
                     ["CLSID"] = "{5CE2FF2A-645A-4197-B48D-8720AC69394F}"
