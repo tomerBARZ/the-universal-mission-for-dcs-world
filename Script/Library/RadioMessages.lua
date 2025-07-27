@@ -85,12 +85,12 @@ Library.radioMessages = {
     pilotWarningSAMLaunch = { "Spike! SAM just launched, break!", "SAM up! Defensive now!", "Launch! SAM, coming fast, pump chaff, go cold!", "SAM in the air, break hard!", "SAM fired, visual smoke! Extend, extend!" },
 
     pilotWingmanEngageAir = {
-        "$1, copy, engaging $2 now.",
-        "$1, tally one, pressing on $2.",
-        "$1, roger, comitting on $2.",
-        "$1, confirm, going after $2.",
-        "$1, affirm, moving in on $2."
-    },
+        "$1, copy, engaging $2 now ($3).",
+        "$1, tally one, pressing on $2 ($3).",
+        "$1, roger, comitting on $2 ($3).",
+        "$1, confirm, going after $2 ($3).",
+        "$1, affirm, moving in on $2 ($3)."
+    }, -- "$2" should be "bandits" in audio version
     pilotWingmanEngageNoTarget = {
         "$1, negative tally, unable engage.",
         "$1, cannot comply, blind on target.",
@@ -98,13 +98,18 @@ Library.radioMessages = {
         "$1, negative contact, unable to commit.",
         "$1, that's a no, not seeing any targets."
     },
-    pilotWingmanEngageSurface = {
-        "$1, engaging surface threat, $2.",
-        "$1, rolling in on enemy position, $2.",
-        "$1, affirm, moving in on target, $2.",
-        "$1, on target, commencing attack on $2.",
-        "$1, weapons hot, engaging $2.",
+    pilotWingmanEngageStrike = {
+        "$1, copy, engaging target structure ($2).",
+        "$1, roger, moving in on the building now ($2).",
+        "$1, copy that, setting up for strike ($2)."
     },
+    pilotWingmanEngageSurface = {
+        "$1, engaging $2 threat ($3).",
+        "$1, rolling in on $2 position ($3).",
+        "$1, affirm, moving in on $2 ($3).",
+        "$1, on target, commencing attack on $2 ($3).",
+        "$1, weapons hot, engaging $2 ($3).",
+    }, -- "$2" should be "target" in audio version
     -- pilotWingmanGoToMarker = {
     --     "$1, copy. Pushing to waypoint now.",
     --     "$1, on route to the coords, maintaining current alt.",
@@ -317,6 +322,12 @@ Library.radioMessages = {
         "Flight, strike $1 in your sector.",
         "Flight, take the lead on enemy $1.",
     }, -- "$1" should be "ships" in audio version
+    playerWingmanEngageStrike = {
+        "Flight, take out target building.",
+        "Flight, hit target structure.",
+        "Flight, clear to hit target building.",
+        "Flight, strike target building, confirm visual.",
+    },
     -- playerWingmanGoToMarker = {
     --     "Flight, proceed to waypoint.",
     --     "Flight, push to the hold point now.",
