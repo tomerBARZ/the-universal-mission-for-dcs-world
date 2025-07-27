@@ -76,6 +76,7 @@ do
 
     function TUM.wingmenMenu.create()
         if TUM.settings.getValue(TUM.settings.id.MULTIPLAYER) then return end -- No wingmen in multiplayer
+        if TUM.settings.getValue(TUM.settings.id.WINGMEN) <= 1 then return end -- No wingmen
 
         local rootPath = missionCommands.addSubMenu("✈ Flight")
         missionCommands.addCommand("Cover me!", rootPath, radioCommandCoverMe, nil)

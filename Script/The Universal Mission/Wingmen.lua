@@ -38,6 +38,8 @@ do
 
     function TUM.wingmen.create()
         TUM.wingmen.removeAll() -- Destroy all pre-existing wingmen
+        if TUM.settings.getValue(TUM.settings.id.WINGMEN) <= 1 then return end -- No wingmen
+
         TUM.log("Creating wingmen...")
 
         local player = world:getPlayer()
@@ -62,12 +64,16 @@ do
             wingmanCallsign = DCSEx.unitCallsignMaker.getCallsign(playerTypeName)
         end
 
+        local unitCount = TUM.settings.getValue(TUM.settings.id.WINGMEN) - 1
+        local unitList = {}
+        for _=1,unitCount do table.insert(unitList, playerTypeName) end
+
         -- Select proper payload for mission
         local groupInfo = DCSEx.unitGroupMaker.create(
             TUM.settings.getPlayerCoalition(),
             playerCategory,
             DCSEx.math.randomPointInCircle(DCSEx.math.vec3ToVec2(player:getPoint()), 500, 250),
-            { playerTypeName, playerTypeName },
+            unitList,
             {
                 altitude = math.min(player:getPoint().y + 1524, 3048), -- spawn at player altitude + 5,000ft, up to a max of 10,000ft (to avoid crashes into nearby hills)
                 callsign = wingmanCallsign,

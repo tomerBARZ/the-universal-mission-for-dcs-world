@@ -22,6 +22,7 @@ TUM.settings.id = {
     TARGET_LOCATION = 9,
     TASKING = 10,
     TIME_PERIOD = 11,
+    WINGMEN = 12,
 }
 
 do
@@ -39,6 +40,7 @@ do
         [TUM.settings.id.TARGET_LOCATION] = "Target location",
         [TUM.settings.id.TASKING] = "Mission type",
         [TUM.settings.id.TIME_PERIOD] = "Time period",
+        [TUM.settings.id.WINGMEN] = "Wingmen",
     }
 
     local SETTING_VALUES = {
@@ -52,6 +54,7 @@ do
         [TUM.settings.id.TARGET_LOCATION] = { },
         [TUM.settings.id.TASKING] = { "Antiship strike", "Ground attack", "Interception", "SEAD", "Strike" }, -- Must match values in the DCSEx.enums.taskFamily enum
         [TUM.settings.id.TIME_PERIOD] = { "World War 2", "Korea War", "Vietnam War", "Late Cold War", "Modern" }, -- Must match values in the DCSEx.enums.timePeriod enum
+        [TUM.settings.id.WINGMEN] = { "None", "One", "Two", "Three" }
     }
 
     local function getFaction(side)
@@ -74,7 +77,8 @@ do
             [TUM.settings.id.TARGET_COUNT] = 2,
             [TUM.settings.id.TARGET_LOCATION] = 1,
             [TUM.settings.id.TASKING] = DCSEx.enums.taskFamily.GROUND_ATTACK,
-            [TUM.settings.id.TIME_PERIOD] = DCSEx.enums.timePeriod.MODERN
+            [TUM.settings.id.TIME_PERIOD] = DCSEx.enums.timePeriod.MODERN,
+            [TUM.settings.id.WINGMEN] = 2
         }
 
         -- TODO: set default time period according to mission year
@@ -155,6 +159,7 @@ do
             TUM.settings.id.ENEMY_AIR_DEFENSE,
             TUM.settings.id.ENEMY_AIR_FORCE,
             -1,
+            TUM.settings.id.WINGMEN,
             TUM.settings.id.AI_CAP,
         }
 
@@ -175,7 +180,7 @@ do
                 end
 
                 if showScoreMultiplier then
-                    local settingMultiplier = TUM.playerScore.getScoreMultiplier(v, settings[v])
+                    local settingMultiplier = TUM.playerScore.getScoreMultiplierMod(v, settings[v])
 
                     if settingMultiplier > 0.0 then
                         summary = summary.." (+"..tostring(math.ceil(settingMultiplier * 100)).."% xp)"
