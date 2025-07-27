@@ -119,7 +119,7 @@ do
         -- missionCommands.addCommand("Go to map marker "..TUM.wingmenTasking.DEFAULT_MARKER_TEXT:upper(), rootPath, radioCommandGoToMapMarker, nil)
         missionCommands.addCommand("Report contacts", rootPath, radioCommandReportContacts, nil)
         missionCommands.addCommand("Hold position", rootPath, radioCommandOrbit, nil)
+        missionCommands.addCommand("Status report", rootPath, radioCommandReportStatus, nil)
         missionCommands.addCommand("Rejoin", rootPath, radioCommandRejoin, nil)
-        missionCommands.addCommand("Status", rootPath, radioCommandReportStatus, nil)
     end
 end
