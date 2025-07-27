@@ -83,7 +83,7 @@ do
         engageSubPath = missionCommands.addSubMenu("Aircraft", engagePath)
         missionCommands.addCommand("Any aircraft", engageSubPath, radioCommandEngage, { attributes = nil, category = Group.Category.AIRPLANE, radioMessageSuffix = "Bandits", radioTargetName = "bandits" })
         missionCommands.addCommand("Fighters", engageSubPath, radioCommandEngage, { attributes = { "Fighters", "Interceptors", "Multirole fighters" }, category = Group.Category.AIRPLANE, radioMessageSuffix = "Bandits", radioTargetName = "fighters" })
-        missionCommands.addCommand("Bombers and transports", engageSubPath, radioCommandEngage, { attributes = nil, category = Group.Category.AIRPLANE, radioMessageSuffix = "Bandits", radioTargetName = "strategic aircraft" })
+        missionCommands.addCommand("Bombers and transports", engageSubPath, radioCommandEngage, { attributes = { "Bombers", "Transports", "AWACS" }, category = Group.Category.AIRPLANE, radioMessageSuffix = "Bandits", radioTargetName = "strategic aircraft" })
         if not isWW2 then
             missionCommands.addCommand("Helicopters", engageSubPath, radioCommandEngage, { attributes = nil, category = Group.Category.HELICOPTER, radioMessageSuffix = "Bandits", radioTargetName = "helos" })
         end
@@ -102,8 +102,10 @@ do
         missionCommands.addCommand("AAA", engageSubPath, radioCommandEngage, { attributes = { "AAA" }, category = Group.Category.GROUND, radioMessageSuffix = "AirDefense", radioTargetName = "AAA" })
         if not isWW2 then
             missionCommands.addCommand("MANPADS", engageSubPath, radioCommandEngage, { attributes = { "MANPADS" }, category = Group.Category.GROUND, radioMessageSuffix = "AirDefense", radioTargetName = "MANPADS" })
-            missionCommands.addCommand("Short range SAMs", engageSubPath, radioCommandEngage, { attributes = { "SR SAM", "IR Guided SAM" }, category = Group.Category.GROUND, radioMessageSuffix = "AirDefense", radioTargetName = "SHORAD" })
-            missionCommands.addCommand("Long-range SAMs", engageSubPath, radioCommandEngage, { attributes = { "LR SAM", "MR SAM" }, category = Group.Category.GROUND, radioMessageSuffix = "AirDefense", radioTargetName = "HIMAD" })
+            missionCommands.addCommand("Short range SAMs", engageSubPath, radioCommandEngage, { attributes = { "SR SAM", "IR Guided SAM" }, category = Group.Category.GROUND, radioMessageSuffix = "AirDefense", radioTargetName = "short-range SAM" })
+            missionCommands.addCommand("Short range SAMs (IR only)", engageSubPath, radioCommandEngage, { attributes = { "IR Guided SAM" }, category = Group.Category.GROUND, radioMessageSuffix = "AirDefense", radioTargetName = "IR SAM" })
+            missionCommands.addCommand("Short range SAMs (radar only)", engageSubPath, radioCommandEngage, { attributes = { "SR SAM" }, category = Group.Category.GROUND, radioMessageSuffix = "AirDefense", radioTargetName = "SHORAD" })
+            missionCommands.addCommand("Long-range SAMs", engageSubPath, radioCommandEngage, { attributes = { "LR SAM", "MR SAM" }, category = Group.Category.GROUND, radioMessageSuffix = "AirDefense", radioTargetName = "long-range SAM" })
         end
 
         -- Ships -- (radioTargetName must be plural)
