@@ -8,6 +8,8 @@ TUM.wingmenTasking = {}
 do
     TUM.wingmenTasking.DEFAULT_MARKER_TEXT = "flight"
 
+    local MAX_STRUCTURE_ENGAGEMENT_RANGE = DCSEx.converter.nmToMeters(25)
+
     local mapMarkerMissingWarningAlreadyDisplayed = false -- Was the "map marker missing" warning already displayed during the mission?
     local targetPointMapMarker = nil
 
@@ -38,14 +40,13 @@ do
         for i=1,TUM.objectives.getCount() do
             local obj = TUM.objectives.getObjective(i)
             if obj and not obj.completed then
-                -- TODO: check distance
                 local objectiveDB = Library.tasks[obj.taskID]
                 if objectiveDB.targetFamilies and #objectiveDB.targetFamilies > 0 then
                     allowWeaponUse(wingmenCtrl, true)
 
                     local distanceFromTarget = DCSEx.math.getDistance2D(wingmenPosition, obj.point2)
 
-                    if distanceFromTarget < nearestDistance then -- TODO: distanceFromTarget < maxSearchDist
+                    if distanceFromTarget < nearestDistance and distanceFromTarget < MAX_STRUCTURE_ENGAGEMENT_RANGE then
                         if objectiveDB.targetFamilies[1] == DCSEx.enums.unitFamily.STATIC_SCENERY then
                             nearestDistance = distanceFromTarget
                             nearestTargetType = "scenery"
