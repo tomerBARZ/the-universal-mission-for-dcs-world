@@ -16,12 +16,33 @@ do
     local currentTargetIDorPoint = nil -- ID for groups/statics, point2 for scenery objects
     local currentTargetType = nil
 
+    local cruiseAltitudeFraction = 1.0 -- Fraction of the default aircraft cruise altitude
+
     local function allowWeaponUse(wingmenCtrl, allowAA, allowAG)
         allowAA = allowAA or false
         allowAG = allowAG or false
         wingmenCtrl:setOption(AI.Option.Air.id.REACTION_ON_THREAT, AI.Option.Air.val.REACTION_ON_THREAT.EVADE_FIRE)
         wingmenCtrl:setOption(AI.Option.Air.id.PROHIBIT_AA, not allowAA)
         wingmenCtrl:setOption(AI.Option.Air.id.PROHIBIT_AG, not allowAG)
+    end
+
+    local function getAltitude()
+        local player = world.getPlayer()
+        if not player then return 600 end -- Don't care about altitude if player's dead anyway
+
+        local altitude = Library.aircraft[player:getTypeName()].altitude * cruiseAltitudeFraction
+        return altitude
+    end
+
+    local function setWingmenAltitude(altitude)
+        local wingmenCtrl = TUM.wingmen.getController()
+        if not wingmenCtrl then return nil end
+
+        altitude = altitude or getAltitude()
+        altitude = math.max(50, altitude)
+        altitude = altitude * DCSEx.math.randomFloat(0.98, 1.02) -- add a slight variation
+
+        wingmenCtrl:setAltitude(altitude, true, AI.Task.AltitudeType.BARO)
     end
 
     local function doCommandEngageStrikeTargets()
@@ -73,6 +94,7 @@ do
                 }
             }
             allowWeaponUse(wingmenCtrl, false, true)
+            setWingmenAltitude()
             wingmenCtrl:setTask(taskTable)
             return DCSEx.world.getStaticObjectByID(nearestTarget):getPoint()
         elseif nearestTargetType == "scenery" then
@@ -86,6 +108,7 @@ do
                 }
             }
             allowWeaponUse(wingmenCtrl, false, true)
+            setWingmenAltitude()
             wingmenCtrl:setTask(taskTable)
             return DCSEx.math.vec2ToVec3(nearestTarget, "land")
         end
@@ -93,25 +116,11 @@ do
         return nil
     end
 
-    local function getOrbitAltitude()
-        local player = world.getPlayer()
-        if not player then return 600 end
-
-        local altitude = world.getPlayer():getPoint().y
-
-        local aircraftType = player:getTypeName()
-        if Library.aircraft[aircraftType] and Library.aircraft[aircraftType].altitude then
-            altitude = math.max(altitude, Library.aircraft[aircraftType].altitude * 0.8)
-        end
-
-        return altitude
-    end
-
     local function getOrbitTaskTable(point2)
         return {
             id = "Orbit",
             params = {
-                altitude = getOrbitAltitude(),
+                altitude = getAltitude(),
                 pattern = "Circle",
                 point = point2,
                 width = DCSEx.converter.nmToMeters(1.0)
@@ -131,6 +140,20 @@ do
                 pos = { x = -formationDistance, y = 0, z = -formationDistance }
             }
         }
+    end
+
+    function TUM.wingmenTasking.commandChangeAltitude(altFraction, delayRadioAnswer)
+        cruiseAltitudeFraction = DCSEx.math.clamp(altFraction or 1.0, 0.0, 2.0)
+        local newAlt = getAltitude()
+
+        local newAltStr = "nap-of-the-earth"
+        if altFraction > 0 then
+            newAltStr = DCSEx.string.toStringThousandsSeparator(math.floor(DCSEx.converter.metersToFeet(newAlt) / 100) * 100).."ft"
+        end
+
+        setWingmenAltitude()
+        TUM.radio.playForAll("pilotWingmanChangeAltitude", { TUM.wingmen.getFirstWingmanNumber(), newAltStr }, TUM.wingmen.getFirstWingmanCallsign(), delayRadioAnswer)
+        return true
     end
 
     function TUM.wingmenTasking.commandEngage(groupCategory, targetAttributes, delayRadioAnswer)
@@ -207,6 +230,7 @@ do
 
         local targetInAir = target:inAir()
         allowWeaponUse(wingmenCtrl, targetInAir, not targetInAir)
+        setWingmenAltitude()
         wingmenCtrl:setTask(taskTable)
 
         local targetBRAA = "distance unknown"
@@ -214,11 +238,11 @@ do
         local messageSuffix = nil
         if targetInAir then
             messageSuffix = "Air"
-            targetInfo = Library.objectNames.get(target) -- Library.objectNames.getGeneric(target)
+            targetInfo = Library.objectNames.get(target)
             targetBRAA = DCSEx.dcs.getBRAA(target:getPoint(), wingmenPosition, true)
         else
             messageSuffix = "Surface"
-            targetInfo = Library.objectNames.get(target) -- Library.objectNames.getGeneric(target)
+            targetInfo = Library.objectNames.getGeneric(target)
             targetBRAA = DCSEx.dcs.getBRAA(target:getPoint(), wingmenPosition, false)
         end
 
@@ -257,6 +281,7 @@ do
 
         currentTargetIDorPoint = nil
         allowWeaponUse(wingmenCtrl, false, false)
+        setWingmenAltitude()
         wingmenCtrl:setTask(getOrbitTaskTable(DCSEx.math.vec3ToVec2(mapMarker.pos)))
         -- TUM.radio.playForAll("pilotWingmanGoToMarker", { TUM.wingmen.getFirstWingmanNumber() }, TUM.wingmen.getFirstWingmanCallsign(), delayRadioAnswer)
 
@@ -272,6 +297,7 @@ do
 
         allowWeaponUse(wingmenCtrl, false, false)
         currentTargetIDorPoint = nil
+        setWingmenAltitude()
         wingmenCtrl:setTask(getOrbitTaskTable(DCSEx.world.getGroupCenter(TUM.wingmen.getGroup())))
         TUM.radio.playForAll("pilotWingmanOrbit", { TUM.wingmen.getFirstWingmanNumber() }, TUM.wingmen.getFirstWingmanCallsign(), delayRadioAnswer)
 
@@ -292,6 +318,8 @@ do
 
         currentTargetIDorPoint = nil
         allowWeaponUse(wingmenCtrl, false, false)
+        -- setWingmenAltitude(player:getPoint().y)
+        setWingmenAltitude()
         wingmenCtrl:setTask(getRejoinTaskTable(formationDistance))
         if not silent then
             local msgID = "pilotWingmanRejoin"
@@ -388,5 +416,9 @@ do
                 TUM.wingmenTasking.commandRejoin(nil, false, false, true)
             end
         end
+    end
+
+    function TUM.wingmenTasking.resetTaskingParameters()
+        cruiseAltitudeFraction = 1.0
     end
 end

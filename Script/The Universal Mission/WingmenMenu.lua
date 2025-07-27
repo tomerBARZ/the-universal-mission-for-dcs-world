@@ -6,6 +6,15 @@
 TUM.wingmenMenu = {}
 
 do
+    local function radioCommandChangeAltitude(args)
+        local player = world:getPlayer()
+        if not player then return end
+
+        TUM.radio.playForAll("playerWingmanChangeAltitude", { args.altitudeText }, player:getCallsign(), false)
+
+        TUM.wingmenTasking.commandChangeAltitude(args.altitudeFraction, true)
+    end
+
     local function radioCommandCoverMe(args)
         local player = world:getPlayer()
         if not player then return end
@@ -92,6 +101,8 @@ do
         engageSubPath = missionCommands.addSubMenu("Ground", engagePath)
         missionCommands.addCommand("Any ground vehicles", engageSubPath, radioCommandEngage, { attributes = {"Tanks", "Trucks", "Artillery", "IFV", "APC"}, category = Group.Category.GROUND, radioMessageSuffix = "Ground", radioTargetName = "ground" })
         missionCommands.addCommand("Armor", engageSubPath, radioCommandEngage, { attributes = {"Tanks", "IFV", "APC"}, category = Group.Category.GROUND, radioMessageSuffix = "Ground", radioTargetName = "armor" })
+        missionCommands.addCommand("Armor (APCs only)", engageSubPath, radioCommandEngage, { attributes = {"IFV", "APC"}, category = Group.Category.GROUND, radioMessageSuffix = "Ground", radioTargetName = "armor" })
+        missionCommands.addCommand("Armor (tanks only)", engageSubPath, radioCommandEngage, { attributes = {"Tanks"}, category = Group.Category.GROUND, radioMessageSuffix = "Ground", radioTargetName = "armor" })
         missionCommands.addCommand("Artillery", engageSubPath, radioCommandEngage, { attributes = {"Artillery"}, category = Group.Category.GROUND, radioMessageSuffix = "Ground", radioTargetName = "artillery" })
         missionCommands.addCommand("Infantry", engageSubPath, radioCommandEngage, { attributes = {"Infantry"}, category = Group.Category.GROUND, radioMessageSuffix = "Ground", radioTargetName = "infantry" })
         missionCommands.addCommand("Trucks", engageSubPath, radioCommandEngage, { attributes = {"Trucks"}, category = Group.Category.GROUND, radioMessageSuffix = "Ground", radioTargetName = "truck" })
@@ -121,6 +132,19 @@ do
         -- missionCommands.addCommand("Go to map marker "..TUM.wingmenTasking.DEFAULT_MARKER_TEXT:upper(), rootPath, radioCommandGoToMapMarker, nil)
         missionCommands.addCommand("Report contacts", rootPath, radioCommandReportContacts, nil)
         missionCommands.addCommand("Hold position", rootPath, radioCommandOrbit, nil)
+
+        ------------------------------------------------------
+        -- "Change altitude" submenu
+        ------------------------------------------------------
+        local altitudePath = missionCommands.addSubMenu("Change altitude", rootPath)
+        local baseAltitude = DCSEx.converter.metersToFeet(Library.aircraft[world.getPlayer():getTypeName()].altitude)
+        local altitudeFactions = { 0, 0.25, 0.5, 0.75, 1.0, 1.25, 1.5 }
+        for _,f in ipairs(altitudeFactions) do
+            local altText = DCSEx.string.toStringThousandsSeparator(math.floor((baseAltitude * f) / 100) * 100).."ft"
+            if f == 0 then altText = "nap-of-the-earth" end
+            missionCommands.addCommand(DCSEx.string.firstToUpper(altText), altitudePath, radioCommandChangeAltitude, { altitudeFraction = f, altitudeText = altText })
+        end
+
         missionCommands.addCommand("Status report", rootPath, radioCommandReportStatus, nil)
         missionCommands.addCommand("Rejoin", rootPath, radioCommandRejoin, nil)
     end
