@@ -135,10 +135,10 @@ do
 
     function TUM.wingmenTasking.commandEngage(groupCategory, targetAttributes, delayRadioAnswer)
         delayRadioAnswer = delayRadioAnswer or false
-        if TUM.settings.getValue(TUM.settings.id.MULTIPLAYER) then return end -- No wingmen in multiplayer
+        if TUM.settings.getValue(TUM.settings.id.MULTIPLAYER) then return false end -- No wingmen in multiplayer
 
         local wingmenCtrl = TUM.wingmen.getController()
-        if not wingmenCtrl then return end
+        if not wingmenCtrl then return false end
 
         -- Strike targets are handled differently
         if groupCategory == "strike" then
@@ -146,10 +146,11 @@ do
 
             if targetPoint3 then
                 TUM.radio.playForAll("pilotWingmanEngageStrike", { TUM.wingmen.getFirstWingmanNumber(), DCSEx.dcs.getBRAA(targetPoint3, DCSEx.world.getGroupCenter(TUM.wingmen.getGroup()), false) }, TUM.wingmen.getFirstWingmanCallsign(), delayRadioAnswer)
+                return true
             else
                 TUM.radio.playForAll("pilotWingmanEngageNoTarget", { TUM.wingmen.getFirstWingmanNumber() }, TUM.wingmen.getFirstWingmanCallsign(), delayRadioAnswer)
+                return false
             end
-            return
         end
 
         local detectedContacts = TUM.wingmenContacts.getContacts(groupCategory)
@@ -178,7 +179,7 @@ do
 
         if #validTargets == 0 then
             TUM.radio.playForAll("pilotWingmanEngageNoTarget", { TUM.wingmen.getFirstWingmanNumber() }, TUM.wingmen.getFirstWingmanCallsign(), delayRadioAnswer)
-            return
+            return false
         end
 
         local wingmenPosition = DCSEx.world.getGroupCenter(TUM.wingmen.getGroup())
@@ -232,12 +233,13 @@ do
         end
 
         TUM.radio.playForAll("pilotWingmanEngage"..messageSuffix, { TUM.wingmen.getFirstWingmanNumber(), targetInfo, targetBRAA }, TUM.wingmen.getFirstWingmanCallsign(), delayRadioAnswer)
+        return true
     end
 
     function TUM.wingmenTasking.commandGoToMapMarker(markerText, delayRadioAnswer)
         markerText = markerText or TUM.wingmenTasking.DEFAULT_MARKER_TEXT
         delayRadioAnswer = delayRadioAnswer or false
-        if TUM.settings.getValue(TUM.settings.id.MULTIPLAYER) then return end -- No wingmen in multiplayer
+        if TUM.settings.getValue(TUM.settings.id.MULTIPLAYER) then return false end -- No wingmen in multiplayer
 
         local mapMarker = DCSEx.world.getMarkerByText(markerText)
         if not mapMarker and not mapMarkerMissingWarningAlreadyDisplayed then
@@ -246,44 +248,47 @@ do
         end
 
         local wingmenCtrl = TUM.wingmen.getController()
-        if not wingmenCtrl then return end
-
+        if not wingmenCtrl then return false end
 
         if not mapMarker then
             -- TUM.radio.playForAll("pilotWingmanGoToMarkerNoMarker", { TUM.wingmen.getFirstWingmanNumber() }, TUM.wingmen.getFirstWingmanCallsign(), delayRadioAnswer)
-            return
+            return false
         end
 
         currentTargetIDorPoint = nil
         allowWeaponUse(wingmenCtrl, false, false)
         wingmenCtrl:setTask(getOrbitTaskTable(DCSEx.math.vec3ToVec2(mapMarker.pos)))
         -- TUM.radio.playForAll("pilotWingmanGoToMarker", { TUM.wingmen.getFirstWingmanNumber() }, TUM.wingmen.getFirstWingmanCallsign(), delayRadioAnswer)
+
+        return true
     end
 
     function TUM.wingmenTasking.commandOrbit(delayRadioAnswer)
         delayRadioAnswer = delayRadioAnswer or false
-        if TUM.settings.getValue(TUM.settings.id.MULTIPLAYER) then return end -- No wingmen in multiplayer
+        if TUM.settings.getValue(TUM.settings.id.MULTIPLAYER) then return false end -- No wingmen in multiplayer
 
         local wingmenCtrl = TUM.wingmen.getController()
-        if not wingmenCtrl then return end
+        if not wingmenCtrl then return false end
 
         allowWeaponUse(wingmenCtrl, false, false)
         currentTargetIDorPoint = nil
         wingmenCtrl:setTask(getOrbitTaskTable(DCSEx.world.getGroupCenter(TUM.wingmen.getGroup())))
         TUM.radio.playForAll("pilotWingmanOrbit", { TUM.wingmen.getFirstWingmanNumber() }, TUM.wingmen.getFirstWingmanCallsign(), delayRadioAnswer)
+
+        return true
     end
 
     function TUM.wingmenTasking.commandRejoin(formationDistance, delayRadioAnswer, silent, taskingComplete)
         delayRadioAnswer = delayRadioAnswer or false
         silent = silent or false
         taskingComplete = taskingComplete or false
-        if TUM.settings.getValue(TUM.settings.id.MULTIPLAYER) then return end -- No wingmen in multiplayer
+        if TUM.settings.getValue(TUM.settings.id.MULTIPLAYER) then return false end -- No wingmen in multiplayer
 
         local player = world:getPlayer()
-        if not player then return end
+        if not player then return false end
 
         local wingmenCtrl = TUM.wingmen.getController()
-        if not wingmenCtrl then return end
+        if not wingmenCtrl then return false end
 
         currentTargetIDorPoint = nil
         allowWeaponUse(wingmenCtrl, false, false)
@@ -293,31 +298,33 @@ do
             if taskingComplete then msgID = "pilotWingmanRejoinTaskComplete" end
             TUM.radio.playForAll(msgID, { TUM.wingmen.getFirstWingmanNumber() }, TUM.wingmen.getFirstWingmanCallsign(), delayRadioAnswer)
         end
+
+        return true
     end
 
     function TUM.wingmenTasking.commandReportContacts(groupCategory, noReportIfNoContacts, delayRadioAnswer)
         noReportIfNoContacts = noReportIfNoContacts or false
         delayRadioAnswer = delayRadioAnswer or false
-        if TUM.settings.getValue(TUM.settings.id.MULTIPLAYER) then return end -- No wingmen in multiplayer
+        if TUM.settings.getValue(TUM.settings.id.MULTIPLAYER) then return false end -- No wingmen in multiplayer
 
         local reportString = TUM.wingmenContacts.getContactsAsReportString(groupCategory, true)
 
         if not reportString then
             if noReportIfNoContacts then return false end
             TUM.radio.playForAll("pilotWingmanReportContactsNoJoy", { TUM.wingmen.getFirstWingmanNumber() }, TUM.wingmen.getFirstWingmanCallsign(), delayRadioAnswer)
-            return true
         else
             TUM.radio.playForAll("pilotWingmanReportContacts", { TUM.wingmen.getFirstWingmanNumber(), reportString }, TUM.wingmen.getFirstWingmanCallsign(), delayRadioAnswer)
-            return true
         end
+
+        return true
     end
 
     function TUM.wingmenTasking.commandReportStatus(delayRadioAnswer)
         delayRadioAnswer = delayRadioAnswer or false
-        if TUM.settings.getValue(TUM.settings.id.MULTIPLAYER) then return end -- No wingmen in multiplayer
+        if TUM.settings.getValue(TUM.settings.id.MULTIPLAYER) then return false end -- No wingmen in multiplayer
 
         local wingmenGroup = TUM.wingmen.getGroup()
-        if not wingmenGroup then return end
+        if not wingmenGroup then return false end
 
         local groupUnits = wingmenGroup:getUnits()
 
@@ -348,6 +355,7 @@ do
         end
 
         TUM.radio.playForAll("pilotWingmanReportStatus", { TUM.wingmen.getFirstWingmanNumber(), statusMsg },  TUM.wingmen.getFirstWingmanCallsign(), delayRadioAnswer)
+        return true
     end
 
     ----------------------------------------------------------
