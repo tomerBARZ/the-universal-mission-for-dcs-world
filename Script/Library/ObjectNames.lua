@@ -24,11 +24,12 @@ do
         "transport helicopter",
         "helicopter",
 
-        "SAM tracking radar",
-        "SAM launcher",
-        "SAM search radar",
-        "short-range SAM",
+        "IR SAM",
+        "SHORAD",
         "AAA",
+        "SAM tracking radar",
+        "SAM search radar",
+        "SAM launcher",
         "air defense",
 
         "artillery",
@@ -648,8 +649,10 @@ do
                     return "MANPADS"
                 elseif obj:hasAttribute("Infantry") then
                     return "infantry"
+                elseif obj:hasAttribute("IR Guided SAM") then
+                    return "IR SAM"
                 elseif obj:hasAttribute("SR SAM") then
-                    return "short-range SAM"
+                    return "SHORAD"
                 elseif obj:hasAttribute("SAM SR") then
                     return "SAM search radar"
                 elseif obj:hasAttribute("SAM TR") then
