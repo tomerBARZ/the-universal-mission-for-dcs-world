@@ -91,11 +91,25 @@ do
         return nil
     end
 
+    local function getOrbitAltitude()
+        local player = world.getPlayer()
+        if not player then return 600 end
+
+        local altitude = world.getPlayer():getPoint().y
+
+        local aircraftType = player:getTypeName()
+        if Library.aircraft[aircraftType] and Library.aircraft[aircraftType].altitude then
+            altitude = math.max(altitude, Library.aircraft[aircraftType].altitude * 0.8)
+        end
+
+        return altitude
+    end
+
     local function getOrbitTaskTable(point2)
         return {
             id = "Orbit",
             params = {
-                altitude = math.max(DCSEx.converter.feetToMeters(10000), world.getPlayer():getPoint().y),
+                altitude = getOrbitAltitude(),
                 pattern = "Circle",
                 point = point2,
                 width = DCSEx.converter.nmToMeters(1.0)
