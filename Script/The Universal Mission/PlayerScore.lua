@@ -22,12 +22,12 @@
 TUM.playerScore = {}
 
 do
-    local SKILL_MULTIPLIER_BONUS = {
+    local ENEMY_DEFENSE_MULTIPLIER_BONUS = {
         0,
         0.1, -- 0.05
-        0.2, -- 0.125
-        0.4, -- 0.25
-        0.6 -- 0.5
+        0.25, -- 0.125
+        0.5, -- 0.25
+        0.75 -- 0.5
     }
 
     local SCORE_REMINDER_INTERVAL = 5 -- in minutes
@@ -266,15 +266,23 @@ do
     -------------------------------------
     -- Returns the value to add to the global score multiplier according to a given setting
     -- @param settingID ID of the setting (from the TUM.settings.id enum)
-    -- @param settingValue The setting value
+    -- @param settingValue The setting value, or nil to use the current value
     -- @return A number (0 if no multiplier)
     -------------------------------------
-    function TUM.playerScore.getScoreMultiplier(settingID, settingValue)
+    function TUM.playerScore.getScoreMultiplierMod(settingID, settingValue)
         if not DCSEx.io.canReadAndWrite() then return 0 end -- IO disabled, career and scoring disabled
         if TUM.settings.getValue(TUM.settings.id.MULTIPLAYER) then return 0 end -- No scoring in multiplayer
 
+        settingValue = TUM.settings.getValue(settingID)
+
         if settingID == TUM.settings.id.ENEMY_AIR_DEFENSE or settingID == TUM.settings.id.ENEMY_AIR_FORCE then
-            return SKILL_MULTIPLIER_BONUS[settingValue]
+            return ENEMY_DEFENSE_MULTIPLIER_BONUS[settingValue]
+        elseif settingID == TUM.settings.id.WINGMEN then
+            return 0 - 10 * (settingValue - 1)
+        elseif settingID == TUM.settings.id.AI_CAP then
+            if settingValue == 2 and TUM.settings.getValue(TUM.settings.id.ENEMY_AIR_FORCE) > 1 then
+                return 15
+            end
         end
 
         return 0
@@ -289,13 +297,11 @@ do
         if TUM.settings.getValue(TUM.settings.id.MULTIPLAYER) then return 1.0 end -- No scoring in multiplayer
 
         local scoreMultiplier = 1.0
-
-        if TUM.settings.getValue(TUM.settings.id.TASKING) ~= DCSEx.enums.taskFamily.ANTISHIP then -- No ground air defense during antiship strikes
-            scoreMultiplier = scoreMultiplier +TUM.playerScore.getScoreMultiplier(TUM.settings.id.ENEMY_AIR_DEFENSE, TUM.settings.getValue(TUM.settings.id.ENEMY_AIR_DEFENSE))
+        for _,v in pairs(TUM.settings.id) do
+            scoreMultiplier = scoreMultiplier + TUM.playerScore.getScoreMultiplierMod(v)
         end
-        scoreMultiplier = scoreMultiplier +TUM.playerScore.getScoreMultiplier(TUM.settings.id.ENEMY_AIR_FORCE, TUM.settings.getValue(TUM.settings.id.ENEMY_AIR_FORCE))
 
-        return scoreMultiplier
+        return math.max(0.0, scoreMultiplier)
     end
 
     ----------------------------------------------------------
