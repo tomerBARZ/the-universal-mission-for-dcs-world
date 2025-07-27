@@ -86,13 +86,12 @@ do
                         type = "contact"
                     }
 
-                    -- Return exact type when aircraft contact is close enough
                     if gCateg == Group.Category.AIRPLANE or gCateg == Group.Category.HELICOPTER then
-                        if distanceToGroup < detectionRange / 2 then
-                            groupInfo.type = Library.objectNames.get(g:getUnit(1))
-                        else
-                            groupInfo.type = Library.objectNames.getGenericGroup(g)
-                        end
+                        -- if distanceToGroup < detectionRange / 2 then
+                        groupInfo.type = Library.objectNames.get(g:getUnit(1))
+                        -- else
+                        --     groupInfo.type = Library.objectNames.getGenericGroup(g)
+                        -- end
                     else
                         groupInfo.type = Library.objectNames.getGenericGroup(g)
                     end
