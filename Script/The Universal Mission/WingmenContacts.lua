@@ -32,19 +32,17 @@ do
             detectionRange = DCSEx.converter.nmToMeters(35 * detectionRangeMultiplier)
         elseif gCateg == Group.Category.SHIP then
             detectionRange = DCSEx.converter.nmToMeters(25 * detectionRangeMultiplier)
-            local allSpeedboats = true
+            local onlySpeedboats = true
             for _,u in ipairs(grp:getUnits()) do
-                if not u:getTypeName() == "speedboat" then allSpeedboats = false end
+                if u:getTypeName() ~= "speedboat" then onlySpeedboats = false end
             end
-            if allSpeedboats then detectionRange = detectionRange / 8 end -- Speedboats are HARD to spot
+            if onlySpeedboats then detectionRange = detectionRange / 8 end -- Speedboats are HARD to spot
         elseif gCateg == Group.Category.GROUND then
-            local allInfantry = true
-            local airDefenseCount = 0
+            local onlyInfantry = true
             for _,u in ipairs(grp:getUnits()) do
-                if not u:hasAttribute("Infantry") then allInfantry = false end
-                if u:hasAttribute("Air Defence") then airDefenseCount = airDefenseCount + 1 end
+                if not u:hasAttribute("Infantry") then onlyInfantry = false end
             end
-            if allInfantry then detectionRange = detectionRange / 8 end -- Infantry is HARD to spot
+            if onlyInfantry then detectionRange = detectionRange / 8 end -- Infantry is HARD to spot
         end
 
         return detectionRange
