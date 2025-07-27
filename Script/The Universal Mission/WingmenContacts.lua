@@ -29,9 +29,9 @@ do
 
         local detectionRange = DCSEx.converter.nmToMeters(15 * detectionRangeMultiplier)
         if gCateg == Group.Category.AIRPLANE then
-            detectionRange = DCSEx.converter.nmToMeters(40 * detectionRangeMultiplier)
+            detectionRange = DCSEx.converter.nmToMeters(35 * detectionRangeMultiplier)
         elseif gCateg == Group.Category.SHIP then
-            detectionRange = DCSEx.converter.nmToMeters(22 * detectionRangeMultiplier)
+            detectionRange = DCSEx.converter.nmToMeters(25 * detectionRangeMultiplier)
             local allSpeedboats = true
             for _,u in ipairs(grp:getUnits()) do
                 if not u:getTypeName() == "speedboat" then allSpeedboats = false end
@@ -88,7 +88,7 @@ do
                         type = "contact"
                     }
 
-                    -- Return exact type when contact is close enough
+                    -- Return exact type when aircraft contact is close enough
                     if gCateg == Group.Category.AIRPLANE or gCateg == Group.Category.HELICOPTER then
                         if distanceToGroup < detectionRange / 2 then
                             groupInfo.type = Library.objectNames.get(g:getUnit(1))
