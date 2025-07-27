@@ -153,6 +153,7 @@ If you want to build the .miz files yourself, you'll need to:
 - In the PHP directory, rename php.ini-production to php.ini, edit it and uncomment or delete the "extension=mbstring" line to enable the MBString extension that my script uses.
 - Then run Make.bat in the source directory (or, alternatively, open the source directory in VSCode and press Ctrl+Alt+B)
 - .Miz files will be generated in the project root directory, and a copy will be sent to your DCS World "missions" directory (if it exists)
+- Please note that a second version of each file marked "DEBUG" will also be generated. This version allows access to the debug menu and additional text outputs during the mission. Debug missions are generated with an F-16C player aircraft as it's a good jack-of-all-trades to test various things.
 
 ## Want to contribute to the project?
 
