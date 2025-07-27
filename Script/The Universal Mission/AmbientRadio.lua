@@ -123,6 +123,7 @@ do
         if Object.getCategory(event.initiator) ~= Object.Category.UNIT then return end -- Initiator isn't an unit
         if event.initiator:getCoalition() ~= TUM.settings.getPlayerCoalition() then return end -- Initiator isn't a friendly
         if event.initiator:getPlayerName() then return end -- No "ejecting!" message for players, so it won't cut the "mission failed" music which is played at the same time
+        if TUM.wingmen.getUnitWingmanNumber(event.initiator) then return end -- Wingmen have their own "I'm going down!" messages
 
         doAmbientChatter("pilotEjecting", nil, event.initiator:getCallsign(), 1)
     end

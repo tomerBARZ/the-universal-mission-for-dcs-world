@@ -90,6 +90,7 @@ do
 
         -- Reinitialize list of known contacts and contact report interval
         TUM.wingmenContacts.clearKnownContacts()
+        TUM.wingmenTasking.resetTaskingParameters()
 
         TUM.log("Spawned AI wingmen")
 
@@ -159,13 +160,31 @@ do
         if TUM.settings.getValue(TUM.settings.id.MULTIPLAYER) then return end -- No wingmen in multiplayer
         if not event.initiator then return end
         if Object.getCategory(event.initiator) ~= Object.Category.UNIT then return end
-        if not event.initiator:getPlayerName() then return end
 
-        if event.id == world.event.S_EVENT_TAKEOFF then -- Create wingmen on player takeoff
+        if event.id == world.event.S_EVENT_UNIT_LOST then
+            local unitWingmenNumber = TUM.wingmen.getUnitWingmanNumber(event.initiator)
+            if unitWingmenNumber then
+                TUM.radio.playForAll("pilotWingmanDown", { DCSEx.string.toStringNumber(unitWingmenNumber, true) }, event.initiator:getCallsign(), false)
+                return
+            end
+        elseif event.id == world.event.S_EVENT_TAKEOFF then -- Create wingmen on player takeoff
+            if not event.initiator:getPlayerName() then return end
             if TUM.mission.getStatus() == TUM.mission.status.NONE then return end -- Mission not in progress, no wingman needed
             TUM.wingmen.create()
         elseif event.id == world.event.S_EVENT_LAND then -- Remove wingmen on player landing
+            if not event.initiator:getPlayerName() then return end
             TUM.wingmen.removeAll()
         end
+    end
+
+    function TUM.wingmen.getUnitWingmanNumber(unit)
+        if not unit then return nil end
+
+        local unitID = DCSEx.dcs.getObjectIDAsNumber(unit)
+        for i,id in ipairs(wingmenUnitID) do
+            if unitID == id then return i + 1 end
+        end
+
+        return nil
     end
 end
