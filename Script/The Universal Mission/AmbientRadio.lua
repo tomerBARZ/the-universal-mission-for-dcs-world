@@ -183,21 +183,21 @@ do
             if TUM.objectives.getSceneryObjectObjective(event.target) then
                 doAmbientChatter("pilotKillStrike", nil, killerName, 1)
             else
-                return -- Not a scenery target, congratulations you just bombed a random civilian target lol
+                return -- Building was not a scenery target, congratulations you just bombed a random civilian structure lol
             end
         elseif Object.getCategory(event.target) == Object.Category.STATIC then
             killMessage = "pilotKillStrike"
             doAmbientChatter("pilotKillStrike", nil, killerName, 1)
         elseif Object.getCategory(event.target) == Object.Category.UNIT then
-            local killUnitType = Library.objectNames.getGeneric(event.target)
+            local killUnitType = Library.objectNames.get(event.target) -- Library.objectNames.getGeneric(event.target)
             local minMessageInterval = 2
 
             if targetDesc.category == Unit.Category.AIRPLANE then
                 killMessage = "pilotKillAir"
-                killUnitType = Library.objectNames.get(event.target) -- Report exact unit type for aircraft
+                killUnitType = Library.objectNames.get(event.target)
             elseif targetDesc.category == Unit.Category.HELICOPTER then
                 killMessage = "pilotKillAir"
-                killUnitType = Library.objectNames.get(event.target) -- Report exact unit type for aircraft
+                killUnitType = Library.objectNames.get(event.target)
             elseif targetDesc.category == Unit.Category.GROUND_UNIT then
                 if event.target:hasAttribute("Infantry") then
                     killMessage = "pilotKillInfantry"
