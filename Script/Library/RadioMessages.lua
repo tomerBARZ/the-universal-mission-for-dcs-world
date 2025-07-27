@@ -1,5 +1,4 @@
 Library.radioMessages = {
-
     pilotEjecting = {
         "Mayday, mayday! Taking fire, punching out now!",
         "Engine's gone, I'm bailing! Mark my chute!",
@@ -74,7 +73,7 @@ Library.radioMessages = {
 
     pilotNewFriendlyAircraft = {
         "$1 CAP launched from $2, we're heading toward AO.",
-        "$1 CAP just wheels-up from $2, we'll will soon be on station.",
+        "$1 CAP just wheels-up from $2, we'll soon be on station.",
         "$1 airborne from $2, we're pushing to cover your AO.",
         "$1 CAP launched from $2, expect blue air in your vicinity shortly.",
         "$1 departed $2, we're setting up CAP near you."
@@ -84,6 +83,21 @@ Library.radioMessages = {
     pilotWarningMANPADS = { "MANPADS launch! Flare, flare, flare!", "Flight, MANPADS in the air. Dump flares, now!", "Coming from the ground, MANPADS hot!", "Go defensive, MANPADS off your nose! Flare, flare!", "MANPADS just came up from the deck, break hard and pop everything!" },
     pilotWarningSAMLaunch = { "Spike! SAM just launched, break!", "SAM up! Defensive now!", "Launch! SAM, coming fast, pump chaff, go cold!", "SAM in the air, break hard!", "SAM fired, visual smoke! Extend, extend!" },
 
+    pilotWingmanChangeAltitude = {
+        "$1, copy, adjusting now to $2.",
+        "$1, roger, setting new altitude to $2.",
+        "$1, altitude change confirmed, $2.",
+        "$1, roger that, moving to new block at $2.",
+        "$1, adjusting as ordered to $2."
+    },
+    pilotWingmanDown = {
+        "$1! I'm hit bad! I can't hold it! Punching out now!",
+        "$1! Mayday! Mayday! I'm on fire! Ejecting, ejecting!",
+        "$1! They got me! Left wing's gone! I'm getting out!",
+        "$1! They nailed me, fire in the pit! I'm outta here!",
+        "$1! Fire in the cockpit! Can't see anything! Ejecting!",
+        "$1! Mayday! No control—this is it, ejecting now!"
+    },
     pilotWingmanEngageAir = {
         "$1, copy, engaging $2 now ($3).",
         "$1, tally one, pressing on $2 ($3).",
@@ -296,6 +310,13 @@ Library.radioMessages = {
         "Command, pass coordinates for objective $1.",
         "Command, confirm grid on objective $1."
     },
+    playerWingmanChangeAltitude = {
+        "Flight, adjust your altitude to $1.",
+        "Flight, set new altitude to $1.",
+        "Flight, stabilize at $1.",
+        "Flight, update altitude profile to $1.",
+        "Flight, altitude correction, go to $1."
+    },
     playerWingmanEngageAirDefense = {
         "Flight, prioritize $1, engage now.",
         "Flight, take down $1 systems.",
@@ -358,10 +379,10 @@ Library.radioMessages = {
         "Flight, rejoin tactical."
     },
     playerWingmanReportContacts = {
-        "Flight, you tally anything?",
-        "Flight, you got any hits?",
+        "Flight, tally anything?",
+        "Flight, got any hits?",
         "Flight, eyes or sensors on anything?",
-        "Flight, you see anything out there?",
+        "Flight, see anything out there?",
         "Flight, any contacts your side?",
     },
     playerWingmanReportStatus = {
