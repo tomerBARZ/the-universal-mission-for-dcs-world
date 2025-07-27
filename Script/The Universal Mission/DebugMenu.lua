@@ -74,7 +74,7 @@ do
 
     local function doSendWingmenToMarker()
         if TUM.wingmenTasking.commandGoToMapMarker(nil, false) then
-            TUM.log("Wingmen moving FLIGHT to marker")
+            TUM.log("Wingmen moving to FLIGHT marker")
         else
             TUM.log("Failed to move wingmen to FLIGHT marker")
         end
