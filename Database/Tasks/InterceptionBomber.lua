@@ -5,9 +5,9 @@ Library.tasks.interceptionBomber = {
       briefing = {
          "Enemy bomber inbound. If it reaches its target, thousands of civilians are at risk. You're the last line to stop it before it crosses the border.",
          "Intel confirms a hostile bomber on approach to critical infrastructure. Your mission: intercept and neutralize before it gets within strike range.",
-         "An enemy bomber is carrying high-yield ordnance toward a populated zone. Failure to intercept means catastrophic loss—scramble now.",
+         "An enemy bomber is carrying high-yield ordnance toward a populated zone. Failure to intercept means catastrophic loss. Scramble now.",
          "Hostile bomber detected on vector to our forward base. Engage immediately; do not allow it to release payload.",
-         "Enemy bomber is on a direct course for our command center. Intercept at all costs—success ensures the survival of our forces."
+         "Enemy bomber is on a direct course for our command center. Intercept at all costs. Success ensures the survival of our forces."
       },
       short = "Intercept enemy bomber",
    },

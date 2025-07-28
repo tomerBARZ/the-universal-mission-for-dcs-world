@@ -3,11 +3,11 @@ Library.tasks.groundAttackAPC = {
    description =
    {
       briefing = {
-         "Enemy APCs are moving to reinforce frontline positions—neutralizing them now will cripple their mobility and delay their counterattack.",
+         "Enemy APCs are moving to reinforce frontline positions. Neutralizing them now will cripple their mobility and delay their counterattack.",
          "Taking out these APCs disrupts enemy troop deployments and buys our ground forces critical time to consolidate gains.",
-         "Enemy armored personnel carriers are transporting infantry toward our exposed flank—engage immediately to prevent a breakthrough.",
-         "Our troops are under pressure—eliminating those APCs will ease the fight and reduce incoming fire on their position.",
-         "Recon confirms high-value targets in the APC convoy, including command elements—destroying them now will cause significant disruption."
+         "Enemy armored personnel carriers are transporting infantry toward our exposed flank. Engage immediately to prevent a breakthrough.",
+         "Our troops are under pressure. Eliminating those APCs will ease the fight and reduce incoming fire on their position.",
+         "Recon confirms high-value targets in the APC convoy, including command elements. Destroying them now will cause significant disruption."
       },
       short = "Destroy enemy APCs",
    },
