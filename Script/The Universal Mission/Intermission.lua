@@ -104,6 +104,7 @@ do
         createSubMenu(TUM.settings.id.TARGET_COUNT, settingsMenu)
         createSubMenu(TUM.settings.id.ENEMY_AIR_DEFENSE, settingsMenu)
         createSubMenu(TUM.settings.id.ENEMY_AIR_FORCE, settingsMenu)
+        createSubMenu(TUM.settings.id.WINGMEN, settingsMenu)
         createSubMenu(TUM.settings.id.AI_CAP, settingsMenu)
         TUM.playerCareer.createMenu()
         missionCommands.addCommand("➤ Begin mission", nil, doCommandStartMission, nil)
