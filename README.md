@@ -167,6 +167,35 @@ The core script is quite simple and small, I probably won't need too much help w
 
 ## Version history
 
+- **Next version** (coming soon)
+
+  - MAJOR CHANGE: Added all new wingman system
+    - Far for perfect but a lot smarter than AI's default wingmen
+    - Many more engage/orbit/go to commands (see "F10 menu manual" above)
+    - All new contacts report system: more realistic (see "AI units reports" changes below in this changelog) and does not spam the player with "new contact" messages
+    - AI wingmen added using mission editor are now despawned on mission start to avoid conflict with TUM's own wingman system
+  - Added "infantry killed" radio messages
+  - Added error message on mission start when autoexec.cfg is missing and script cannot proceed
+  - Added many new radio messages, mostly related to wingmen command/replies
+  - Added new voiceovers for Fox 1/2/3 calls
+  - Added payload table for all DCS World aircraft (datamined from Briefing Room, many thanks to @john681611)
+  - Added "weapons introduction date" table for upcoming "time period" setting (datamined from Briefing Room, many thanks to @john681611)
+  - All AI aircraft now despawned on landing to free CPU cycles and allow space for new aircraft
+  - Changed AWACS aircraft detection logic (a tiny bit less realistic but more efficient)
+  - Changed some UTF-8 symbols in F10 menu, added UTF-8 symbol for "Objectives" submenu
+  - Fixed missing airbase name in "aircraft landed safely" messages
+  - Improved display of XP modifiers in menu
+  - Improved wording of many lines and commands, correct a bunch of typos
+  - Increased minimum aircraft spawn altitude to avoir crashes in nearby hills
+  - Infantry escaping from destroyed vehicles is now hidden on F10 map, as it should be
+  - Interception objectives are now marked as complete when target is shot down
+  - Lowered MANPADS count and skill (MANPADS are overpowered in DCS, especially SA-18)
+  - "New friendly/enemy aircraft taking off" radio messages now mention their BRAA relative to the player, number of bandits taking off now displayed as a word instead of digits
+  - "Rifle!" and "Missile away!" radio calls now both used for any kind of A/G missiles
+  - Tons of internal logic bugfixes and tweaks
+  - Tweaked XP bonus/penalty for various mission settings
+  - Vastly improved the way AI units reports on contact tracks. According to range and sensors capabilities, can go from perfect ID (e.g. "Su-27") to very generic descriptions (e.g. "fighter" or even "aircraft")
+
 - **0.1.250723** (07/23/2025)
   - Added new "autoexec.cfg" file required by DCS 2.9.18.12722. You have to copy it to **[Saved Games]\DCS\Config directory** or the script won't work.
   - Fixed a bug with convoys sometimes stuck in trees and buildings
