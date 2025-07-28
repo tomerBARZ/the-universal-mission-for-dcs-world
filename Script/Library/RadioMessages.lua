@@ -11,7 +11,7 @@ Library.radioMessages = {
         "Taking fire!",
         "Bird's hurt, trying to hold altitude!",
         "Impact on fuselage, took a solid hit!",
-        "Taking damage, warning lights all over"
+        "Taking damage, warning lights all over!"
     },
     pilotKillAir = {
         "Splash one $1. Rejoining.",
@@ -96,12 +96,12 @@ Library.radioMessages = {
         "$1! They got me! Left wing's gone! I'm getting out!",
         "$1! They nailed me, fire in the pit! I'm outta here!",
         "$1! Fire in the cockpit! Can't see anything! Ejecting!",
-        "$1! Mayday! No control—this is it, ejecting now!"
+        "$1! Mayday! No control! This is it, ejecting now!"
     },
     pilotWingmanEngageAir = {
         "$1, copy, engaging $2 now ($3).",
         "$1, tally one, pressing on $2 ($3).",
-        "$1, roger, comitting on $2 ($3).",
+        "$1, roger, committing on $2 ($3).",
         "$1, confirm, going after $2 ($3).",
         "$1, affirm, moving in on $2 ($3)."
     }, -- "$2" should be "bandits" in audio version
@@ -141,7 +141,7 @@ Library.radioMessages = {
         "$1. Copy, orbiting now.",
         "$1. Roger, in the hold.",
         "$1. Affirm, setting up the orbit.",
-        "$1. Orbiting at pos."
+        "$1. Orbiting at position."
     },
     pilotWingmanRejoin = {
         "$1, off the perch, rejoining your side.",
@@ -317,6 +317,13 @@ Library.radioMessages = {
         "Flight, update altitude profile to $1.",
         "Flight, altitude correction, go to $1."
     },
+    playerWingmanCoverMe = {
+        "Flight, need cover now.",
+        "Flight, keep my six clean.",
+        "Flight, engaged defensive, cover me!",
+        "Flight, break off and clear my tail.",
+        "Flight, keep bandits off me."
+    },
     playerWingmanEngageAirDefense = {
         "Flight, prioritize $1, engage now.",
         "Flight, take down $1 systems.",
@@ -331,13 +338,6 @@ Library.radioMessages = {
         "Flight, engage $1, your discretion.",
         "Flight, you're free to engage $1."
     }, -- "$1" should be "bandits" in audio version
-    playerWingmanCoverMe = {
-        "Flight, need cover now.",
-        "Flight, keep my six clean.",
-        "Flight, engaged defensive, cover me!",
-        "Flight, break off and clear my tail.",
-        "Flight, keep bandits off me."
-    },
     playerWingmanEngageGround = {
         "Flight, engage $1 targets.",
         "Flight, prosecute $1 targets ahead.",
@@ -364,15 +364,15 @@ Library.radioMessages = {
     --     "Flight, move to designated steerpoint."
     -- },
     playerWingmanOrbit = {
-        "Flight, orbit your position.",
+        "Flight, orbit at position.",
         "Flight, set up an orbit.",
-        "Flight, hold on me.",
-        "Flight, anchor on my current pos.",
-        "Flight, orbit overhead"
+        "Flight, hold on position.",
+        "Flight, anchor on current position.",
+        "Flight, orbit overhead."
     },
     playerWingmanRejoin =
     {
-        "Flight, rejoin my side",
+        "Flight, rejoin my side.",
         "Flight, push it up, rejoin formation.",
         "Flight, come back to route.",
         "Flight, tighten it up.",
