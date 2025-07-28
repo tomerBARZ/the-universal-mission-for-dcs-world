@@ -22,13 +22,7 @@
 TUM.playerScore = {}
 
 do
-    local ENEMY_DEFENSE_MULTIPLIER_BONUS = {
-        0,
-        0.1, -- 0.05
-        0.25, -- 0.125
-        0.5, -- 0.25
-        0.75 -- 0.5
-    }
+    local ENEMY_DEFENSE_MULTIPLIER_BONUS = { -0.1, 0.1, 0.3, 0.5, 0.7 }
 
     local SCORE_REMINDER_INTERVAL = 5 -- in minutes
 
@@ -267,7 +261,7 @@ do
     -- Returns the value to add to the global score multiplier according to a given setting
     -- @param settingID ID of the setting (from the TUM.settings.id enum)
     -- @param settingValue The setting value, or nil to use the current value
-    -- @return A number (0 if no multiplier)
+    -- @return A number in the -1.0 to +1.0 range, or nil if this setting has no effect on XP gains
     -------------------------------------
     function TUM.playerScore.getScoreMultiplierMod(settingID, settingValue)
         if not DCSEx.io.canReadAndWrite() then return 0 end -- IO disabled, career and scoring disabled
@@ -278,19 +272,20 @@ do
         if settingID == TUM.settings.id.ENEMY_AIR_DEFENSE or settingID == TUM.settings.id.ENEMY_AIR_FORCE then
             return ENEMY_DEFENSE_MULTIPLIER_BONUS[settingValue]
         elseif settingID == TUM.settings.id.WINGMEN then
-            return 0 - 10 * (settingValue - 1)
+            return 0 - 0.10 * (settingValue - 1)
         elseif settingID == TUM.settings.id.AI_CAP then
             if settingValue == 2 and TUM.settings.getValue(TUM.settings.id.ENEMY_AIR_FORCE) > 1 then
-                return 15
+                return 0.15
             end
+            return 0
         end
 
-        return 0
+        return nil
     end
 
     -------------------------------------
     -- Returns the global score multiplier according the current settings
-    -- @return A number (1.0 if no multiplier)
+    -- @return A number (where 1.0 means default value, 0.5 is -50%, etc)
     -------------------------------------
     function TUM.playerScore.getTotalScoreMultiplier()
         if not DCSEx.io.canReadAndWrite() then return 1.0 end -- IO disabled, career and scoring disabled
@@ -298,7 +293,7 @@ do
 
         local scoreMultiplier = 1.0
         for _,v in pairs(TUM.settings.id) do
-            scoreMultiplier = scoreMultiplier + TUM.playerScore.getScoreMultiplierMod(v)
+            scoreMultiplier = scoreMultiplier + (TUM.playerScore.getScoreMultiplierMod(v) or 0.0)
         end
 
         return math.max(0.0, scoreMultiplier)
