@@ -40,7 +40,7 @@ do
         [TUM.settings.id.TARGET_LOCATION] = "Target location",
         [TUM.settings.id.TASKING] = "Mission type",
         [TUM.settings.id.TIME_PERIOD] = "Time period",
-        [TUM.settings.id.WINGMEN] = "Wingmen",
+        [TUM.settings.id.WINGMEN] = "Wingmen count"
     }
 
     local SETTING_VALUES = {
@@ -54,7 +54,7 @@ do
         [TUM.settings.id.TARGET_LOCATION] = { },
         [TUM.settings.id.TASKING] = { "Antiship strike", "Ground attack", "Interception", "SEAD", "Strike" }, -- Must match values in the DCSEx.enums.taskFamily enum
         [TUM.settings.id.TIME_PERIOD] = { "World War 2", "Korea War", "Vietnam War", "Late Cold War", "Modern" }, -- Must match values in the DCSEx.enums.timePeriod enum
-        [TUM.settings.id.WINGMEN] = { "None", "One", "Two", "Three" }
+        [TUM.settings.id.WINGMEN] = { "None", "1", "2", "3" }
     }
 
     local function getFaction(side)
@@ -182,8 +182,10 @@ do
                 if showScoreMultiplier then
                     local settingMultiplier = TUM.playerScore.getScoreMultiplierMod(v, settings[v])
 
-                    if settingMultiplier > 0.0 then
-                        summary = summary.." (+"..tostring(math.ceil(settingMultiplier * 100)).."% xp)"
+                    if settingMultiplier ~= nil then -- Must add "~= nil" because can be 0
+                        summary = summary.." ("
+                        if settingMultiplier >= 0.0 then summary = summary.."+" end
+                        summary = summary..tostring(math.ceil(settingMultiplier * 100)).."% xp)"
                     end
                 end
             end
