@@ -34,6 +34,10 @@ I think with The Universal Mission is, finally, the proper way to approach this 
 - Not all mission types are supported yet
 - Career progress may be lost because of future updates, don't get too attached to it
 
+### Known bugs
+
+- AWACS datalink info is now displayed on SA pages
+
 ## How to use/play The Universal Mission?
 
 ### First setup
@@ -147,8 +151,9 @@ Please also note that PvP is not supported at the moment and that the mission wi
 ### VERY high priority
 
 - All new AI wingman system
+- Fix bug with AWACS datalink info not showing on SA pages
 - New objectives: helicopter (drop/pickup units...), CAP, CAS, OCA (airbase attack)
-- Support for Germany theater
+- Support for the Germany and South America theaters
 - Support for more factions and five different time periods (World War 2, Korea war, Vietnam war, late Cold war, Modern)
 
 ### High priority
