@@ -15,11 +15,11 @@ do
         TUM.wingmenTasking.commandChangeAltitude(args.altitudeFraction, true)
     end
 
-    local function radioCommandCoverMe(args)
+    local function radioCommandCoverMe()
         local player = world:getPlayer()
         if not player then return end
 
-        TUM.radio.playForAll("playerWingmanCoverMe"..args.radioMessageSuffix, nil, player:getCallsign(), false)
+        TUM.radio.playForAll("playerWingmanCoverMe", nil, player:getCallsign(), false)
 
         TUM.wingmenTasking.commandEngage(Group.Category.AIRPLANE, { "Fighters", "Interceptors", "Multirole fighters" } , true)
     end
@@ -77,11 +77,10 @@ do
     function TUM.wingmenMenu.create()
         if TUM.settings.getValue(TUM.settings.id.MULTIPLAYER) then return end -- No wingmen in multiplayer
         if TUM.settings.getValue(TUM.settings.id.WINGMEN) <= 1 then return end -- No wingmen
+        local isWW2 = (TUM.settings.getValue(TUM.settings) == DCSEx.enums.timePeriod.WORLD_WAR_2) -- Some options are different when time period is WW2
 
         local rootPath = missionCommands.addSubMenu("✈ Flight")
         missionCommands.addCommand("Cover me!", rootPath, radioCommandCoverMe, nil)
-
-        local isWW2 = (TUM.settings.getValue(TUM.settings) == DCSEx.enums.timePeriod.WORLD_WAR_2)
 
         ------------------------------------------------------
         -- "Engage targets" submenu

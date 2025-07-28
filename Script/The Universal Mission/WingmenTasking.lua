@@ -393,7 +393,7 @@ do
         -- No tasking? Rejoin leader
         local wingmenCtrl = TUM.wingmen:getController()
         if wingmenCtrl and not wingmenCtrl:hasTask() then
-            TUM.wingmenTasking.commandRejoin(nil, false)
+            TUM.wingmenTasking.commandRejoin(nil, false, false, true)
             return
         end
 
