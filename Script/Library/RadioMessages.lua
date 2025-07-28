@@ -171,7 +171,7 @@ Library.radioMessages = {
     pilotWingmanReportContactsNew = {
         "Heads up, new contacts just popped up.$2",
         "Look out, tally fresh threats.$2",
-        "Stay sharp, eyes on new group, stand by.$2",
+        "Stay sharp, eyes on new group.$2",
         "Eyes open, additional threats spotted.$2",
         "Stay alert, new activity in our sector.$2",
         "Be aware, got more targets popping up.$2",
