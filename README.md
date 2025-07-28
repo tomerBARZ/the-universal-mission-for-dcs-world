@@ -223,10 +223,11 @@ The core script is quite simple and small, I probably won't need too much help w
     - Many more engage/orbit/go to commands (see "Using the mission menu" above)
     - All new contacts report system: more realistic (see "AI units reports" changes below in this changelog) and does not spam the player with "new contact" messages
     - AI wingmen added using mission editor are now despawned on mission start to avoid conflict with TUM's own wingman system
-  - Added "infantry killed" radio messages
+  - Added many new radio messages and their voiceover
+    - Additional voiceovers for Fox 1/2/3 calls
+    - "Infantry down" call
+    - Tons of wingmen commands and replies
   - Added error message on mission start when autoexec.cfg is missing and script cannot proceed
-  - Added many new radio messages, mostly related to wingmen command/replies
-  - Added new voiceovers for Fox 1/2/3 calls
   - Added payload table for all DCS World aircraft (datamined from Briefing Room, many thanks to @john681611)
   - Added "Using the mission menu" section to this README file, detailing all available commands
   - Added "weapons introduction date" table for upcoming "time period" setting (datamined from Briefing Room, many thanks to @john681611)
