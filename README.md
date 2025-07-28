@@ -52,16 +52,60 @@ Please refer to the "Advanced stuff you may want to try" section to learn all th
 
 ### Starting the mission
 
-- Launch the mission from the mission editor or the "Mission" selection in the main menu
-- You are now on the ramp or runway. Open the communication menu and navigate to the F10/Other menu. From there, you can view and change mission settings. They include:
+- Launch the mission from the mission editor or the "Mission" selection in the main DCS World menu
+- You are now on the ramp or runway. Open the communication menu (see "Using the mission menu" below) and navigate to the F10/Other menu. From there, you can view and change mission settings. They include:
   - Who belong to the blue and red coalitions
   - The type of mission
-  - The number and location of targets (you can use the F10 map to see where the available target zones are located). Be aware that targets of antiship strikes will always be spawned in open seas, which can be quite far if you picked a landlocked target zone
+  - The number and location of targets (you can use the F10 map to see where the available target zones are located).
   - The amount of enemy air force and air defense. The higher these settings, the more XP you'll recieve upon completion of a single-player mission
 - When you're ready, pick the "Begin mission" option, wait a few seconds (precaching all the game assets can take some time, especially if you have a slow CPU), you're ready to go!
-- Use the F10 mission and check the F10 map for additional information about the mission. Don't forget to come back to base alive, all awarded XP and completed objectives will only be saved to your pilot profile once you've landed
+- Use the F10 mission and check the F10 map for additional information about the mission (see "Using the mission menu" below). Don't forget to come back to base alive, all awarded XP and completed objectives will only be saved to your pilot profile once you've landed
 
-### Playing
+### Using the mission menu
+
+Most features of The Universal Mission require the use of the "F10. Other" menu. To access it, press the "Communication menu" key (check the key bindings), navigate to the root menu by pressing F11 ("Previous menu") if need, then press "F10" to access the "Other" menu.
+The exact content of the menu will depend on the current phase of the mission.
+
+#### On startup/when no mission is active
+
+- **Display mission settings**: Displays the current mission settings, that will be applied if you choose to start the mission now.
+- **Change mission settings**: Allows you to change the mission settings to your taste.
+  - **Blue coalition**: Who is the blue coalition? Determines the type of units that will be spawned. Available factions (e.g. NATO) depend on the missions's time period and theater.
+  - **Red coalition**: Who is the red coalition? Determines the type of units that will be spawned. Available factions (e.g. USSR) depend on the missions's time period and theater.
+  - **Mission type**: What will your mission be?
+    - **Antiship strike**: Sink enemy warships and cargo ships.
+    - **Ground attack**: Interdiction missions against armor, artillery and convoys.
+    - **Interception**: Shoot down strategic airplanes (bombers, transports...) and enemy attack planes on interdiction missions.
+    - **SEAD**: Destroy enemy SAM sites.
+    - **Strike**: Destroy enemy structures and civilian buildings occupied by enemy forces.
+  - **Target location**: Where on the map will the targets be spawned? Approximate distance to possible regions is displayed in the menu. You can also. Make sure to pick a region not too far away from your starting location if you don't like long ingresses. Picking a region very close to your starting location (for instance, the one where your airbase is located in) can also be a bad idea, as you might takeoff in range of an enemy SAM. Be aware that targets of antiship strikes will always be spawned in open seas, which can be quite far if you picked a landlocked target zone.
+  - **Target count**: How many objectives will be spawned. More objectives means potentially more xp in a single sortie, so better medals, but also more work and more risk. Be aware that you can RTB to rearm/refuel at any time between objectives, but you won't accumulate as many single-sortie XP as if you complete objectives without going back to base, because XP is awarded to your profile and reset each time you land.
+  - **Enemy air defense**: Amount, quality and skill of enemy surface-to-air units (AAA, MANPADS and SAM). A higher setting awards more XP.
+  - **Enemy air force**: Amount, quality and skill of enemy combat air patrols. A higher setting awards more XP.
+  - **Wingmen count**: How many wingmen will fly by your side (from zero to three). A small XP penalty is added for each additional wingman. Wingman won't get replaced if they get shot during a mission, but they will (with full payload) each time you land and takeoff again. Only shown in single-player missions.
+  - **Friendly AI CAP**: Should AI fighter aicraft be spawned regularly to patrol the AO and shoot down potential threats? Disabling this option will award you more XP (only if "Enemy air force" is not set to "None") but also means you and your wingmen will be alone against the whole enemy air force.
+- **View pilot career stats**: Displays a list of your achievements, as well as your medal case. Only available when playing single-player missions and if the Lua IO module has been unsanitized (see "First setup" above)
+- **Begin mission**: Starts a mission with the current settings.
+
+#### During the mission
+
+- **Mission status**: Displays a summary of the mission's status (list of objectives and progress on each objective).
+- **Objectives**: Displays a list of commands related to each of the mission's objectives.
+  - **Objective coordinates**: Displays the coordinates of the objective and its BRA ("fly X for Y") relative to the player's position. Some objectives types (e.g. strike missions) are provided with exact coordinates, but must will only have approximate coordiantes, so you'll have to search for your targets in the objective area.
+  - **Smoke marker on target**: Asks for a friendly JTAC to pop a smoke marker on the target. Makes finding the target easier, but will cost you a small XP penalty. Only available for missions where a JTAC is available (it's pretty hard to throw a smoke grenade at an airplane or a ship in the middle of the sea).
+- **Flight**: Displays a list of commands for your wingmen. Only shown in single-player missions and if wingmen are available for this mission.
+  - **Cover me!**: Tasks your wingmen to immediately engage any nearby air threats.
+  - **Engage**: Tasks your wingmen to engage a certain type of targets. Targets must be detected by your wingmen (see "Report contacts" below), or they won't be able to engage them.
+  - **Report contacts**: Asks your wingmen for a list of all detected contacts. According to range and sensors capabilities, their reports can go from perfect ID (e.g. "Su-27") to very generic descriptions (e.g. "fighter" or even "aircraft")
+  - **Hold position**: Tasks your wingmen to orbit at their current position. All other tasking will be aborted.
+  - **Change altitude**: Asks your wingmen to change their altitude. This altitude will be employed when attacking on orbiting but not when rejoining/forming up with you (in that case, they'll match your altitude).
+  - **Status report**: Asks your wingmen for a complete report (damage sustained, fuel status, available payload).
+  - **Rejoin**: Asks your wingmen to rejoin and follow you. All other tasking will be aborted. This is the default tasking when wingmen take off and when they complete another task.
+- **AWACS**: Displays a list of commands for the AWACS. Only shown if an AWACS aircraft is available for this mission.
+  - **Bogey dope**: Asks for the nearest enemy air threat
+  - **Picture**: Asks for a summary of all detected enemy aircraft
+- **Display mission score**: Displays the number of XP gained and objectives completed since your last takeoff. They will be added to your flight log (and any promotions/medals be awarded) the next time you land. If you crash, eject or abort the mission, all currently "stowed" XP and objectives will be lost. Only available when playing single-player missions and if the Lua IO module has been unsanitized (see "First setup" above)
+- **Abort mission**: Aborts the current mission and forfeit all XP/objectives gained since last landing. The game will ask for confirmation so you don't select this option by mistake.
 
 ### Advanced stuff you may want to try
 
@@ -85,7 +129,7 @@ The Universal Mission is designed to be easily editable to suit your preferences
 
 #### A few notes regarding multiplayer
 
-While The Universal Mission supports multiplayer and is perfectely suitable (and fun!) for playing with friends on a private server, it is **absolutely not suited for public servers** as missions settings can be edited by anyone at any time using the F10 menu.
+While The Universal Mission supports multiplayer and is perfectely suitable (and fun!) for playing with friends on a private server, it is **absolutely not suited for public servers** as missions settings can be edited by anyone at any time Using the mission menu.
 Please also note that PvP is not supported at the moment and that the mission will not launch if both coalitions have player slots.
 
 #### Other parameters
@@ -171,7 +215,7 @@ The core script is quite simple and small, I probably won't need too much help w
 
   - MAJOR CHANGE: Added all new wingman system
     - Far for perfect but a lot smarter than AI's default wingmen
-    - Many more engage/orbit/go to commands (see "F10 menu manual" above)
+    - Many more engage/orbit/go to commands (see "Using the mission menu" above)
     - All new contacts report system: more realistic (see "AI units reports" changes below in this changelog) and does not spam the player with "new contact" messages
     - AI wingmen added using mission editor are now despawned on mission start to avoid conflict with TUM's own wingman system
   - Added "infantry killed" radio messages
@@ -179,6 +223,7 @@ The core script is quite simple and small, I probably won't need too much help w
   - Added many new radio messages, mostly related to wingmen command/replies
   - Added new voiceovers for Fox 1/2/3 calls
   - Added payload table for all DCS World aircraft (datamined from Briefing Room, many thanks to @john681611)
+  - Added "Using the mission menu" section to this README file, detailing all available commands
   - Added "weapons introduction date" table for upcoming "time period" setting (datamined from Briefing Room, many thanks to @john681611)
   - All AI aircraft now despawned on landing to free CPU cycles and allow space for new aircraft
   - Changed AWACS aircraft detection logic (a tiny bit less realistic but more efficient)
