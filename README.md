@@ -82,7 +82,7 @@ The exact content of the menu will depend on the current phase of the mission.
   - **Target count**: How many objectives will be spawned. More objectives means potentially more xp in a single sortie, so better medals, but also more work and more risk. Be aware that you can RTB to rearm/refuel at any time between objectives, but you won't accumulate as many single-sortie XP as if you complete objectives without going back to base, because XP is awarded to your profile and reset each time you land.
   - **Enemy air defense**: Amount, quality and skill of enemy surface-to-air units (AAA, MANPADS and SAM). A higher setting awards more XP.
   - **Enemy air force**: Amount, quality and skill of enemy combat air patrols. A higher setting awards more XP.
-  - **Wingmen count**: How many wingmen will fly by your side (from zero to three). A small XP penalty is added for each additional wingman. Wingman won't get replaced if they get shot during a mission, but they will (with full payload) each time you land and takeoff again. Only shown in single-player missions.
+  - **Wingmen count**: **(COMING SOON!)** How many wingmen will fly by your side (from zero to three). A small XP penalty is added for each additional wingman. Wingman won't get replaced if they get shot during a mission, but they will (with full payload) each time you land and takeoff again. Only shown in single-player missions.
   - **Friendly AI CAP**: Should AI fighter aicraft be spawned regularly to patrol the AO and shoot down potential threats? Disabling this option will award you more XP (only if "Enemy air force" is not set to "None") but also means you and your wingmen will be alone against the whole enemy air force.
 - **View pilot career stats**: Displays a list of your achievements, as well as your medal case. Only available when playing single-player missions and if the Lua IO module has been unsanitized (see "First setup" above)
 - **Begin mission**: Starts a mission with the current settings.
@@ -93,7 +93,7 @@ The exact content of the menu will depend on the current phase of the mission.
 - **Objectives**: Displays a list of commands related to each of the mission's objectives.
   - **Objective coordinates**: Displays the coordinates of the objective and its BRA ("fly X for Y") relative to the player's position. Some objectives types (e.g. strike missions) are provided with exact coordinates, but must will only have approximate coordiantes, so you'll have to search for your targets in the objective area.
   - **Smoke marker on target**: Asks for a friendly JTAC to pop a smoke marker on the target. Makes finding the target easier, but will cost you a small XP penalty. Only available for missions where a JTAC is available (it's pretty hard to throw a smoke grenade at an airplane or a ship in the middle of the sea).
-- **Flight**: Displays a list of commands for your wingmen. Only shown in single-player missions and if wingmen are available for this mission.
+- **Flight**: **(COMING SOON!)** Displays a list of commands for your wingmen. Only shown in single-player missions and if wingmen are available for this mission.
   - **Cover me!**: Tasks your wingmen to immediately engage any nearby air threats.
   - **Engage**: Tasks your wingmen to engage a certain type of targets. Targets must be detected by your wingmen (see "Report contacts" below), or they won't be able to engage them.
   - **Report contacts**: Asks your wingmen for a list of all detected contacts. According to range and sensors capabilities, their reports can go from perfect ID (e.g. "Su-27") to very generic descriptions (e.g. "fighter" or even "aircraft")
@@ -213,7 +213,7 @@ The core script is quite simple and small, I probably won't need too much help w
 
 - **Next version** (coming soon)
 
-  - MAJOR CHANGE: Added all new wingman system
+  - **MAJOR CHANGE:** Added all new wingman system
     - Far for perfect but a lot smarter than AI's default wingmen
     - Many more engage/orbit/go to commands (see "Using the mission menu" above)
     - All new contacts report system: more realistic (see "AI units reports" changes below in this changelog) and does not spam the player with "new contact" messages
