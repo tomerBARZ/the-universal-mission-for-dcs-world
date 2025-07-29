@@ -103,11 +103,18 @@ do
         local awacsUnits = Library.factions.getUnits(TUM.settings.getPlayerFaction(), DCSEx.enums.unitFamily.PLANE_AWACS, 1)
         awacsCallsign = "AWACS"
 
+        local awacsSpawnPoint = DCSEx.envMission.getPlayerGroupsCenterPoint(TUM.settings.getPlayerCoalition())
+        if awacsSpawnPoint then
+            awacsSpawnPoint = DCSEx.math.randomPointInCircle(awacsSpawnPoint, DCSEx.converter.nmToMeters(10), DCSEx.converter.nmToMeters(5))
+        else
+            awacsSpawnPoint = TUM.territories.getTerritoryCenter(TUM.settings.getPlayerCoalition())
+        end
+
         if awacsUnits and #awacsUnits > 0 then
             local groupInfo = DCSEx.unitGroupMaker.create(
                 TUM.settings.getPlayerCoalition(),
                 Group.Category.AIRPLANE,
-                TUM.territories.getTerritoryCenter(TUM.settings.getPlayerCoalition()),
+                awacsSpawnPoint,
                 { DCSEx.table.getRandom(awacsUnits) },
                 {
                     immortal = true,
