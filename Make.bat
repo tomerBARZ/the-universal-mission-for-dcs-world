@@ -26,18 +26,19 @@ goto CANCEL-END
 :BUILD-DEBUG-ALL
 if exist *.miz del *.miz
 c:\php\php Make.php debug
-goto END
+goto COPY-TO-DCS
 
 :BUILD-DEBUG-PERSIAN
 if exist *.miz del *.miz
 c:\php\php Make.php debug persiangulf
-goto END
+goto COPY-TO-DCS
 
 :BUILD-RELEASE
 if exist *.miz del *.miz
 c:\php\php Make.php release
-goto END
+goto COPY-TO-DCS
 
+:COPY-TO-DCS
 @REM -------------------------------------------
 @REM COPY OUTPUT MIZ FILES TO DCS'S MISSIONS DIRECTORY
 @REM -------------------------------------------
@@ -46,7 +47,7 @@ if not exist *.miz goto END
 echo Copying output MIZ files to %userprofile%\Saved Games\DCS\Missions...
 copy /y *.miz "%userprofile%\Saved Games\DCS\Missions"
 echo DONE
-echo.
+goto END
 
 :CANCEL-END
 echo.

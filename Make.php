@@ -9,7 +9,7 @@ if (!is_dir("./_DebugOutput"))
 
 function packMiz($theaterJson, $debugMode)
 {
-    echo "  Writing ZIP file...\n";
+    echo "  Creating ".($debugMode ? "debug" : "release")." .miz file...\n";
     $zip = new ZipArchive();
 
     $suffix = "";
