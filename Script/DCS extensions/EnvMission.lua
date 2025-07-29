@@ -6,6 +6,7 @@
 -- DCSEx.envMission.getGroup(groupID)
 -- DCSEx.envMission.getGroups(sideID)
 -- DCSEx.envMission.getPlayerGroups(coalitionId)
+-- DCSEx.envMission.getPlayerGroupsCenterPoint(coalitionId)
 -- ====================================================================================
 
 DCSEx.envMission = {}
@@ -111,6 +112,7 @@ function DCSEx.envMission.getPlayerGroups(coalitionId)
         for _, u in pairs(g.units) do
             if u.skill == "Player" or u.skill == "Client" then
                 isPlayerGroup = true
+                break
             end
         end
 
@@ -120,6 +122,27 @@ function DCSEx.envMission.getPlayerGroups(coalitionId)
     end
 
     return playerGroups
+end
+
+-------------------------------------
+-- Return the center 2D point of all player groups
+-- @param coalitionId Coalition ID (coalition.side.*), or nil to use unit groups from all coalitions
+-- @return A 2D point, or nil if no player groups
+-------------------------------------
+function DCSEx.envMission.getPlayerGroupsCenterPoint(coalitionId)
+    local pGroups = DCSEx.envMission.getPlayerGroups(coalitionId)
+    if #pGroups == 0 then return nil end
+
+    local center = { x = 0, y = 0 }
+    for _,g in ipairs(pGroups) do
+        center.x = center.x + g.x
+        center.y = center.y + g.y
+    end
+
+    center.x = center.x / #pGroups
+    center.y = center.y / #pGroups
+
+    return center
 end
 
 -- TODO: description & file header
