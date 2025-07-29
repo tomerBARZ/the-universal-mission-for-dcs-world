@@ -5,9 +5,7 @@ require_once("./BuildScript/Script.php");
 require_once("./BuildScript/Warehouses.php");
 
 if (!is_dir("./_DebugOutput"))
-{
     mkdir("./_DebugOutput");
-}
 
 function packMiz($theaterJson, $debugMode)
 {
@@ -45,11 +43,19 @@ function packMiz($theaterJson, $debugMode)
     return true;
 }
 
+$buildType = "debug";
+if (count($argv) > 1) $buildType = strtolower($argv[1]);
+$buildSingleTheater = null;
+if (count($argv) > 2) $buildSingleTheater = strtolower($argv[2]);
+
 $theaterFiles = scandir("./Theaters");
 foreach ($theaterFiles as $theaterFile)
 {
     if (($theaterFile === ".") || ($theaterFile === "..")) continue;
     if (!str_ends_with(strtolower($theaterFile), ".json")) continue;
+
+    if (($buildSingleTheater != null) && (strtolower($theaterFile) !== $buildSingleTheater.".json"))
+        continue;
 
     $theaterJson = json_decode(file_get_contents("./Theaters/$theaterFile"), true);
     if ($theaterJson == null)
@@ -59,10 +65,7 @@ foreach ($theaterFiles as $theaterFile)
     }
 
     echo "Building scenario \"".$theaterFile."\"...\n";
-    for ($i = 0; $i <= 1; $i++)
-    {
-        packMiz($theaterJson, $i == 1);
-    }
+    packMiz($theaterJson, $buildType !== "release");
     echo "\n";
 }
 

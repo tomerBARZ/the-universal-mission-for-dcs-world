@@ -101,7 +101,7 @@ do
             trigger.action.outSound("UI-MissionStart.ogg")
         end
 
-        trigger.action.outText("MISSION OBJECTIVES:\n"..TUM.mission.getSummaryString(), 10)
+        trigger.action.outText("MISSION OBJECTIVES:\n\n"..TUM.mission.getSummaryString(), 10)
 
         objectivesReminderIntervalLeft = OBJECTIVES_REMINDER_INTERVAL
     end
@@ -119,7 +119,7 @@ do
                 if not o.completed or not onlyShowIncomplete then
                     local bulletCharacter = "⬤"
                     if validObjCount == 1 then bulletCharacter = "❶"
-                    elseif validObjCount == 2 then bulletCharacter = "❷"
+                    elseif validObjCount == 2 then bulletCharacter = "⬤"
                     elseif validObjCount == 3 then bulletCharacter = "❸"
                     elseif validObjCount == 4 then bulletCharacter = "❹"
                     elseif validObjCount == 5 then bulletCharacter = "❺"

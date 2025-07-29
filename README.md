@@ -202,8 +202,10 @@ If you want to build the .miz files yourself, you'll need to:
 - Add the PHP directory it to your system PATH so the batch file will find it
 - In the PHP directory, rename php.ini-production to php.ini, edit it and uncomment or delete the "extension=mbstring" line to enable the MBString extension that my script uses.
 - Then run Make.bat in the source directory (or, alternatively, open the source directory in VSCode and press Ctrl+Alt+B)
+- You will be asked if you want to build only the Persian Gulf debug mission (useful, as build is quicker and PG is one of the fastest loading maps in DCS World), debug versions of all theaters or release version of all theaters.
+  - Debug version of the mission give access to debugging options in the F10 menu and output additional logs during the mission. Debug missions are generated with an F-16C player aircraft as it's a good jack-of-all-trades to test various things, but you're free to change it in the mission editor.
 - .Miz files will be generated in the project root directory, and a copy will be sent to your DCS World "missions" directory (if it exists)
-- Please note that a second version of each file marked "DEBUG" will also be generated. This version allows access to the debug menu and additional text outputs during the mission. Debug missions are generated with an F-16C player aircraft as it's a good jack-of-all-trades to test various things.
+- If you use VSCode, be aware that .miz files are ignored in the explorer (as per .vscode/settings.json settings) to unclutter the explorer panel, so don't be suprise if you don't see them when building from VSCode.
 
 ## Want to contribute to the project?
 
@@ -239,6 +241,7 @@ The core script is quite simple and small, I probably won't need too much help w
   - Fixed missing airbase name in "aircraft landed safely" messages
   - Friendly CAP flights now take off from near the centerpoint of mission player slots
   - Improved display of XP modifiers in menu
+  - Improved the script used to build the project
   - Improved wording of many lines and commands, correct a bunch of typos
   - Increased minimum aircraft spawn altitude to avoir crashes in nearby hills
   - Infantry escaping from destroyed vehicles is now hidden on F10 map, as it should be

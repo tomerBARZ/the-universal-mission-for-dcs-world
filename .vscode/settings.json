@@ -1,4 +1,5 @@
 {
+  "files.exclude": { "*.miz": true },
   "Lua.workspace.library": ["Libraries/dcs-world-api.lua"],
   "Lua.diagnostics.disable": ["deprecated"]
 }
