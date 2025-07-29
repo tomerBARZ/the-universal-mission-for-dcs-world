@@ -232,10 +232,11 @@ The core script is quite simple and small, I probably won't need too much help w
   - Added "Using the mission menu" section to this README file, detailing all available commands
   - Added "weapons introduction date" table for upcoming "time period" setting (datamined from Briefing Room, many thanks to @john681611)
   - All AI aircraft now despawned on landing to free CPU cycles and allow space for new aircraft
-  - AWACS aircraft now spawned near the centerpoint of all mission player slots
+  - AWACS aircraft now spawned near the centerpoint of mission player slots
   - Changed AWACS aircraft detection logic (a tiny bit less realistic but more efficient)
   - Changed some UTF-8 symbols in F10 menu, added UTF-8 symbol for "Objectives" submenu
   - Fixed missing airbase name in "aircraft landed safely" messages
+  - Friendly CAP flights now take off from near the centerpoint of mission player slots
   - Improved display of XP modifiers in menu
   - Improved wording of many lines and commands, correct a bunch of typos
   - Increased minimum aircraft spawn altitude to avoir crashes in nearby hills

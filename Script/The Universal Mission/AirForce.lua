@@ -136,13 +136,11 @@ do
         end
         if not validAirbases or #validAirbases == 0 then return false end -- No airbases found for this coalition, nowhere to take off from
 
-        local center = nil
         if side == TUM.settings.getPlayerCoalition() then
-            center = playerCenter
+            validAirbases = { DCSEx.dcs.getNearestObject(playerCenter, validAirbases) }
         else
-            center = TUM.objectives.getCenter()
+            validAirbases = DCSEx.dcs.getNearestObjects(TUM.objectives.getCenter(), validAirbases)
         end
-        validAirbases = DCSEx.dcs.getNearestObjects(center, validAirbases)
 
         local airborneUnitCount = getAirborneUnitCount(side)
 
@@ -152,7 +150,8 @@ do
                     randomizeDesiredAircraftCount(side)
                 end
 
-                return launchNewAircraftGroup(side, airbases)
+                -- return launchNewAircraftGroup(side, airbases)
+                return launchNewAircraftGroup(side, validAirbases)
             end
         end
 
@@ -195,18 +194,12 @@ do
     end
 
     function TUM.airForce.onStartUp()
-        playerCenter = { x = env.mission.map.centerX, y = env.mission.map.centerY }
-
-        local playerSlots = DCSEx.envMission.getPlayerGroups()
-        if #playerSlots > 0 then
-            playerCenter = { x = 0, y = 0 }
-            for _,p in ipairs(playerSlots) do
-                playerCenter.x = playerCenter.x + p.x
-                playerCenter.y = playerCenter.y + p.y
-            end
-            playerCenter.x = playerCenter.x / #playerSlots
-            playerCenter.y = playerCenter.y / #playerSlots
+        playerCenter = DCSEx.envMission.getPlayerGroupsCenterPoint()
+        if not playerCenter then
+            playerCenter = { x = env.mission.map.centerX, y = env.mission.map.centerY }
         end
+
+        -- TODO: build list of airbases now instead of of each update() (but what about destroyed airbases?)
 
         return true
     end
