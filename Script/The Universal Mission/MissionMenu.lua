@@ -11,24 +11,26 @@ do
     end
 
     local function doCommandMissionStatus()
-        TUM.radio.playForCoalition(TUM.settings.getPlayerCoalition(), "playerCommandMissionStatus", nil, "Flight", false)
+        TUM.radio.playForCoalition(TUM.settings.getPlayerCoalition(), "playerCommandMissionStatus", nil, TUM.mission.getPlayerCallsign(), false)
         TUM.mission.playMissionSummaryRadioMessage(false, true)
     end
 
-    -- local function doCommandNearestAirbase(index)
-    --     local obj = TUM.objectives.getObjective(index)
-    --     if not obj then return end
-
-    --     TUM.radio.playForCoalition(TUM.settings.getPlayerCoalition(), "playerATCRequireNearestAirbase", { obj.name }, "Flight", false)
-    --     TUM.atc.requestNavAssistanceToAirbase(false)
-    -- end
+    local function doCommandNearestAirbase()
+        TUM.radio.playForCoalition(TUM.settings.getPlayerCoalition(), "playerATCRequireNearestAirbase", nil, TUM.mission.getPlayerCallsign(), false)
+        TUM.atc.requestNavAssistanceToAirbase(false)
+    end
 
     local function doCommandObjectiveLocation(index)
         local obj = TUM.objectives.getObjective(index)
         if not obj then return end
 
-        TUM.radio.playForCoalition(TUM.settings.getPlayerCoalition(), "playerCommandRequireObjectives", { obj.name }, "Flight", false)
+        TUM.radio.playForCoalition(TUM.settings.getPlayerCoalition(), "playerCommandRequireObjectives", { obj.name }, TUM.mission.getPlayerCallsign(), false)
         TUM.atc.requestNavAssistanceToObjective(index, true)
+    end
+
+    local function doCommandWeatherUpdate()
+        TUM.radio.playForCoalition(TUM.settings.getPlayerCoalition(), "playerATCWeatherUpdate", nil, TUM.mission.getPlayerCallsign(), false)
+        TUM.atc.requestWeatherUpdate(false)
     end
 
     function TUM.missionMenu.create()
@@ -49,7 +51,7 @@ do
                 missionCommands.addCommand("Nav to objective "..objNameAndDescription, navigationMenuRoot, doCommandObjectiveLocation, i)
             end
         end
-
+        -- missionCommands.addCommand("Weather update", navigationMenuRoot, doCommandWeatherUpdate, nil)
 
         TUM.wingmenMenu.create()
         TUM.supportAWACS.createMenu()

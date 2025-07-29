@@ -106,6 +106,12 @@ do
         objectivesReminderIntervalLeft = OBJECTIVES_REMINDER_INTERVAL
     end
 
+    function TUM.mission.getPlayerCallsign()
+        local player = world.getPlayer()
+        if player then return player:getCallsign() end
+        return "Flight"
+    end
+
     function TUM.mission.getSummaryString(onlyShowIncomplete, doublePercentage)
         onlyShowIncomplete = onlyShowIncomplete or false
         if missionStatus == TUM.mission.status.NONE then return "" end
@@ -119,7 +125,7 @@ do
                 if not o.completed or not onlyShowIncomplete then
                     local bulletCharacter = "⬤"
                     if validObjCount == 1 then bulletCharacter = "❶"
-                    elseif validObjCount == 2 then bulletCharacter = "⬤"
+                    elseif validObjCount == 2 then bulletCharacter = "❷"
                     elseif validObjCount == 3 then bulletCharacter = "❸"
                     elseif validObjCount == 4 then bulletCharacter = "❹"
                     elseif validObjCount == 5 then bulletCharacter = "❺"

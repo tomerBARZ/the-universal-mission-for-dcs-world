@@ -68,12 +68,12 @@ do
     end
 
     local function doCommandPicture()
-        TUM.radio.playForCoalition(TUM.settings.getPlayerCoalition(), "playerAwacsPicture", { awacsCallsign }, "Flight", false)
+        TUM.radio.playForCoalition(TUM.settings.getPlayerCoalition(), "playerAwacsPicture", { awacsCallsign }, TUM.mission.getPlayerCallsign(), false)
         doAwacsPicture(false, true)
     end
 
     local function doCommandBogeyDope()
-        TUM.radio.playForCoalition(TUM.settings.getPlayerCoalition(), "playerAwacsBogeyDope", { awacsCallsign }, "Flight", false)
+        TUM.radio.playForCoalition(TUM.settings.getPlayerCoalition(), "playerAwacsBogeyDope", { awacsCallsign }, TUM.mission.getPlayerCallsign(), false)
         doAwacsPicture(true, true)
     end
 

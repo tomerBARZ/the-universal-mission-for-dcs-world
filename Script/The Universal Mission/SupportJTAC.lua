@@ -47,7 +47,7 @@ do
         local smokeColorName = "red"
         if smokeColor == trigger.smokeColor.Orange then smokeColorName = "orange" end
 
-        TUM.radio.playForCoalition(TUM.settings.getPlayerCoalition(), "playerJTACSmoke", { jtacName[index], obj.name }, "Flight", false)
+        TUM.radio.playForCoalition(TUM.settings.getPlayerCoalition(), "playerJTACSmoke", { jtacName[index], obj.name }, TUM.mission.getPlayerCallsign(), false)
 
         if not lastSmoke[index] then lastSmoke[index] = -3600 end
         if lastSmoke[index] + SMOKE_DURATION > timer.getAbsTime() then
