@@ -201,6 +201,17 @@ Library.radioMessages = {
         "$1, off the deck, forming up now."
     },
 
+    atcRequireNearestAirbase = { -- TODO: voiceover
+        "Roger. Vectoring you to the nearest airbase.",
+        "Copy. Coordinates to nearest field inbound.",
+        "Roger. Guide you direct to the nearest recovery airfield."
+    },
+    atcRequireWeather = { -- TODO: voiceover
+        "Roger. Weather info coming up now.",
+        "Copy. Weather report inbound.",
+        "This is control, checking conditions now.",
+        "Copy. Weather data on the way."
+    },
     atcSafeLanding = { "Be advised: $1 is wheels down at $2 and clear of runway.", "All aircraft, $1 has landed at $2 and vacated active. Runway is open for next inbound.", "Traffic, $1 is on deck at $2 and heading to parking. Runway clear.", "All flights, $1 just rolled out at $2 and cleared the active.", "Heads up, $1 landed at $2 and moving to the ramp. Runway available for next approach." },
     atcSafeLandingPlayer = { "$1, wheels on deck, welcome back. You may taxi to the parking area.", "$1, good copy on landing. Exit when able, proceed to the parking area.", "$1, touchdown confirmed. Continue to parking.", "$1, welcome home. Clear of runway and taxi to parking area.", "$1, nice landing. Taxi to parking when ready." },
 
@@ -295,6 +306,19 @@ Library.radioMessages = {
         "$1, target already marked with smoke."
     },
 
+    playerATCRequireNearestAirbase = { -- TODO: voiceover
+        "Control, request vectors to nearest suitable base for recovery.",
+        "Control, requesting nearest friendly airfield for landing, over.",
+        "Control, negative on original destination, request alternate field nearest current position.",
+        "Control, requesting location and frequency for closest towered airfield."
+    },
+    playerATCRequireWeather = { -- TODO: voiceover
+        "Control, request latest weather update, over.",
+        "Control, need current weather and visibility.",
+        "Control, what's the weather looking like out there?",
+        "Control, checking weather, particularly wind.",
+    },
+
     playerAwacsBogeyDope = { "$1, request bogey dope.", "$1, bogey dope." },
     playerAwacsPicture = { "$1, request picture.", "$1, picture when able.", "$1, need a picture.", "$1, request full picture.", "$1, picture update." },
     playerCommandMissionStatus = {
@@ -305,6 +329,8 @@ Library.radioMessages = {
         "Command, need an update on situation, what's the status?",
         "Command, mission timeline check, are we on schedule?"
     },
+
+
     playerCommandRequireObjectives = {
         "Command, request objective $1 coordinates, over.",
         "Command, send me grid for objective $1.",

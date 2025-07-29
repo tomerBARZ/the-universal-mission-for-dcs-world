@@ -15,6 +15,14 @@ do
         TUM.mission.playMissionSummaryRadioMessage(false, true)
     end
 
+    -- local function doCommandNearestAirbase(index)
+    --     local obj = TUM.objectives.getObjective(index)
+    --     if not obj then return end
+
+    --     TUM.radio.playForCoalition(TUM.settings.getPlayerCoalition(), "playerATCRequireNearestAirbase", { obj.name }, "Flight", false)
+    --     TUM.atc.requestNavAssistanceToAirbase(false)
+    -- end
+
     local function doCommandObjectiveLocation(index)
         local obj = TUM.objectives.getObjective(index)
         if not obj then return end
@@ -29,6 +37,7 @@ do
 
         local objectivesMenuRoot = missionCommands.addSubMenu("❖ Objectives")
         local navigationMenuRoot = missionCommands.addSubMenu("➽ Navigation")
+        -- missionCommands.addCommand("Nav to nearest airbase", navigationMenuRoot, doCommandNearestAirbase, nil)
 
         for i=1,TUM.objectives.getCount() do
             local obj = TUM.objectives.getObjective(i)
@@ -37,7 +46,7 @@ do
                 local objRoot = missionCommands.addSubMenu("Objective "..objNameAndDescription, objectivesMenuRoot)
                 TUM.supportJTAC.setupJTACOnObjective(i, objRoot)
 
-                missionCommands.addCommand("Navigation to objective "..objNameAndDescription, navigationMenuRoot, doCommandObjectiveLocation, i)
+                missionCommands.addCommand("Nav to objective "..objNameAndDescription, navigationMenuRoot, doCommandObjectiveLocation, i)
             end
         end
 
