@@ -46,6 +46,28 @@ function DCSEx.string.join(table, separator)
 end
 
 -- TODO: description, file header
+function DCSEx.string.getTimeString(timeInSeconds, useColon)
+    timeInSeconds = timeInSeconds or timer.getAbsTime()
+    useColon = useColon or false
+
+    timeInSeconds = math.max(0, timeInSeconds) % 86400
+
+    local hours = math.floor(timeInSeconds / 3600)
+    local minutes = math.floor(timeInSeconds / 60 - hours * 60)
+
+    local hoursStr = tostring(hours)
+    if #hoursStr == 1 then hoursStr = "0"..hoursStr end
+
+    local minutesStr = tostring(minutes)
+    if #minutesStr == 1 then minutesStr = "0"..minutesStr end
+
+    local separator = ""
+    if useColon then separator = ":" end
+
+    return hoursStr..separator..minutesStr
+end
+
+-- TODO: description, file header
 function DCSEx.string.toStringNumber(number, firstToUpper)
     firstToUpper = firstToUpper or false
     local NUMBERS = { "zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "eleven", "twelve", "thirteen", "fourteen", "fifteen", "sixteen", "seventeen", "eighteen", "nineteen", "twenty" }
