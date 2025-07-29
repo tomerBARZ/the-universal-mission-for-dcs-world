@@ -19,17 +19,8 @@ do
         local obj = TUM.objectives.getObjective(index)
         if not obj then return end
 
-        local messageSuffix = ""
-        if obj.preciseCoordinates then messageSuffix = "Precise" end
-
         TUM.radio.playForCoalition(TUM.settings.getPlayerCoalition(), "playerCommandRequireObjectives", { obj.name }, "Flight", false)
-
-        local players = coalition.getPlayers(TUM.settings.getPlayerCoalition())
-        for _,p in ipairs(players) do
-            local coordinates = DCSEx.world.getCoordinatesAsString(obj.waypoint3, false)
-            local braa = DCSEx.dcs.getBRAA(obj.waypoint3, p:getPoint(), false)
-            TUM.radio.playForUnit(DCSEx.dcs.getObjectIDAsNumber(p), "commandObjectiveCoordinates"..messageSuffix, { obj.name, coordinates, braa }, "Command", true)
-        end
+        TUM.atc.requestNavAssistanceToObjective(index, true)
     end
 
     function TUM.missionMenu.create()
@@ -37,14 +28,19 @@ do
         missionCommands.addCommand("☱ Mission status", nil, doCommandMissionStatus, nil)
 
         local objectivesMenuRoot = missionCommands.addSubMenu("❖ Objectives")
+        local navigationMenuRoot = missionCommands.addSubMenu("➽ Navigation")
+
         for i=1,TUM.objectives.getCount() do
             local obj = TUM.objectives.getObjective(i)
             if obj then
-                local objRoot = missionCommands.addSubMenu("Objective "..obj.name.." ("..Library.tasks[obj.taskID].description.short..")", objectivesMenuRoot)
-                missionCommands.addCommand("Request objective coordinates", objRoot, doCommandObjectiveLocation, i)
+                local objNameAndDescription = obj.name.." ("..Library.tasks[obj.taskID].description.short..")"
+                local objRoot = missionCommands.addSubMenu("Objective "..objNameAndDescription, objectivesMenuRoot)
                 TUM.supportJTAC.setupJTACOnObjective(i, objRoot)
+
+                missionCommands.addCommand("Navigation to objective "..objNameAndDescription, navigationMenuRoot, doCommandObjectiveLocation, i)
             end
         end
+
 
         TUM.wingmenMenu.create()
         TUM.supportAWACS.createMenu()

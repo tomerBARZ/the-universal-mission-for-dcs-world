@@ -86,7 +86,7 @@ The exact content of the menu will depend on the current phase of the mission.
   - **Target count**: How many objectives will be spawned. More objectives means potentially more xp in a single sortie, so better medals, but also more work and more risk. Be aware that you can RTB to rearm/refuel at any time between objectives, but you won't accumulate as many single-sortie XP as if you complete objectives without going back to base, because XP is awarded to your profile and reset each time you land.
   - **Enemy air defense**: Amount, quality and skill of enemy surface-to-air units (AAA, MANPADS and SAM). A higher setting awards more XP.
   - **Enemy air force**: Amount, quality and skill of enemy combat air patrols. A higher setting awards more XP.
-  - **Wingmen count**: **(COMING SOON!)** How many wingmen will fly by your side (from zero to three). A small XP penalty is added for each additional wingman. Wingman won't get replaced if they get shot during a mission, but they will (with full payload) each time you land and takeoff again. Only shown in single-player missions.
+  - **Wingmen count**: How many wingmen will fly by your side (from zero to three). A small XP penalty is added for each additional wingman. Wingman won't get replaced if they get shot during a mission, but they will (with full payload) each time you land and takeoff again. Only shown in single-player missions.
   - **Friendly AI CAP**: Should AI fighter aicraft be spawned regularly to patrol the AO and shoot down potential threats? Disabling this option will award you more XP (only if "Enemy air force" is not set to "None") but also means you and your wingmen will be alone against the whole enemy air force.
 - **View pilot career stats**: Displays a list of your achievements, as well as your medal case. Only available when playing single-player missions and if the Lua IO module has been unsanitized (see "First setup" above)
 - **Begin mission**: Starts a mission with the current settings.
@@ -94,10 +94,11 @@ The exact content of the menu will depend on the current phase of the mission.
 #### During the mission
 
 - **Mission status**: Displays a summary of the mission's status (list of objectives and progress on each objective).
-- **Objectives**: Displays a list of commands related to each of the mission's objectives.
-  - **Objective coordinates**: Displays the coordinates of the objective and its BRA ("fly X for Y") relative to the player's position. Some objectives types (e.g. strike missions) are provided with exact coordinates, but must will only have approximate coordiantes, so you'll have to search for your targets in the objective area.
+- **Objectives**: Displays a list of special commands related to each of the mission's objectives. Be aware that some objectives may have no special commands associated with them.
   - **Smoke marker on target**: Asks for a friendly JTAC to pop a smoke marker on the target. Makes finding the target easier, but will cost you a small XP penalty. Only available for missions where a JTAC is available (it's pretty hard to throw a smoke grenade at an airplane or a ship in the middle of the sea).
-- **Flight**: **(COMING SOON!)** Displays a list of commands for your wingmen. Only shown in single-player missions and if wingmen are available for this mission.
+- **Navigation**: Displays a list of commands related to navigational assistance.
+  - **Navigation to objective [OBJECTIVE NAME]**: Displays the coordinates of the objective, its BRA ("fly X for Y") relative to the player's position and an estimated flight time and ETA. Some objectives types (e.g. strike missions) are provided with exact coordinates, but most will only have approximate coordiantes, so you'll have to search for targets yourself once in the objective area.
+- **Flight**: Displays a list of commands for your wingmen. Only shown in single-player missions and if wingmen are available for this mission.
   - **Cover me!**: Tasks your wingmen to immediately engage any nearby air threats.
   - **Engage**: Tasks your wingmen to engage a certain type of targets. Targets must be detected by your wingmen (see "Report contacts" below), or they won't be able to engage them.
   - **Report contacts**: Asks your wingmen for a list of all detected contacts. According to range and sensors capabilities, their reports can go from perfect ID (e.g. "Su-27") to very generic descriptions (e.g. "fighter" or even "aircraft")
@@ -242,6 +243,7 @@ The core script is quite simple and small, I probably won't need too much help w
   - Increased minimum aircraft spawn altitude to avoir crashes in nearby hills
   - Infantry escaping from destroyed vehicles is now hidden on F10 map, as it should be
   - Interception objectives are now marked as complete when target is shot down
+  - Moved "Request objective coordinates" radio commands to new "Navigation" submenu, which will include additional navigational assist in future versions
   - Lowered MANPADS count and skill (MANPADS are overpowered in DCS, especially SA-18)
   - "New friendly/enemy aircraft taking off" radio messages now mention their BRAA relative to the player, number of bandits taking off now displayed as a word instead of digits
   - "Rifle!" and "Missile away!" radio calls now both used for any kind of A/G missiles
