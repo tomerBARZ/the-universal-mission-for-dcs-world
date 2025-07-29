@@ -370,8 +370,7 @@ Library.radioMessages = {
         "Flight, anchor on current position.",
         "Flight, orbit overhead."
     },
-    playerWingmanRejoin =
-    {
+    playerWingmanRejoin = {
         "Flight, rejoin my side.",
         "Flight, push it up, rejoin formation.",
         "Flight, come back to route.",

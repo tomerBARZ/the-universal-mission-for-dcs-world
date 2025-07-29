@@ -15,7 +15,7 @@ I think with The Universal Mission is, finally, the proper way to approach this 
 - Can generate any kind of mission: ground attack, interception, strike, airbase attack, CAS, CAP, and more
 - Completely dynamic, no two missions are ever the same
 - Entirely self-contained inside a .miz file, no need for any external program
-- More than 170 fully voiced radio messages (with more coming) for immersive and realistic coms
+- More than 300 voiced radio messages for immersive and realistic coms
 - Supports both single-player and small-scale PvE on closed servers
 - Persistent single player career mode, with awards and promotions. Dying won't reset your progress, but you have to come back to base alive for your kills and completed objectives to be saved to your profile, so watch out for SAMs on your way home
 - Uses advanced DCS World scripting functionalities (like the brand new Disposition singleton and net.dostring_in hacks) to achieve effects seldom seen in other scripts, such as graphic overlays and random but realistic placement of units in cities and forests without the use of handmade spawn points
@@ -223,10 +223,10 @@ The core script is quite simple and small, I probably won't need too much help w
     - Many more engage/orbit/go to commands (see "Using the mission menu" above)
     - All new contacts report system: more realistic (see "AI units reports" changes below in this changelog) and does not spam the player with "new contact" messages
     - AI wingmen added using mission editor are now despawned on mission start to avoid conflict with TUM's own wingman system
-  - Added many new radio messages and their voiceover
+  - Added 138 new radio messages, with voiceover
+    - 120+ wingmen commands and replies
     - Additional voiceovers for Fox 1/2/3 calls
-    - "Infantry down" call
-    - Tons of wingmen commands and replies
+    - "Infantry kill" BDA report
   - Added error message on mission start when autoexec.cfg is missing and script cannot proceed
   - Added payload table for all DCS World aircraft (datamined from Briefing Room, many thanks to @john681611)
   - Added "Using the mission menu" section to this README file, detailing all available commands
