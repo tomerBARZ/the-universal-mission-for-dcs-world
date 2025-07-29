@@ -111,12 +111,26 @@ do
         if missionStatus == TUM.mission.status.NONE then return "" end
 
         local missionSummary = ""
+        local validObjCount = 1
         for i=1,TUM.objectives.getCount() do
             local o = TUM.objectives.getObjective(i)
 
             if o then
                 if not o.completed or not onlyShowIncomplete then
-                    missionSummary = missionSummary.."- Objective "..o.name..": "..Library.tasks[o.taskID].description.short
+                    local bulletCharacter = "⬤"
+                    if validObjCount == 1 then bulletCharacter = "❶"
+                    elseif validObjCount == 2 then bulletCharacter = "❷"
+                    elseif validObjCount == 3 then bulletCharacter = "❸"
+                    elseif validObjCount == 4 then bulletCharacter = "❹"
+                    elseif validObjCount == 5 then bulletCharacter = "❺"
+                    elseif validObjCount == 6 then bulletCharacter = "❻"
+                    elseif validObjCount == 7 then bulletCharacter = "❼"
+                    elseif validObjCount == 8 then bulletCharacter = "❽"
+                    elseif validObjCount == 9 then bulletCharacter = "❾"
+                    elseif validObjCount == 10 then bulletCharacter = "❿"
+                    end
+
+                    missionSummary = missionSummary..bulletCharacter.." Objective "..o.name..": "..Library.tasks[o.taskID].description.short
                     if not o.completed then
                         missionSummary = missionSummary.." ("..TUM.objectives.getObjectiveProgress(i, doublePercentage)..")"
                     else
@@ -126,6 +140,8 @@ do
                     if i < TUM.objectives.getCount() then
                         missionSummary = missionSummary.."\n"
                     end
+
+                    validObjCount = validObjCount + 1
                 end
             end
         end

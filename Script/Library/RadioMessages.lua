@@ -256,21 +256,21 @@ Library.radioMessages = {
     commandObjectiveCoordinatesPrecise = "Copy, navigational assist for objective $1.\n\n$2",
 
     commandObjectivesManyLeft = {
-        "Stay focused, people. We still have work to do.\n$1",
-        "Our work is not done yet, we have a lot to do.\n$1",
-        "Flights, you've got a couple of tasks left, keep moving down the list.\n$1",
-        "Still a few objectives outstanding, don't break until they're complete.\n$1",
-        "Alright people, keep your focus, more work ahead before you can head home.\n$1",
-        "All flights, maintain timeline. You've got more boxes to check before RTB.\n$1"
+        "Stay focused, people. We still have work to do.\n\n$1",
+        "Our work is not done yet, we have a lot to do.\n\n$1",
+        "Flights, you've got a couple of tasks left, keep moving down the list.\n\n$1",
+        "Still a few objectives outstanding, don't break until they're complete.\n\n$1",
+        "Alright people, keep your focus, more work ahead before you can head home.\n\n$1",
+        "All flights, maintain timeline. You've got more boxes to check before RTB.\n\n$1"
     },
     commandObjectivesOneLeft = {
-        "All flights, you've got one last task before you're done.\n$1",
-        "Flights, almost home. One objective remaining, then you're RTB.\n$1",
-        "All flights, you're down to the final push. Complete this and you're done.\n$1",
-        "All leads, one more on the board. Finish it and head back to base.\n$1",
-        "Flights, you're not clear yet. One last objective to wrap up.\n$1",
-        "Come on people, one last push and we're done.\n$1",
-        "Just one objective to complete and we're done.\n$1"
+        "All flights, you've got one last task before you're done.\n\n$1",
+        "Flights, almost home. One objective remaining, then you're RTB.\n\n$1",
+        "All flights, you're down to the final push. Complete this and you're done.\n\n$1",
+        "All leads, one more on the board. Finish it and head back to base.\n\n$1",
+        "Flights, you're not clear yet. One last objective to wrap up.\n\n$1",
+        "Come on people, one last push and we're done.\n\n$1",
+        "Just one objective to complete and we're done.\n\n$1"
     },
 
     jtacSmokeOK = {
