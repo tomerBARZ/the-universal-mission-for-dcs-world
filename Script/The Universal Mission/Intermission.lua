@@ -31,8 +31,8 @@ do
 
         trigger.action.outText("Generating mission and loading assets, this can take some time...", 5)
 
+        -- Add a little delay for the "Generating mission..." message be printed out. Once generation begins, the main DCS thread will be to busy to output anything.
         timer.scheduleFunction(TUM.mission.beginMission, false, timer.getTime() + 1)
-        -- TUM.mission.beginMission()
     end
 
     local function setSetting(args)

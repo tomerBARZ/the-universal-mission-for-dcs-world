@@ -263,7 +263,7 @@ do
     -- @param settingValue The setting value, or nil to use the current value
     -- @return A number in the -1.0 to +1.0 range, or nil if this setting has no effect on XP gains
     -------------------------------------
-    function TUM.playerScore.getScoreMultiplierMod(settingID, settingValue)
+    function TUM.playerScore.getScoreMultiplier(settingID, settingValue)
         if not DCSEx.io.canReadAndWrite() then return 0 end -- IO disabled, career and scoring disabled
         if TUM.settings.getValue(TUM.settings.id.MULTIPLAYER) then return 0 end -- No scoring in multiplayer
 
@@ -273,10 +273,14 @@ do
             return ENEMY_DEFENSE_MULTIPLIER_BONUS[settingValue]
         elseif settingID == TUM.settings.id.WINGMEN then
             return 0 - 0.10 * (settingValue - 1)
+        elseif settingID == TUM.settings.id.TARGET_LOCATION then
+            local zoneName = TUM.settings.getValue(TUM.settings.id.TARGET_LOCATION, true)
+            local tgtZone = DCSEx.zones.getByName(zoneName)
+            if not tgtZone then return 0 end
+            if TUM.territories.getPointOwner(tgtZone) == TUM.settings.getEnemyCoalition() then return 0.25 end
+            return 0
         elseif settingID == TUM.settings.id.AI_CAP then
-            if settingValue == 2 and TUM.settings.getValue(TUM.settings.id.ENEMY_AIR_FORCE) > 1 then
-                return 0.15
-            end
+            if settingValue == 2 and TUM.settings.getValue(TUM.settings.id.ENEMY_AIR_FORCE) > 1 then return 0.15 end
             return 0
         end
 
@@ -293,7 +297,7 @@ do
 
         local scoreMultiplier = 1.0
         for _,v in pairs(TUM.settings.id) do
-            scoreMultiplier = scoreMultiplier + (TUM.playerScore.getScoreMultiplierMod(v) or 0.0)
+            scoreMultiplier = scoreMultiplier + (TUM.playerScore.getScoreMultiplier(v) or 0.0)
         end
 
         return math.max(0.0, scoreMultiplier)

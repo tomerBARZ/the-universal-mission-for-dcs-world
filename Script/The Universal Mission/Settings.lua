@@ -57,6 +57,8 @@ do
         [TUM.settings.id.WINGMEN] = { "None", "1", "2", "3" }
     }
 
+    local targetLocation
+
     local function getFaction(side)
         if side == coalition.side.BLUE then
             return TUM.settings.getValue(TUM.settings.id.COALITION_BLUE, true)
@@ -180,11 +182,11 @@ do
                 end
 
                 if showScoreMultiplier then
-                    local settingMultiplier = TUM.playerScore.getScoreMultiplierMod(v, settings[v])
+                    local settingMultiplier = TUM.playerScore.getScoreMultiplier(v, settings[v])
 
                     if settingMultiplier ~= nil then -- Must add "~= nil" because can be 0
                         summary = summary.." ("
-                        if settingMultiplier >= 0.0 then summary = summary.."+" end
+                        if settingMultiplier >= 0 then summary = summary.."+" end
                         summary = summary..tostring(math.ceil(settingMultiplier * 100)).."% xp)"
                     end
                 end
