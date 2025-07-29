@@ -240,12 +240,12 @@ do
         return timeOfDayInSeconds < sunriseTime or timeOfDayInSeconds > sunsetTime
     end
 
-    function Library.environment.getWindLevel()
+    function Library.environment.getWindAverage()
         local windSpeed = 0
         local windSpeedValuesCount = 0
 
         if not env or not env.mission or not env.mission.weather or not env.mission.weather.wind then
-            return Library.environment.windAmount.CALM
+            return 0
         end
 
         for _,v in ipairs({"at8000", "atGround", "at2000"}) do
@@ -255,11 +255,13 @@ do
             end
         end
 
-        if windSpeedValuesCount == 0 then
-            return Library.environment.windAmount.CALM
-        end
+        windSpeed = math.max(0, windSpeed / windSpeedValuesCount)
+        return windSpeed
+    end
 
-        windSpeed = windSpeed / windSpeedValuesCount
+    function Library.environment.getWindLevel()
+        local windSpeed = Library.environment.getWindAverage()
+
         if windSpeed < 1 then
             return Library.environment.windAmount.CALM
         elseif windSpeed < 4 then
