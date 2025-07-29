@@ -277,7 +277,7 @@ do
             local zoneName = TUM.settings.getValue(TUM.settings.id.TARGET_LOCATION, true)
             local tgtZone = DCSEx.zones.getByName(zoneName)
             if not tgtZone then return 0 end
-            if TUM.territories.getPointOwner(tgtZone) == TUM.settings.getEnemyCoalition() then return 0.25 end
+            if TUM.territories.getPointOwner(tgtZone) == TUM.settings.getEnemyCoalition() then return 0.3 end
             return 0
         elseif settingID == TUM.settings.id.AI_CAP then
             if settingValue == 2 and TUM.settings.getValue(TUM.settings.id.ENEMY_AIR_FORCE) > 1 then return 0.15 end

@@ -83,7 +83,7 @@ The exact content of the menu will depend on the current phase of the mission.
     - **SEAD**: Destroy enemy SAM sites.
     - **Strike**: Destroy enemy structures and civilian buildings occupied by enemy forces.
   - **Target location**: Where on the map will the targets be spawned? Approximate distance to possible regions is displayed in the menu.
-    - Missions taking place in enemy territory now award 25% more XP to account for increased SAM threat and proximity of enemy airbases.
+    - Missions taking place in enemy territory award 30% more XP to account for increased SAM threat and proximity of enemy airbases.
     - Make sure to pick a region not too far away from your starting location if you don't like long ingresses.
     - Picking a region very close to your starting location (for instance, the one where your airbase is located in) can also be a bad idea, as you might takeoff in range of an enemy SAM.
     - Be aware that targets of antiship strikes will always be spawned in open seas, which can be quite far if you picked a landlocked target zone.
@@ -250,7 +250,7 @@ The core script is quite simple and small, I probably won't need too much help w
   - Increased minimum aircraft spawn altitude to avoir crashes in nearby hills
   - Infantry escaping from destroyed vehicles is now hidden on F10 map, as it should be
   - Interception objectives are now marked as complete when target is shot down
-  - Missions taking place in enemy territory now award 25% more XP to account for increased SAM threat and proximity of enemy airbases
+  - Missions taking place in enemy territory now award 30% more XP to account for increased SAM threat and proximity of enemy airbases
   - Moved "Request objective coordinates" radio commands to new "Navigation" submenu, which will include additional navigational assist in future versions
   - Lowered MANPADS count and skill (MANPADS are overpowered in DCS, especially SA-18)
   - "New friendly/enemy aircraft taking off" radio messages now mention their BRAA relative to the player, number of bandits taking off now displayed as a word instead of digits
