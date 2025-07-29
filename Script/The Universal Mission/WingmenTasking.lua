@@ -18,6 +18,8 @@ do
 
     local cruiseAltitudeFraction = 1.0 -- Fraction of the default aircraft cruise altitude
 
+    local wingmenTick = 0 -- Number of clockticks with active wingmen
+
     local function allowWeaponUse(wingmenCtrl, allowAA, allowAG)
         allowAA = allowAA or false
         allowAG = allowAG or false
@@ -390,9 +392,15 @@ do
     -- Called on every mission update tick (every 10-20 seconds)
     ----------------------------------------------------------    
     function TUM.wingmenTasking.onClockTick()
-        -- No tasking? Rejoin leader
         local wingmenCtrl = TUM.wingmen:getController()
-        if wingmenCtrl and not wingmenCtrl:hasTask() then
+        if not wingmenCtrl then return end
+
+        -- Wingmen are invincible 1/3 of the time to compensate for DCS's "special" AI, while still not making them completely indestructible
+        wingmenTick = wingmenTick + 1
+        wingmenCtrl:setCommand({ id = 'SetImmortal', params = { value = (wingmenTick % 3 == 0) } })
+
+        -- No tasking? Rejoin leader
+        if not wingmenCtrl:hasTask() then
             TUM.wingmenTasking.commandRejoin(nil, false, false, true)
             return
         end
