@@ -38,4 +38,51 @@ do
             TUM.radio.playForUnit(DCSEx.dcs.getObjectIDAsNumber(p), "commandObjectiveCoordinates"..msgIDSuffix, { obj.name, navInfo }, "Command", delayRadioAnswer)
         end
     end
+
+    function TUM.atc.requireNearestAirbase(delayRadioAnswer)
+        local players = coalition.getPlayers(TUM.settings.getPlayerCoalition())
+        for _,p in ipairs(players) do
+            local airbaseInfo = "- No airbase available near you at the moment." -- TODO: proper "no airbase" message
+
+            local validAirbaseTypes = { Airbase.Category.AIRDROME }
+            if p:hasAttribute("Helicopters") then table.insert(validAirbaseTypes, Airbase.Category.HELIPAD) end
+            local pDesc = p:getDesc()
+            if pDesc.LandRWCategories and #pDesc.LandRWCategories > 0 then
+                -- TODO: check player unit description to filter compatible carrier types
+                table.insert(validAirbaseTypes, Airbase.Category.SHIP)
+            end
+
+            local allAirbases = coalition.getAirbases(TUM.settings.getPlayerCoalition())
+            if allAirbases and #allAirbases > 0 then
+                allAirbases = DCSEx.dcs.getNearestObjects(DCSEx.math.vec3ToVec2(p:getPoint()), allAirbases)
+
+                for i=1,#allAirbases do
+                    local abDesc = airbaseInfo[i]:getDesc()
+
+                    if DCSEx.table.contains(validAirbaseTypes, abDesc.category) then
+                        airbaseInfo = abDesc.displayName
+                        break
+                    end
+                end
+            end
+
+            TUM.radio.playForUnit(DCSEx.dcs.getObjectIDAsNumber(p), "atcRequireNearestAirbase", { airbaseInfo }, "Control", delayRadioAnswer)
+        end
+    end
+
+    function TUM.atc.requestWeatherUpdate(delayRadioAnswer)
+        local weatherInfo = "- It is currenly "..DCSEx.string.getTimeString()
+        if Library.environment.isItNightTime() then
+            weatherInfo = weatherInfo.." (night, sunrise at "..DCSEx.string.getTimeString(Library.environment.getDayTime(nil, false))..")\n"
+        else
+            weatherInfo = weatherInfo.." (day, sunset at "..DCSEx.string.getTimeString(Library.environment.getDayTime(nil, true))..")\n"
+        end
+
+        weatherInfo = weatherInfo.."- Average windspeed is "..tostring(DCSEx.floor(Library.environment.getWindAverage())).."m/s\n"
+
+        local players = coalition.getPlayers(TUM.settings.getPlayerCoalition())
+        for _,p in ipairs(players) do
+            TUM.radio.playForUnit(DCSEx.dcs.getObjectIDAsNumber(p), "atcWeatherUpdate", { weatherInfo }, "Control", delayRadioAnswer)
+        end
+    end
 end
