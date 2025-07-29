@@ -88,6 +88,6 @@ do
         local objectiveDB = Library.tasks[obj.taskID]
         if not DCSEx.table.contains(objectiveDB.flags, DCSEx.enums.taskFlag.ALLOW_JTAC) then return end -- No JTAC for this objective
 
-        missionCommands.addCommand("Require smoke marker on target ("..tostring(SMOKE_MARKER_PENALTY).."xp)", menuRoot, doCommandSmoke, index)
+        missionCommands.addCommand("Smoke marker on target ("..tostring(SMOKE_MARKER_PENALTY).."xp)", menuRoot, doCommandSmoke, index)
     end
 end

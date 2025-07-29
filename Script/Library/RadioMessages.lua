@@ -11,7 +11,7 @@ Library.radioMessages = {
         "Taking fire!",
         "Bird's hurt, trying to hold altitude!",
         "Impact on fuselage, took a solid hit!",
-        "Taking damage, warning lights all over"
+        "Taking damage, warning lights all over!"
     },
     pilotKillAir = {
         "Splash one $1. Rejoining.",
@@ -96,12 +96,12 @@ Library.radioMessages = {
         "$1! They got me! Left wing's gone! I'm getting out!",
         "$1! They nailed me, fire in the pit! I'm outta here!",
         "$1! Fire in the cockpit! Can't see anything! Ejecting!",
-        "$1! Mayday! No control—this is it, ejecting now!"
+        "$1! Mayday! No control! This is it, ejecting now!"
     },
     pilotWingmanEngageAir = {
         "$1, copy, engaging $2 now ($3).",
         "$1, tally one, pressing on $2 ($3).",
-        "$1, roger, comitting on $2 ($3).",
+        "$1, roger, committing on $2 ($3).",
         "$1, confirm, going after $2 ($3).",
         "$1, affirm, moving in on $2 ($3)."
     }, -- "$2" should be "bandits" in audio version
@@ -141,7 +141,7 @@ Library.radioMessages = {
         "$1. Copy, orbiting now.",
         "$1. Roger, in the hold.",
         "$1. Affirm, setting up the orbit.",
-        "$1. Orbiting at pos."
+        "$1. Orbiting at position."
     },
     pilotWingmanRejoin = {
         "$1, off the perch, rejoining your side.",
@@ -171,7 +171,7 @@ Library.radioMessages = {
     pilotWingmanReportContactsNew = {
         "Heads up, new contacts just popped up.$2",
         "Look out, tally fresh threats.$2",
-        "Stay sharp, eyes on new group, stand by.$2",
+        "Stay sharp, eyes on new group.$2",
         "Eyes open, additional threats spotted.$2",
         "Stay alert, new activity in our sector.$2",
         "Be aware, got more targets popping up.$2",
@@ -251,8 +251,10 @@ Library.radioMessages = {
         "All flights, objective $1 wrapped, keep on the good work.",
         "All callsigns, objective $1's done. Proceed direct to next waypoint."
     },
-    commandObjectiveCoordinates = "We have no exact coordinates for objective $1.\nObjective should be located near:\n$2\n\nFly $3 to reach the objective.",
-    commandObjectiveCoordinatesPrecise = "We have exact coordinates for objective $1.\nObjective coordinates are:\n$2\n\nFly $3 to reach the objective.",
+
+    commandObjectiveCoordinates = "Copy, navigational assist for objective $1.\n\n$2",
+    commandObjectiveCoordinatesPrecise = "Copy, navigational assist for objective $1.\n\n$2",
+
     commandObjectivesManyLeft = {
         "Stay focused, people. We still have work to do.\n$1",
         "Our work is not done yet, we have a lot to do.\n$1",
@@ -317,6 +319,13 @@ Library.radioMessages = {
         "Flight, update altitude profile to $1.",
         "Flight, altitude correction, go to $1."
     },
+    playerWingmanCoverMe = {
+        "Flight, need cover now.",
+        "Flight, keep my six clean.",
+        "Flight, engaged defensive, cover me!",
+        "Flight, break off and clear my tail.",
+        "Flight, keep bandits off me."
+    },
     playerWingmanEngageAirDefense = {
         "Flight, prioritize $1, engage now.",
         "Flight, take down $1 systems.",
@@ -331,13 +340,6 @@ Library.radioMessages = {
         "Flight, engage $1, your discretion.",
         "Flight, you're free to engage $1."
     }, -- "$1" should be "bandits" in audio version
-    playerWingmanCoverMe = {
-        "Flight, need cover now.",
-        "Flight, keep my six clean.",
-        "Flight, engaged defensive, cover me!",
-        "Flight, break off and clear my tail.",
-        "Flight, keep bandits off me."
-    },
     playerWingmanEngageGround = {
         "Flight, engage $1 targets.",
         "Flight, prosecute $1 targets ahead.",
@@ -364,15 +366,14 @@ Library.radioMessages = {
     --     "Flight, move to designated steerpoint."
     -- },
     playerWingmanOrbit = {
-        "Flight, orbit your position.",
+        "Flight, orbit at position.",
         "Flight, set up an orbit.",
-        "Flight, hold on me.",
-        "Flight, anchor on my current pos.",
-        "Flight, orbit overhead"
+        "Flight, hold on position.",
+        "Flight, anchor on current position.",
+        "Flight, orbit overhead."
     },
-    playerWingmanRejoin =
-    {
-        "Flight, rejoin my side",
+    playerWingmanRejoin = {
+        "Flight, rejoin my side.",
         "Flight, push it up, rejoin formation.",
         "Flight, come back to route.",
         "Flight, tighten it up.",
