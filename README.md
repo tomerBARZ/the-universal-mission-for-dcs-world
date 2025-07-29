@@ -1,6 +1,6 @@
 # The Universal Mission for DCS World
 
-**Current version: open beta 0.1.250723** (see the "version history" section at the end of this file for a list of the latest changes)
+**Current version: open beta 0.2.250729** (see the "version history" section at the end of this file for a list of the latest changes)
 
 **This is a BETA version, there may be bugs and there WILL be unbalanced stuff.**
 
@@ -18,6 +18,7 @@ I think with The Universal Mission is, finally, the proper way to approach this 
 - More than 300 voiced radio messages for immersive and realistic coms
 - Supports both single-player and small-scale PvE on closed servers
 - Persistent single player career mode, with awards and promotions. Dying won't reset your progress, but you have to come back to base alive for your kills and completed objectives to be saved to your profile, so watch out for SAMs on your way home
+- All new AI wingman system, smarter and more immersive than DCS's original wingmen
 - Uses advanced DCS World scripting functionalities (like the brand new Disposition singleton and net.dostring_in hacks) to achieve effects seldom seen in other scripts, such as graphic overlays and random but realistic placement of units in cities and forests without the use of handmade spawn points
 - Various little details to make the DCS world more alive, like crew running away from destroyed vehicles
 
@@ -44,6 +45,7 @@ I think with The Universal Mission is, finally, the proper way to approach this 
 
 - Download the latest release from this GitHub page.
 - Copy the provided autoexec.cfg file to your **[Saved Games]\DCS\Config directory**
+  - Please note: as of DCS 2.9.18.12899, it seems the autoexec.cfg file [is no longer needed](https://www.digitalcombatsimulator.com/en/news/changelog/release/2.9.18.12899/) but I advise you to copy it anyway, ED might change its mind again.
 - Copy the .miz files for your theater(s) of choice to your **[Saved Games]\DCS\Missions directory**
 - _**(Optional but strongly recommended)**_ Unsanitize the Lua IO module. You don't have to do this, but the persistent career system won't work if you don't. To do it, open the file **[DCS World installation directory]\Scripts\MissionScripting.lua** with a text editor and comment or remove the line "sanitizeModule('io')". Make sure you restart DCS World once you've modified the file.
   - Please note: should you want to backup, delete or transfer it, career progress is saved in **[DCS World installation directory]\TheUniversalMission.sav**
@@ -155,35 +157,37 @@ Please also note that PvP is not supported at the moment and that the mission wi
 
 ### VERY high priority
 
-- All new AI wingman system
-- Fix bug with AWACS datalink info not showing on SA pages
+- Additional "navigation" commands (vector to nearest airfield, complete weather report...)
+- Bugfix: AWACS datalink info not showing on SA pages
+- Improved score multiplier taking into account various aspects of mission difficulty (weather, nighttime ops...)
 - New objectives: helicopter (drop/pickup units...), CAP, CAS, OCA (airbase attack)
 - Support for the Germany and South America theaters
 - Support for more factions and five different time periods (World War 2, Korea war, Vietnam war, late Cold war, Modern)
 
 ### High priority
 
-- Additional and better radio messages
+- Additional/improved radio messages
   - More "flavor" radio messages ("fence in" when player approaches the AO, etc) so the world will feel more alive
 - Better balancing of the player career awards and promotions
 - Better use of context for "ambient" radio messages (should only warn of a SAM launch if an AI pilot is there to witness it, etc)
 - Friendly air defenses
+- GitHub page
 - Laser designation of targets by JTAC
+- PDF manual
 - Support for all missing DCS World theaters
 
 ### Medium priority
 
-- Advanced options such as "use metric units" or "use bullseye rather than player position for coordinates transmission" (the later awarding more XP when enabled, because of the need for higher situational awareness)
-- GitHub page
-- Improved score multiplier taking into account various aspects of mission difficulty (weather, nighttime ops...)
+- Combined Arms support
 - Modded units support (other than player-controlled aircraft, those are already supported: just add them to the mission)
 - Spawning of tankers for long-range missions
 - (maybe) Text (not voiceover) localization, if there's enough popular demand
 
 ### Low priority
 
+- Advanced options such as "use metric units" or "use bullseye rather than player position for coordinates transmission" (the later awarding more XP when enabled, because of the need for higher situational awareness)
 - Female voice option for the player
-- New ATC system. Won't be realistic/BMS-like but a LOT better than the vanilla DCS one
+- Full ATC system. Don't expect anything BMS-like but it will be a LOT better than the vanilla DCS one
 - (maybe) AI CSAR helos to pick up stranded/ejected pilots
 - (maybe) PvP support
 
@@ -223,10 +227,9 @@ The core script is quite simple and small, I probably won't need too much help w
 
 ## Version history
 
-- **Next version** (coming soon)
-
+- **0.2.250729** (07/29/2025)
   - **MAJOR CHANGE:** Added all new wingman system
-    - Far for perfect but a lot smarter than AI's default wingmen
+    - Far for perfect but a lot better than AI's default wingmen
     - Many more engage/orbit/go to commands (see "Using the mission menu" above)
     - All new contacts report system: more realistic (see "AI units reports" changes below in this changelog) and does not spam the player with "new contact" messages
     - AI wingmen added using mission editor are now despawned on mission start to avoid conflict with TUM's own wingman system
@@ -258,7 +261,6 @@ The core script is quite simple and small, I probably won't need too much help w
   - Tons of internal logic bugfixes and tweaks
   - Tweaked XP bonus/penalty for various mission settings
   - Vastly improved the way AI units reports on contact tracks. According to range and sensors capabilities, can go from perfect ID (e.g. "Su-27") to very generic descriptions (e.g. "fighter" or even "aircraft")
-
 - **0.1.250723** (07/23/2025)
   - Added new "autoexec.cfg" file required by DCS 2.9.18.12722. You have to copy it to **[Saved Games]\DCS\Config directory** or the script won't work.
   - Fixed a bug with convoys sometimes stuck in trees and buildings
