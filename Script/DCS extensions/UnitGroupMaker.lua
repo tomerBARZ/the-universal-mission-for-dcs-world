@@ -18,6 +18,7 @@ DCSEx.unitGroupMaker = {}
 do
     local nextGroupID = 1 -- ID of the next generated group
     local nextUnitID = 1 -- ID of the next generated unit
+    local dataLinkID = 201 -- Next datalink ID
 
     local function createGroupTable(groupID, groupCategory, options)
         local groupTable = {
@@ -442,9 +443,19 @@ do
                 unitTable.name = unitTable.callsign.name
 
                 -- Special properties for unit
+                unitTable.AddPropAircraft = {}
                 if aircraftDB.properties then
                     unitTable.AddPropAircraft = DCSEx.table.deepCopy(aircraftDB.properties)
                 end
+                -- Setup datalink
+                local datalinkString = tostring(dataLinkID)
+                if #datalinkString == 3 then
+                    datalinkString = "00"..datalinkString
+                elseif #datalinkString == 4 then
+                    datalinkString = "0"..datalinkString
+                end
+                unitTable.AddPropAircraft["STN_L16"] = datalinkString
+                dataLinkID = dataLinkID + 1
 
                 -- Common payload (fuel, gun ammo, etc)
                 if aircraftDB.payload then
