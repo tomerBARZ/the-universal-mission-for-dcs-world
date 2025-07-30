@@ -227,6 +227,10 @@ The core script is quite simple and small, I probably won't need too much help w
 
 ## Version history
 
+- **Next version** (coming soon)
+
+  - Increased AWACS altitude
+
 - **0.2.250729** (07/29/2025)
   - **MAJOR CHANGE:** Added all new wingman system
     - Far for perfect but a lot better than DCS's default wingmen
@@ -257,7 +261,7 @@ The core script is quite simple and small, I probably won't need too much help w
   - Moved "Request objective coordinates" radio commands to new "Navigation" submenu, which will include additional navigational assist in future versions
   - Lowered MANPADS count and skill (MANPADS are overpowered in DCS, especially SA-18)
   - "New friendly/enemy aircraft taking off" radio messages now mention their BRAA relative to the player, number of bandits taking off now displayed as a word instead of digits
-  - "Rifle!" and "Missile away!" radio calls now both used for any kind of A/G missiles (except antiship and antiradiation missiles, who 
+  - "Rifle!" and "Missile away!" radio calls now both used for any kind of A/G missiles (except antiship and antiradiation missiles, who
   - Tons of internal logic bugfixes and tweaks
   - Tweaked XP bonus/penalty for various mission settings
   - Vastly improved the way AI units reports on contact tracks. According to range and sensors capabilities, can go from perfect ID (e.g. "Su-27") to very generic descriptions (e.g. "fighter" or even "aircraft")

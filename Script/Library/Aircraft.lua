@@ -561,7 +561,7 @@ Library.aircraft = {
         }
     },
     ["A-50"] = {
-        ["altitude"] = 4898,
+        ["altitude"] = 11000,
         ["speed"] = 220,
         ["payload"] = {
             ["chaff"] = 192,
@@ -2460,7 +2460,7 @@ Library.aircraft = {
         ["pylons"] = {}
     },
     ["E-2C"] = {
-        ["altitude"] = 4510,
+        ["altitude"] = 9000,
         ["speed"] = 133.3,
         ["payload"] = {
             ["chaff"] = 120,
@@ -2479,7 +2479,7 @@ Library.aircraft = {
         ["pylons"] = {}
     },
     ["E-3A"] = {
-        ["altitude"] = 4800,
+        ["altitude"] = 11000,
         ["speed"] = 220,
         ["payload"] = {
             ["chaff"] = 120,
@@ -7567,7 +7567,7 @@ Library.aircraft = {
         }
     },
     ["KJ-2000"] = {
-        ["altitude"] = 4898,
+        ["altitude"] = 11000,
         ["speed"] = 220,
         ["payload"] = {
             ["fuel"] = 70000,
