@@ -12,6 +12,7 @@ echo THE ULTIMATE MISSION BUILDER SCRIPT:
 echo - Build [P]ersianGulf debug theater only (default)
 echo - Build all [D]ebug theaters
 echo - Build all [R]elease theaters
+echo - [C]ancel
 echo.
 set /p buildConfig=Your choice:
 echo.
