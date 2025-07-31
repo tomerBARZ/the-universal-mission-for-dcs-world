@@ -1,0 +1,35 @@
+html,
+body {
+  background-color: white;
+  color: black;
+  font-family: Garamond, Georgia, "Times New Roman", Times, serif;
+  font-size: 1em;
+}
+
+h2 {
+  background-color: black;
+  color: white;
+  font-family: "Courier New", Courier, monospace;
+  font-weight: bold;
+  padding: 0.2rem;
+}
+
+h3 {
+  background-color: dimgray;
+  color: white;
+  font-family: "Courier New", Courier, monospace;
+  font-weight: bold;
+  padding: 0.2rem;
+}
+
+a {
+  background-color: transparent;
+  color: dimgray;
+  text-decoration: none;
+  border-bottom: 1px dotted dimgray;
+}
+
+.heavy {
+  font-family: "Courier New", Courier, monospace;
+  font-weight: bold;
+}

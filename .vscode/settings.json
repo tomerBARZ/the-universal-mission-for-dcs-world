@@ -1,5 +1,9 @@
 {
   "files.exclude": { "*.miz": true },
   "Lua.workspace.library": ["Libraries/dcs-world-api.lua"],
-  "Lua.diagnostics.disable": ["deprecated"]
+  "Lua.diagnostics.disable": ["deprecated"],
+  "markdown-pdf.convertOnSave": true,
+  "markdown-pdf.convertOnSaveExclude": ["README.md"],
+  "markdown-pdf.headerTemplate": "<span class='title' style='display: none;'></span>",
+  "markdown-pdf.styles": ["docs/style.css"]
 }
