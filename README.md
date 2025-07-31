@@ -30,14 +30,14 @@ The Universal Mission for DCS World is an attempt to create a fully dynamic sing
 - Not all mission types are supported yet
 - Career progress may be lost because of future updates, don't get too attached to it
 
-#### Known bugs in latest release
+<h4>Known bugs in latest release</h4>
 
 - AWACS datalink info is now displayed on SA pages
 - Some player callsigns may cause an error on mission start, stick to the "basic" callsigns (Enf) to avoir this problem
 
 ## How to use/play The Universal Mission?
 
-Please refer to the [User's manual](https://github.com/akaAgar/the-universal-mission-for-dcs-world/blob/main/docs/The%20Universal%20Mission%20-%20User's%20Manual.md) for additional information.
+**Please refer to the [User's manual](https://github.com/akaAgar/the-universal-mission-for-dcs-world/blob/main/docs/The%20Universal%20Mission%20-%20User's%20Manual.md) for additional information.**
 
 ### First setup
 
@@ -72,7 +72,7 @@ Please also note that PvP is not supported at the moment and that the mission wi
 
 ## Planned development
 
-### Planned for next version (could be subject to change)
+<h3>Planned for next version (could be subject to change)</h3>
 
 - Additional content
   - [ ] At least partial Germany map support
@@ -92,8 +92,9 @@ Please also note that PvP is not supported at the moment and that the mission wi
     - [ ] Weather report
   - [ ] Use of "Client" slot instead of "Player" slot even in single-player missions, allowing the player to respawn on death/ejection
   - [ ] Single-player mission autostart on player take off
-- Quality of life/feedback
+- Quality of life/minor tweaks
   - [ ] AI wingment "Winchester!" call when out of ammo
+  - [x] Increased AWACS aircraft spawn altitude
   - [ ] Target coordinates radio message displayed for a longer time so players have the time to write them down or enter them in their flight computer
 
 ### High priority
@@ -161,10 +162,6 @@ The core script is quite simple and small, I probably won't need too much help w
 - You can also [buy me a coffee](https://buymeacoffee.com/akaagar)!
 
 ## Version history
-
-- **Next version** (coming soon)
-
-  - Increased AWACS altitude
 
 - **0.2.250729** (07/29/2025)
   - **MAJOR CHANGE:** Added all new wingman system
