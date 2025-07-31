@@ -1,5 +1,5 @@
 -- ====================================================================================
--- WORLDTOOLS - FUNCTIONS RELATED TO THE GAME WORLD
+-- DCSEX.WORLD - FUNCTIONS RELATED TO THE GAME WORLD
 -- ====================================================================================
 -- DCSEx.world.collidesWithScenery(vec2, radius)
 -- DCSEx.world.findSpawnPoint(vec2, minRadius, maxRadius, surfaceType, radiusWithoutScenery)

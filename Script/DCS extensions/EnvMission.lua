@@ -1,18 +1,20 @@
 -- ====================================================================================
--- (DCS LUA ADD-ON) ENVMISSION - FUNCTIONS RELATED TO THE ENV.MISSION TABLE
---
+-- DCSEX.ENVMISSION - FUNCTIONS RELATED TO THE ENV.MISSION TABLE
+-- ====================================================================================
 -- DCSEx.envMission.getDecade(yearOffset)
--- DCSEx.envMission.getDistanceToNearestPlayerSpawnPoint(point)
+-- DCSEx.envMission.getDistanceToNearestPlayerSpawnPoint(coalition, point)
 -- DCSEx.envMission.getGroup(groupID)
 -- DCSEx.envMission.getGroups(sideID)
 -- DCSEx.envMission.getPlayerGroups(coalitionId)
 -- DCSEx.envMission.getPlayerGroupsCenterPoint(coalitionId)
+-- DCSEx.envMission.setBriefing(side, text, picture)
 -- ====================================================================================
 
 DCSEx.envMission = {}
 
 -------------------------------------
 -- Returns the decade during which the mission takes place (1940 to 2010)
+-------------------------------------
 -- @param yearOffset An offset to apply to the actual year
 -- @return The decade, as a number
 -------------------------------------
@@ -22,6 +24,7 @@ end
 
 -------------------------------------
 -- Returns the distance to the nearest player spawn point
+-------------------------------------
 -- @param coalition Coalition the players belong to
 -- @param point A vec3 or vec2
 -- @return The distance, in meters, to the nearest player spawn point, or nil if no player spawn points are present
@@ -42,6 +45,7 @@ end
 
 -------------------------------------
 -- Gets information about a group
+-------------------------------------
 -- @param groupID Group ID
 -- @return Missiondata group table or nil if ID doesn't exist
 -------------------------------------
@@ -59,6 +63,7 @@ end
 
 -------------------------------------
 -- Gets all unit groups
+-------------------------------------
 -- @param sideID Coalition ID (coalition.side.*), or nil to return unit groups from all coalitions
 -- @return Table of missiondata group tables
 -------------------------------------
@@ -98,6 +103,7 @@ end
 
 -------------------------------------
 -- Gets all player groups
+-------------------------------------
 -- @param coalitionId Coalition ID (coalition.side.*), or nil to return unit groups from all coalitions
 -- @return Table of missiondata group tables
 -------------------------------------
@@ -126,6 +132,7 @@ end
 
 -------------------------------------
 -- Return the center 2D point of all player groups
+-------------------------------------
 -- @param coalitionId Coalition ID (coalition.side.*), or nil to use unit groups from all coalitions
 -- @return A 2D point, or nil if no player groups
 -------------------------------------
@@ -145,7 +152,13 @@ function DCSEx.envMission.getPlayerGroupsCenterPoint(coalitionId)
     return center
 end
 
--- TODO: description & file header
+-------------------------------------
+-- Sets the text for the briefing description in the briefing panel
+-------------------------------------
+-- @param side Coalition ID (coalition.side.*) of the coalition
+-- @param text Text of the briefing
+-- @param picture Resource name of the picture to use for the briefing
+-------------------------------------
 function DCSEx.envMission.setBriefing(side, text, picture)
     text = text or ""
     text = text:gsub("\n", "\\n")

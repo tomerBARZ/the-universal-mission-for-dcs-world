@@ -1,7 +1,19 @@
+-- ====================================================================================
+-- DCSEX.ENUMS - VARIOUS ENUMS
+-- ====================================================================================
+-- DCSEx.enums.lineType
+-- DCSEx.enums.taskEvent
+-- DCSEx.enums.taskFamily
+-- DCSEx.enums.taskFlag
+-- DCSEx.enums.timePeriod
+-- DCSEx.enums.unitFamily
+-- DCSEx.enums.victoryCondition
+-- ====================================================================================
+
 DCSEx.enums = {}
 
 -------------------------------------
--- Line types for map markers. The enum is missing from DCS
+-- Line types for map markers. This enum is missing from DCS
 -------------------------------------
 DCSEx.enums.lineType = {
     NO_LINE = 0,
@@ -11,16 +23,6 @@ DCSEx.enums.lineType = {
     DOT_DASH = 4,
     LONG_DASH = 5,
     TWO_DASH = 6,
-}
-
--------------------------------------
--- Event to check to see if a task/objective is complete
--------------------------------------
-DCSEx.enums.spawnPointType = {
-    LAND_LARGE = 1,
-    LAND_MEDIUM = 2,
-    LAND_SMALL = 3,
-    SEA = 4,
 }
 
 -------------------------------------
@@ -113,11 +115,13 @@ DCSEx.enums.unitFamily = {
     STATIC_STRUCTURE = 402
 }
 
+-------------------------------------
+-- Victory conditions for tasks/objectives
+-------------------------------------
 DCSEx.enums.victoryCondition = {
     DESTROY = 1,
     DESTROY_NO_AIR_DEFENSE = 2,
     DESTROY_SCENERY = 3,
     DESTROY_TRACK_RADARS_ONLY = 4, -- for SEAD tasks
-
-    LAND_NEAR = 5,
+    LAND_NEAR = 5
 }

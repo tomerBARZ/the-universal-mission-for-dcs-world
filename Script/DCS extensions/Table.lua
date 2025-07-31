@@ -1,15 +1,17 @@
 -- ====================================================================================
--- (DCS LUA ADD-ON) TABLE - EXTENSION TO THE "TABLE" TABLE
---
+-- DCSEX.TABLE - FUNCTIONS RELATED TO TABLE MANIPULATION
+-- ====================================================================================
 -- DCSEx.table.contains(t, val)
 -- DCSEx.table.containsKey(t, k)
 -- DCSEx.table.containsAll(t, values)
 -- DCSEx.table.containsAny(t, values)
+-- DCSEx.table.containsAllKeys(t, keys)
+-- DCSEx.table.containsAnyKeys(t, keys)
 -- DCSEx.table.countNonNils(t)
 -- DCSEx.table.deepCopy(orig)
 -- DCSEx.table.dump(t)
--- DCSEx.table.getKeys(t)
 -- DCSEx.table.getKeyFromValue(t, val)
+-- DCSEx.table.getKeys(t)
 -- DCSEx.table.getRandom(t)
 -- DCSEx.table.getRandomIndex(t)
 -- DCSEx.table.shuffle(t)
@@ -19,6 +21,7 @@ DCSEx.table = {}
 
 -------------------------------------
 -- Returns true if table t contains value val
+-------------------------------------
 -- @param t A table
 -- @param val A value
 -- @return True if the table contains the value, false otherwise
@@ -35,6 +38,7 @@ end
 
 -------------------------------------
 -- Returns true if table t contains key k
+-------------------------------------
 -- @param t A table
 -- @param k A key
 -- @return True if the table contains the key, false otherwise
@@ -47,10 +51,11 @@ function DCSEx.table.containsKey(t, k)
 end
 
 -------------------------------------
--- Returns true if table t contains all values in table values
+-- Returns true if table t contains ALL values from the "values" table
+-------------------------------------
 -- @param t A table
 -- @param values A table of values
--- @return True if the table contains all values, false otherwise
+-- @return True if the table contains ALL values, false otherwise
 -------------------------------------
 function DCSEx.table.containsAll(t, values)
     if not t then return false end
@@ -65,10 +70,11 @@ function DCSEx.table.containsAll(t, values)
 end
 
 -------------------------------------
--- Returns true if table t contains at least one value in table values
+-- Returns true if table t contains AT LEAST ONE value from the "values" table
+-------------------------------------
 -- @param t A table
 -- @param values A table of values
--- @return True if the table contains at least one value, false otherwise
+-- @return True if the table contains AT LEAST ONE value, false otherwise
 -------------------------------------
 function DCSEx.table.containsAny(t, values)
     if not t then return false end
@@ -82,6 +88,13 @@ function DCSEx.table.containsAny(t, values)
     return false
 end
 
+-------------------------------------
+-- Returns true if table t contains ALL keys from the "keys" table
+-------------------------------------
+-- @param t A table
+-- @param keys A table of keys
+-- @return True if the table contains ALL keys, false otherwise
+-------------------------------------
 function DCSEx.table.containsAllKeys(t, keys)
     if not t then return false end
 
@@ -94,6 +107,13 @@ function DCSEx.table.containsAllKeys(t, keys)
     return true
 end
 
+-------------------------------------
+-- Returns true if table t contains AT LEAST ONE key from the "keys" table
+-------------------------------------
+-- @param t A table
+-- @param values A table of keys
+-- @return True if the table contains AT LEAST ONE key, false otherwise
+-------------------------------------
 function DCSEx.table.containsAnyKeys(t, keys)
     if not t then return false end
 
@@ -108,6 +128,7 @@ end
 
 -------------------------------------
 -- Returns the number of non-nils elements in a table
+-------------------------------------
 -- @param t A table
 -- @return A number
 -------------------------------------
@@ -122,6 +143,7 @@ end
 
 -------------------------------------
 -- Returns a deep copy of the table, doesn't work with recursive tables (code from http://lua-users.org/wiki/CopyTable)
+-------------------------------------
 -- @param orig A table
 -- @return A deep copied clone of the table
 -------------------------------------
@@ -142,6 +164,7 @@ end
 
 -------------------------------------
 -- Dumps the content of a table as a string
+-------------------------------------
 -- @param orig A table
 -- @return A string representaton of the table
 -------------------------------------
@@ -160,6 +183,7 @@ function DCSEx.table.dump(t)
 
 -------------------------------------
 -- Returns the key associated to a value in a table, or nil if not found
+-------------------------------------
 -- @param t A table
 -- @param val A value
 -- @return The key associated to this value in the table, or nil
@@ -173,6 +197,7 @@ end
 
 -------------------------------------
 -- Returns all the keys in an associative table
+-------------------------------------
 -- @param t A table
 -- @return An array of keys
 -------------------------------------
@@ -191,6 +216,7 @@ end
 
 -------------------------------------
 -- Returns a random value from a numerically-indexed table
+-------------------------------------
 -- @param t A table
 -- @return A random element from the table
 -------------------------------------
@@ -200,6 +226,7 @@ end
 
 -------------------------------------
 -- Returns a random index from a numerically-indexed table
+-------------------------------------
 -- @param t A table
 -- @return A random index from the table
 -------------------------------------
@@ -209,6 +236,7 @@ end
 
 -------------------------------------
 -- Randomly shuffles a numerically-indexed table
+-------------------------------------
 -- @param t A table
 -- @return A table with shuffled values
 -------------------------------------

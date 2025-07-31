@@ -1,6 +1,6 @@
 -- ====================================================================================
--- (DCS LUA ADD-ON) CONVERTER - UNITS CONVERSION FUNCTIONS
---
+-- DCSEX.CONVERTER - UNITS CONVERSION FUNCTIONS
+-- ====================================================================================
 -- DCSEx.converter.celsiusToFahrenheit(t)
 -- DCSEx.converter.degreesToRadians(degrees)
 -- DCSEx.converter.fahrenheitToCelsius(fahrenheit)
@@ -21,6 +21,7 @@ DCSEx.converter = {}
 
 -------------------------------------
 -- Converts Celsius degrees to Fahrenheit
+-------------------------------------
 -- @param t Temperature in Celsius degrees
 -- @return Temperature in Fahrenheit degrees
 -------------------------------------
@@ -30,6 +31,7 @@ end
 
 -------------------------------------
 -- Converts angle in degrees to radians.
+-------------------------------------
 -- @param degrees Angle in degrees
 -- @return Angle in radians
 -------------------------------------
@@ -39,6 +41,7 @@ end
 
 -------------------------------------
 -- Converts Fahrenheit degrees to Celsius
+-------------------------------------
 -- @param fahrenheit Temperature in Fahrenheit degrees
 -- @return Temperature in Celsius degrees
 -------------------------------------
@@ -48,6 +51,7 @@ end
 
 -------------------------------------
 -- Converts feet to meters.
+-------------------------------------
 -- @param feet Distance in feet
 -- @return Distance in meters
 -------------------------------------
@@ -57,6 +61,7 @@ end
 
 -------------------------------------
 -- Converts Kelvin degrees to Celsius
+-------------------------------------
 -- @param kelvin Temperature in Kelvin degrees
 -- @return Temperature in Celsius degrees
 -------------------------------------
@@ -66,6 +71,7 @@ end
 
 -------------------------------------
 -- Converts Kelvin degrees to Fahrenheit
+-------------------------------------
 -- @param kelvin Temperature in Kelvin degrees
 -- @return Temperature in Fahrenheit degrees
 -------------------------------------
@@ -75,6 +81,7 @@ end
 
 -------------------------------------
 -- Converts kilometers per hour to meters per second.
+-------------------------------------
 -- @param kmph speed in km/h
 -- @return speed in m/s
 -------------------------------------
@@ -84,6 +91,7 @@ end
 
 -------------------------------------
 -- Converts knots to meters per second.
+-------------------------------------
 -- @param knots speed in knots
 -- @return speed in m/s
 -------------------------------------
@@ -93,6 +101,7 @@ end
 
 -------------------------------------
 -- Converts meters to feet.
+-------------------------------------
 -- @param meters distance in meters
 -- @return distance in feet
 -------------------------------------
@@ -102,6 +111,7 @@ end
 
 -------------------------------------
 -- Converts meters to nautical miles.
+-------------------------------------
 -- @param meters distance in meters
 -- @return distance in nautical miles
 -------------------------------------
@@ -111,6 +121,7 @@ end
 
 -------------------------------------
 -- Converts meters per second to kilometers per hour.
+-------------------------------------
 -- @param mps speed in m/s
 -- @return speed in km/h
 -------------------------------------
@@ -120,6 +131,7 @@ end
 
 -------------------------------------
 -- Converts meters per second to knots.
+-------------------------------------
 -- @param mps speed in m/s
 -- @return speed in knots
 -------------------------------------
@@ -129,6 +141,7 @@ end
 
 -------------------------------------
 -- Converts nautical miles to meters.
+-------------------------------------
 -- @param nm distance in nautical miles
 -- @return distance in meters
 -------------------------------------
@@ -138,6 +151,7 @@ end
 
 -------------------------------------
 -- Converts angle in radians to degrees.
+-------------------------------------
 -- @param degrees Angle in radians
 -- @return Angle in degrees
 -------------------------------------

@@ -132,7 +132,7 @@ do
                     groupInfo.unitsID = { DCSEx.unitGroupMaker.createStatic(TUM.settings.getEnemyCoalition(), objective.point2, units[1], "") }
                 end
             else
-                groupInfo = DCSEx.unitGroupMaker.create(TUM.settings.getEnemyCoalition(), DCSEx.dcs.getUnitTypeFromFamily(objectiveDB.targetFamilies[1]), objective.point2, units, groupOptions)
+                groupInfo = DCSEx.unitGroupMaker.create(TUM.settings.getEnemyCoalition(), DCSEx.dcs.getUnitCategoryFromFamily(objectiveDB.targetFamilies[1]), objective.point2, units, groupOptions)
             end
 
             if not groupInfo then

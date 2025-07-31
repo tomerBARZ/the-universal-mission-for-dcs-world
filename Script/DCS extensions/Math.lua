@@ -1,13 +1,13 @@
 -- ====================================================================================
--- (DCS LUA ADD-ON) MATH - EXTENSION TO THE "MATH" TABLE
---
+-- DCSEX.MATH - MATH AND MATH-RELATED FUNCTIONS
+-- ====================================================================================
 -- (Constant) DCSEx.math.TWO_PI
 -- DCSEx.math.addVec(vecA, vecB)
 -- DCSEx.math.clamp(val, min, max)
 -- DCSEx.math.getBearing(point, refPoint, returnAsNESWstring)
 -- DCSEx.math.getDistance2D(vec2a, vec2b)
 -- DCSEx.math.getDistance3D(vec3a, vec3b)
--- DCSEx.math.getRelativeHeading(point, refObject)
+-- DCSEx.math.getRelativeHeading(point, refObject, format)
 -- DCSEx.math.getVec2FromAngle(angle)
 -- DCSEx.math.isPointInsideCircle(center, radius, vec2)
 -- DCSEx.math.isPointInsidePolygon(polygon, vec2)
@@ -28,12 +28,13 @@
 DCSEx.math = {}
 
 -------------------------------------
--- Constants
+-- Two times Pi
 -------------------------------------
 DCSEx.math.TWO_PI = math.pi * 2
 
 -------------------------------------
 -- Returns the sum of two vec2 or vec3
+-------------------------------------
 -- @param vecA A vector
 -- @param vecB Another vector
 -- @return The sum of both vectors
@@ -48,6 +49,7 @@ end
 
 -------------------------------------
 -- Clamp a number value between min and max
+-------------------------------------
 -- @param value The value to clamp
 -- @param min Minimum allowed value
 -- @param max Maximum allowed value
@@ -59,6 +61,7 @@ end
 
 -------------------------------------
 -- Gets the bearing between two vectors, in degrees
+-------------------------------------
 -- @param point A vec2/vec3
 -- @param refPoint Vec2/vec3 to use as a reference point
 -- @param returnAsNESWstring Should the value be returned as a N/S/E/W string instead of a numeric value
@@ -90,6 +93,7 @@ end
 
 -------------------------------------
 -- Returns the pythagorean distance between two 2D points or the length of a single vector
+-------------------------------------
 -- @param vec2a A 2D point
 -- @param vec2b (optional) Another 2D point
 -- @return Distance between the points
@@ -104,6 +108,7 @@ end
 
 -------------------------------------
 -- Returns the pythagorean distance between two 3D points or the length of a single vector
+-------------------------------------
 -- @param vec3a A 3D point
 -- @param vec3b (optional) Another 3D point
 -- @return Distance between the points
@@ -116,6 +121,7 @@ end
 
 -------------------------------------
 -- Returns the relative heading difference between refObject and a given point
+-------------------------------------
 -- @param point The point for which to check the relative heading
 -- @param refObject The reference object against which relative heading should be measured
 -- @param format (optional) Return format. Possible formats are "clock" (1 o'clock...) or "cardinal" (NNW...)
@@ -149,6 +155,7 @@ end
 
 -------------------------------------
 -- Returns an normalized vec2 from an angle/bearing in radians
+-------------------------------------
 -- @param unit Angle/bearing in radians
 -- @return A normalized vec2
 -------------------------------------
@@ -158,6 +165,7 @@ end
 
 -------------------------------------
 -- Is a point inside a circle?
+-------------------------------------
 -- @param center The center of the circle, as a vec2
 -- @param radius The radius of the circle
 -- @param vec2 A vec2
@@ -169,6 +177,7 @@ end
 
 -------------------------------------
 -- Is a point inside a polygon?
+-------------------------------------
 -- @param vec2[] A polygon, as a table of vec2
 -- @param vec2 A vec2
 -- @return True if vec2 is inside the polygon, false otherwise
@@ -195,6 +204,7 @@ end
 
 -------------------------------------
 -- Compares two 2D or 3D points
+-------------------------------------
 -- @param pointA a Point2 or Point3
 -- @param pointB another Point2 or Point3
 -- @return True if points are the same, false otherwise
@@ -210,7 +220,8 @@ function DCSEx.math.isSamePoint(pointA, pointB)
 end
 
 -------------------------------------
--- Linearly interpolates between two numbers
+-- Linearly interpolates two numbers
+-------------------------------------
 -- @param val0 Value vers l=0
 -- @param val1 Value vers l=1
 -- @param t Interpolation between 0 and 1
@@ -222,6 +233,7 @@ end
 
 -------------------------------------
 -- Multiplies both the x and y components of a vec2 by a floating-point value
+-------------------------------------
 -- @param vec2 A vec2
 -- @param mult A floating-point value
 -- @return A vec2
@@ -232,6 +244,7 @@ end
 
 -------------------------------------
 -- Returns an normalized vec2
+-------------------------------------
 -- @param unit A vec2
 -- @return A normalized vec2
 -------------------------------------
@@ -242,6 +255,7 @@ end
 
 -------------------------------------
 -- Returns a random boolean
+-------------------------------------
 -- @return A boolean
 -------------------------------------
 function DCSEx.math.randomBoolean()
@@ -250,20 +264,19 @@ end
 
 -------------------------------------
 -- Returns a random floating-point number between min and max
+-------------------------------------
 -- @param min Minimum floating-point value
 -- @param max Maximum floating-point value
 -- @return A number
 -------------------------------------
 function DCSEx.math.randomFloat(min, max)
-    if min >= max then
-        return min
-    end
-
+    if min >= max then return min end
     return min + math.random() * (max - min)
 end
 
 -------------------------------------
 -- Returns a random vec2 at a given distance of another vec2
+-------------------------------------
 -- @param point Reference point
 -- @param distance Distance from the reference point
 -- @return A vec2
@@ -278,6 +291,7 @@ end
 
 -------------------------------------
 -- Returns a random vec2 in circle of a given center and radius
+-------------------------------------
 -- @param center Center of the circle as a vec2
 -- @param radius Radius of the circle
 -- @param minRadius (optional) Minimum inner radius circle in which points should not be spawned
@@ -306,6 +320,7 @@ end
 
 -------------------------------------
 -- Returns a random sign as a number, -1 or 1
+-------------------------------------
 -- @return -1 50% of the time, 1 50% of the time
 -------------------------------------
 function DCSEx.math.randomSign()
@@ -317,6 +332,7 @@ end
 
 -------------------------------------
 -- Converts a value to a boolean
+-------------------------------------
 -- @param val Value to convert
 -- @return A boolean, or nil if val was nil
 -------------------------------------
@@ -331,6 +347,7 @@ end
 
 -------------------------------------
 -- Converts a vec2 to a vec3
+-------------------------------------
 -- @param vec2 A vec2
 -- @param y (Optional) A value for the vec3's y component or "land" to use land height
 -- @return A vec3 where v3.x=v2.x, v3.y=y and v3.z=v2.y
@@ -349,6 +366,7 @@ end
 
 -------------------------------------
 -- Converts a vec3 to a vec2
+-------------------------------------
 -- @param vec3 A vec3
 -- @return A vec2 where v2.x=v3.x and v2.y=v3.z
 -------------------------------------

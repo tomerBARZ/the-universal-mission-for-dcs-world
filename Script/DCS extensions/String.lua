@@ -1,8 +1,12 @@
 -- ====================================================================================
--- (DCS LUA ADD-ON) STRING - EXTENSION TO THE "STRING" TABLE
---
+-- DCSEX.STRING - FUNCTIONS RELATED TO STRING MANIPULATION
+-- ====================================================================================
 -- DCSEx.string.firstToUpper(str)
 -- DCSEx.string.getReadingTime(message)
+-- DCSEx.string.join(table, separator)
+-- DCSEx.string.getTimeString(timeInSeconds, separator)
+-- DCSEx.string.toStringNumber(number, firstToUpper)
+-- DCSEx.string.toStringThousandsSeparator(number)
 -- DCSEx.string.split(str, separator)
 -- DCSEx.string.startsWith(haystack, needle)
 -- DCSEx.string.trim(str)
@@ -12,6 +16,7 @@ DCSEx.string = {}
 
 -------------------------------------
 -- Uppercases the fist letter of a string
+-------------------------------------
 -- @param str A string
 -- @return A string, with the first letter cast to upper case
 -------------------------------------
@@ -21,6 +26,7 @@ end
 
 -------------------------------------
 -- Estimates the time (in seconds) required to read a string
+-------------------------------------
 -- @param message A text message
 -- @return A duration in seconds
 -------------------------------------
@@ -31,7 +37,13 @@ function DCSEx.string.getReadingTime(message)
     return DCSEx.math.clamp(#message / 8.7, 3.0, 15.0) -- 10.7 letters per second, minimum length 3 seconds, max length 15 seconds
 end
 
--- TODO: description, update file header
+-------------------------------------
+-- Joins a table of string into a single string
+-------------------------------------
+-- @param table A table of strings
+-- @param separator Separator used to glue table entries (default: "")
+-- @return A string
+-------------------------------------
 function DCSEx.string.join(table, separator)
     local joinedString = ""
 
@@ -45,10 +57,16 @@ function DCSEx.string.join(table, separator)
     return joinedString
 end
 
--- TODO: description, file header
-function DCSEx.string.getTimeString(timeInSeconds, useColon)
+-------------------------------------
+-- Converts a time of day (in seconds since midnight) to a human-readable time string
+-------------------------------------
+-- @param timeInSeconds Number of seconds since midnight (default: current time)
+-- @param separator Separator between minutes and seconds (":", "h"...) (default: "")
+-- @return The time, as as string
+-------------------------------------
+function DCSEx.string.getTimeString(timeInSeconds, separator)
     timeInSeconds = timeInSeconds or timer.getAbsTime()
-    useColon = useColon or false
+    separator = separator or ""
 
     timeInSeconds = math.max(0, timeInSeconds) % 86400
 
@@ -61,13 +79,15 @@ function DCSEx.string.getTimeString(timeInSeconds, useColon)
     local minutesStr = tostring(minutes)
     if #minutesStr == 1 then minutesStr = "0"..minutesStr end
 
-    local separator = ""
-    if useColon then separator = ":" end
-
     return hoursStr..separator..minutesStr
 end
 
--- TODO: description, file header
+-------------------------------------
+-- Converts a numeric value between 0 and 20 into its word/string representation
+-------------------------------------
+-- @param number A number (>=0, <=20)
+-- @return A string
+-------------------------------------
 function DCSEx.string.toStringNumber(number, firstToUpper)
     firstToUpper = firstToUpper or false
     local NUMBERS = { "zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "eleven", "twelve", "thirteen", "fourteen", "fifteen", "sixteen", "seventeen", "eighteen", "nineteen", "twenty" }
@@ -81,8 +101,13 @@ function DCSEx.string.toStringNumber(number, firstToUpper)
     return DCSEx.string.toStringThousandsSeparator(number)
 end
 
--- TODO: description, file header
--- Code from https://stackoverflow.com/questions/10989788/format-integer-in-lua
+-------------------------------------
+-- Converts a numeric value to a string, with proper thousands separators
+-- (Code taken from https://stackoverflow.com/questions/10989788/format-integer-in-lua)
+-------------------------------------
+-- @param number A number
+-- @return A string
+-------------------------------------
 function DCSEx.string.toStringThousandsSeparator(number)
   local i, j, minus, int, fraction = tostring(number):find('([-]?)(%d+)([.]?%d*)')
   int = int:reverse():gsub("(%d%d%d)", "%1,")
@@ -90,7 +115,8 @@ function DCSEx.string.toStringThousandsSeparator(number)
 end
 
 -------------------------------------
--- Splits a string
+-- Splits a string into a table
+-------------------------------------
 -- @param str The string to split
 -- @param separator The string to split
 -- @return A table of split strings
@@ -105,6 +131,7 @@ end
 
 -------------------------------------
 -- Does a string starts with the given substring?
+-------------------------------------
 -- @param haystack The string
 -- @param needle The substring to look for
 -- @return True if it starts with the substring, false otherwise
@@ -115,6 +142,7 @@ end
 
 -------------------------------------
 -- Trims a string
+-------------------------------------
 -- @param str A string
 -- @return A string
 -------------------------------------

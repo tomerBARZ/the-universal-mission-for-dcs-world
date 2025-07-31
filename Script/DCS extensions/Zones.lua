@@ -1,24 +1,34 @@
 -- ====================================================================================
---  ZONETOOLS - FUNCTIONS RELATED TO MAP TRIGGER ZONES
+-- DCSEX.ZONES - FUNCTIONS RELATED TO MAP TRIGGER ZONES
 -- ====================================================================================
--- DCSEx.zones.drawOnMap(zoneTable, lineColor, fillColor, lineType, drawName, readonly)
+-- DCSEx.zones.drawOnMap(zoneTable, lineColor, fillColor, lineType, drawName, readOnly)
 -- DCSEx.zones.getAll()
 -- DCSEx.zones.getByName(name)
 -- DCSEx.zones.getCenter(zoneTable)
--- DCSEx.zones.getProperty(zoneTable, propertyName)
+-- DCSEx.zones.getProperty(zoneTable, propertyName, defaultValue)
 -- DCSEx.zones.getPropertyBoolean(zoneTable, propertyName, defaultValue)
 -- DCSEx.zones.getPropertyFloat(zoneTable, propertyName, defaultValue, min, max)
 -- DCSEx.zones.getPropertyInt(zoneTable, propertyName, defaultValue, min, max)
 -- DCSEx.zones.getPropertyParse(zoneTable, propertyName, stringTable, valueTable, defaultValue)
 -- DCSEx.zones.getPropertyTable(zoneTable, propertyName)
 -- DCSEx.zones.getRadius(zoneTable, useMaxForQuads)
+-- DCSEx.zones.getRandomPointInside(zoneTable, surfaceType)
 -- DCSEx.zones.getSurfaceArea(zoneTable)
 -- DCSEx.zones.isPointInside(zoneTable, point)
 -- ====================================================================================
 
 DCSEx.zones = { }
 
--- TODO: function description
+-------------------------------------
+-- Draws a zone on the F10, visible for all players
+-------------------------------------
+-- @param zoneTable The zone to draw
+-- @param lineColor Line color as a RGBA table
+-- @param fillColor Fill color as a RGBA table
+-- @param lineType Type of line from the DCSEx.enums.lineType enum
+-- @param drawName Should the name of the zone be drawn too (default: false)
+-- @param drawName Should the zone marker be read only? (default: true)
+-------------------------------------
 function DCSEx.zones.drawOnMap(zoneTable, lineColor, fillColor, lineType, drawName, readOnly)
     drawName = drawName or false
     readOnly = readOnly or true
@@ -64,6 +74,7 @@ end
 
 -------------------------------------
 -- Returns all trigger zones
+-------------------------------------
 -- @return Table of zones
 -------------------------------------
 function DCSEx.zones.getAll()
@@ -79,6 +90,7 @@ end
 
 -------------------------------------
 -- Finds and return a trigger zone by a certain name
+-------------------------------------
 -- @param name Case-insensitive name of the zone
 -- @return Zone table or nil if no zone with this name was found
 -------------------------------------
@@ -100,6 +112,7 @@ end
 
 -------------------------------------
 -- Returns the center of a zone
+-------------------------------------
 -- @param zoneTable The zone table, returned by TMMissionData.getZones() or TMMissionData.getZoneByName(name)
 -- @return A vec2
 -------------------------------------
@@ -119,6 +132,7 @@ end
 
 -------------------------------------
 -- Returns the value of the property of a trigger zone, as a string
+-------------------------------------
 -- @param zoneTable The zone table, returned by DCSEx.zones.getAll() or DCSEx.zones.getByName(name)
 -- @param propertyName Case-insensitive name of the property
 -- @return The value of the property or nil if it doesn't exist
@@ -141,6 +155,7 @@ end
 
 -------------------------------------
 -- Returns the value of the property of a trigger zone, parsed against a case-insensitive table of strings
+-------------------------------------
 -- @param zoneTable The zone table, returned by DCSEx.zones.getAll() or DCSEx.zones.getByName(name)
 -- @param propertyName Case-insensitive name of the property
 -- @param defaultValue Default value to return if no match was found
@@ -157,6 +172,7 @@ end
 
 -------------------------------------
 -- Returns the value of the property of a trigger zone, as a float
+-------------------------------------
 -- @param zoneTable The zone table, returned by DCSEx.zones.getAll() or DCSEx.zones.getByName(name)
 -- @param propertyName Case-insensitive name of the property
 -- @param defaultValue Default value to return if no match was found
@@ -174,6 +190,7 @@ end
 
 -------------------------------------
 -- Returns the value of the property of a trigger zone, as an integer
+-------------------------------------
 -- @param zoneTable The zone table, returned by DCSEx.zones.getAll() or DCSEx.zones.getByName(name)
 -- @param propertyName Case-insensitive name of the property
 -- @param defaultValue Default value to return if no match was found
@@ -189,6 +206,7 @@ end
 
 -------------------------------------
 -- Gets the value of a property of a trigger zone and parse it according to two correspondance tables
+-------------------------------------
 -- @param zoneTable The zone table, returned by DCSEx.zones.getAll() or DCSEx.zones.getByName(name)
 -- @param propertyName Case-insensitive name of the property
 -- @param stringTable A table of strings
@@ -211,6 +229,7 @@ end
 
 -------------------------------------
 -- Returns the value of the property of a trigger zone, as a table of comma-separated lowercase strings
+-------------------------------------
 -- @param zoneTable The zone table, returned by DCSEx.zones.getAll() or DCSEx.zones.getByName(name)
 -- @param propertyName Case-insensitive name of the property
 -- @return An table
@@ -223,6 +242,7 @@ end
 
 -------------------------------------
 -- Returns the radius of a zone, in meter
+-------------------------------------
 -- @param zoneTable The zone table, returned by DCSEx.zones.getAll() or DCSEx.zones.getByName(name)
 -- @param useMaxForQuads If true, return largest distance between the center and a vertex. If false (default value), returns the mean distance. Only used if the zone is a quad.
 -- @return An table
@@ -271,6 +291,7 @@ end
 
 -------------------------------------
 -- Returns the surface area of a zone
+-------------------------------------
 -- @param zoneTable The zone table, returned by TMMissionData.getZones() or TMMissionData.getZoneByName(name)
 -- @return A number, in squared meters
 -------------------------------------
@@ -289,6 +310,7 @@ end
 
 -------------------------------------
 -- Returns true if a point is inside a zone
+-------------------------------------
 -- @param zoneTable The zone table, returned by TMMissionData.getZones() or TMMissionData.getZoneByName(name)
 -- @param point A point, as a vec3 or vec2
 -- @return True if the point is inside the zone, false otherwise

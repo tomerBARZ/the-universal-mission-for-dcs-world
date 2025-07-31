@@ -1,16 +1,18 @@
 -- ====================================================================================
--- DCSEX.UNITGROUMAKER - CREATES AND ADDS GROUPS TO THE GAME WORLD
---
+-- DCSEX.UNITGROUPMAKER - CREATES AND ADDS GROUPS TO THE GAME WORLD
+-- ====================================================================================
 -- (local) createGroupTable(groupID, groupCategory, options)
 -- (local) getDefaultUnitSpread(groupCategory)
 -- (local) getNextGroupID()
 -- (local) getNextUnitID()
 -- (local) setAircraftTaskAwacs(groupTable)
+-- (local) setAircraftTaskCAP(groupTable)
+-- (local) setAircraftTaskFollow(groupTable, followedGroupID, xyDistance)
 -- (local) setAircraftTaskOrbit(groupTable, options)
 -- (local) setCommand(groupTable, actionID, actionValue)
 -- (local) setOption(groupTable, optionID, optionValue)
+-- DCSEx.unitGroupMaker.createStatic(side, point2, typeName, shapeName, heading, dead)
 -- DCSEx.unitGroupMaker.create(coalitionID, groupCategory, vec2, unitTypes, options)
--- DCSEx.unitGroupMaker.initialize()
 -- ====================================================================================
 
 DCSEx.unitGroupMaker = {}
