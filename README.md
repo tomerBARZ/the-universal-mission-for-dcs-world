@@ -4,7 +4,7 @@
 
 **This is a BETA version, there may be bugs and there WILL be unbalanced stuff.**
 
-The Universal Mission for DCS World is an attempt to create a fully dynamic single-player/PvE mission giving access to the whole content of DCS World in a structure similar to the one found in old "simulators", like the early Microprose games (think F-117 or the Strike Eagle serie).
+The Universal Mission for DCS World is a fully dynamic single-player/PvE mission giving access to the whole content of DCS World.
 
 ### Features
 
@@ -33,7 +33,7 @@ The Universal Mission for DCS World is an attempt to create a fully dynamic sing
 <h4>Known bugs in latest release</h4>
 
 - AWACS datalink info is now displayed on SA pages
-- Some player callsigns may cause an error on mission start, stick to the "basic" callsigns (Enf) to avoir this problem
+- Some player callsigns may cause an error on mission start, stick to the "basic" DCS callsigns (Enfield, Springfield, Uzi, Colt, Dodge, Ford, Chevy and Pontiac) to avoid this problem
 
 ## How to use/play The Universal Mission?
 
@@ -79,7 +79,7 @@ Please also note that PvP is not supported at the moment and that the mission wi
 - AI improvements
   - [ ] AI wingmen should engage tracking radars first when told to engage SAM sites, in order to disable the site ASAP
 - Balance improvements
-  - [ ] Lower enemy CAP respawn rate
+  - [ ] Lowered enemy CAP respawn rate
   - [ ] Tweaked XP requirements for medals/promotions
 - Bug fixes
   - [ ] AWACS datalinked contacts not showing on SA pages
@@ -90,10 +90,11 @@ Please also note that PvP is not supported at the moment and that the mission wi
   - [ ] Additional commands in the "navigation" menu
     - [ ] Vector to nearest airfield
     - [ ] Weather report
-  - [ ] Use of "Client" slot instead of "Player" slot even in single-player missions, allowing the player to respawn on death/ejection
+  - [ ] Use of "Client" slot instead of "Player" slot even in single-player missions, allowing the player to respawn on death/ejection instead of having to start the whole mission again
   - [ ] Single-player mission autostart on player take off
 - Quality of life/minor tweaks
-  - [ ] AI wingment "Winchester!" call when out of ammo
+  - [ ] AI wingmen "Two was shot down!" call when witnessing another wingman killed
+  - [ ] AI wingmen "Winchester!" call when out of ammo
   - [x] Increased AWACS aircraft spawn altitude
   - [ ] Target coordinates radio message displayed for a longer time so players have the time to write them down or enter them in their flight computer
 
