@@ -18,7 +18,7 @@ Created and maintained by Ambroise Garel (<a href='mailto:akaagarmail@gmail.com'
 
 <h2>Table of contents</h2>
 <ul>
-<li><a href="#page_welcome">Welcome to <em>The Universal Mission</a></li>
+<li><a href="#page_welcome">Welcome to <em>The Universal Mission</em></a></li>
 <li><a href="#page_howtoplay">How to use/play The Universal Mission?</a></li>
 <li><a href="#page_menumission">Using the mission menu</a></li>
 <li><a href="#page_advancedstuff">Advanced stuff you may want to try</a></li>
@@ -67,7 +67,7 @@ I hope you'll like it.
 <!------------------------- NEW PAGE ------------------------->
 
 <div id="page_howtoplay"></div>
-<h2>How to use/play The Universal Mission?<h2>
+<h2>How to use/play The Universal Mission?</h2>
 
 <h3>First setup</h3>
 
