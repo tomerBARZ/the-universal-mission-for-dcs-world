@@ -5,10 +5,6 @@
 **This is a BETA version, there may be bugs and there WILL be unbalanced stuff.**
 
 The Universal Mission for DCS World is an attempt to create a fully dynamic single-player/PvE mission giving access to the whole content of DCS World in a structure similar to the one found in old "simulators", like the early Microprose games (think F-117 or the Strike Eagle serie).
-These game had both fun and clear objectives, endless replayability and a career system that made sure that something was at stake: crash and die, and you'll lose all these hard-earned medals.
-
-As the original creator of [Briefing Room](https://github.com/DCS-BR-Tools/briefing-room-for-dcs) (now maintained by the talented John Harvey), I've always wanted to create an easy-to-use, enticing and fun mission generator for DCS, capable of creating CPU-light missions without requiring an external program.
-I think with The Universal Mission is, finally, the proper way to approach this problem. The current version is still an early beta but most core features are already working. I hope you'll like it.
 
 ### Features
 
@@ -26,20 +22,22 @@ I think with The Universal Mission is, finally, the proper way to approach this 
 [![Screen shot of the target zone system](./docs/target-zones-tn.jpg)](./docs/target-zones.jpg)
 [![Screen shot of the career mode's medal case display](./docs/career-mode-tn.jpg)](./docs/career-mode.jpg)
 
-### Limitations of current beta version
+#### Limitations of current beta version
 
 **Please read the "planned development" section below for more information.**
 
 - The current version supports only modern (post-Cold War) units and Caucasus, Kola, Marianas, Persian Gulf and Syria theaters
-  - Germany support will come soon, others will follow later
 - Not all mission types are supported yet
 - Career progress may be lost because of future updates, don't get too attached to it
 
-### Known bugs
+#### Known bugs in latest release
 
 - AWACS datalink info is now displayed on SA pages
+- Some player callsigns may cause an error on mission start, stick to the "basic" callsigns (Enf) to avoir this problem
 
 ## How to use/play The Universal Mission?
+
+Please refer to the [User's manual](https://github.com/akaAgar/the-universal-mission-for-dcs-world/blob/main/docs/The%20Universal%20Mission%20-%20User's%20Manual.md) for additional information.
 
 ### First setup
 
@@ -67,102 +65,36 @@ Please refer to the "Advanced stuff you may want to try" section to learn all th
 - When you're ready, pick the "Begin mission" option, wait a few seconds (precaching all the game assets can take some time, especially if you have a slow CPU), you're ready to go!
 - Use the F10 mission and check the F10 map for additional information about the mission (see "Using the mission menu" below). Don't forget to come back to base alive, all awarded XP and completed objectives will only be saved to your pilot profile once you've landed
 
-### Using the mission menu
-
-Most features of The Universal Mission require the use of the "F10. Other" menu. To access it, press the "Communication menu" key (check the key bindings), navigate to the root menu by pressing F11 ("Previous menu") if need, then press "F10" to access the "Other" menu.
-The exact content of the menu will depend on the current phase of the mission.
-
-#### On startup/when no mission is active
-
-- **Display mission settings**: Displays the current mission settings, that will be applied if you choose to start the mission now.
-- **Change mission settings**: Allows you to change the mission settings to your taste.
-  - **Blue coalition**: Who is the blue coalition? Determines the type of units that will be spawned. Available factions (e.g. NATO) depend on the missions's time period and theater.
-  - **Red coalition**: Who is the red coalition? Determines the type of units that will be spawned. Available factions (e.g. USSR) depend on the missions's time period and theater.
-  - **Mission type**: What will your mission be?
-    - **Antiship strike**: Sink enemy warships and cargo ships.
-    - **Ground attack**: Interdiction missions against armor, artillery and convoys.
-    - **Interception**: Shoot down strategic airplanes (bombers, transports...) and enemy attack planes on interdiction missions.
-    - **SEAD**: Destroy enemy SAM sites.
-    - **Strike**: Destroy enemy structures and civilian buildings occupied by enemy forces.
-  - **Target location**: Where on the map will the targets be spawned? Approximate distance to possible regions is displayed in the menu.
-    - Missions taking place in enemy territory award 30% more XP to account for increased SAM threat and proximity of enemy airbases.
-    - Make sure to pick a region not too far away from your starting location if you don't like long ingresses.
-    - Picking a region very close to your starting location (for instance, the one where your airbase is located in) can also be a bad idea, as you might takeoff in range of an enemy SAM.
-    - Be aware that targets of antiship strikes will always be spawned in open seas, which can be quite far if you picked a landlocked target zone.
-  - **Target count**: How many objectives will be spawned. More objectives means potentially more xp in a single sortie, so better medals, but also more work and more risk. Be aware that you can RTB to rearm/refuel at any time between objectives, but you won't accumulate as many single-sortie XP as if you complete objectives without going back to base, because XP is awarded to your profile and reset each time you land.
-  - **Enemy air defense**: Amount, quality and skill of enemy surface-to-air units (AAA, MANPADS and SAM). A higher setting awards more XP.
-  - **Enemy air force**: Amount, quality and skill of enemy combat air patrols. A higher setting awards more XP.
-  - **Wingmen count**: How many wingmen will fly by your side (from zero to three). A small XP penalty is added for each additional wingman. Wingman won't get replaced if they get shot during a mission, but they will (with full payload) each time you land and takeoff again. Only shown in single-player missions.
-  - **Friendly AI CAP**: Should AI fighter aicraft be spawned regularly to patrol the AO and shoot down potential threats? Disabling this option will award you more XP (only if "Enemy air force" is not set to "None") but also means you and your wingmen will be alone against the whole enemy air force.
-- **View pilot career stats**: Displays a list of your achievements, as well as your medal case. Only available when playing single-player missions and if the Lua IO module has been unsanitized (see "First setup" above)
-- **Begin mission**: Starts a mission with the current settings.
-
-#### During the mission
-
-- **Mission status**: Displays a summary of the mission's status (list of objectives and progress on each objective).
-- **Objectives**: Displays a list of special commands related to each of the mission's objectives. Be aware that some objectives may have no special commands associated with them.
-  - **Smoke marker on target**: Asks for a friendly JTAC to pop a smoke marker on the target. Makes finding the target easier, but will cost you a small XP penalty. Only available for missions where a JTAC is available (it's pretty hard to throw a smoke grenade at an airplane or a ship in the middle of the sea).
-- **Navigation**: Displays a list of commands related to navigational assistance.
-  - **Navigation to objective [OBJECTIVE NAME]**: Displays the coordinates of the objective, its BRA ("fly X for Y") relative to the player's position and an estimated flight time and ETA. Some objectives types (e.g. strike missions) are provided with exact coordinates, but most will only have approximate coordiantes, so you'll have to search for targets yourself once in the objective area.
-- **Flight**: Displays a list of commands for your wingmen. Only shown in single-player missions and if wingmen are available for this mission.
-  - **Cover me!**: Tasks your wingmen to immediately engage any nearby air threats.
-  - **Engage**: Tasks your wingmen to engage a certain type of targets. Targets must be detected by your wingmen (see "Report contacts" below), or they won't be able to engage them.
-  - **Report contacts**: Asks your wingmen for a list of all detected contacts. According to range and sensors capabilities, their reports can go from perfect ID (e.g. "Su-27") to very generic descriptions (e.g. "fighter" or even "aircraft")
-  - **Hold position**: Tasks your wingmen to orbit at their current position. All other tasking will be aborted.
-  - **Change altitude**: Asks your wingmen to change their altitude. This altitude will be employed when attacking on orbiting but not when rejoining/forming up with you (in that case, they'll match your altitude).
-  - **Status report**: Asks your wingmen for a complete report (damage sustained, fuel status, available payload).
-  - **Rejoin**: Asks your wingmen to rejoin and follow you. All other tasking will be aborted. This is the default tasking when wingmen take off and when they complete another task.
-- **AWACS**: Displays a list of commands for the AWACS. Only shown if an AWACS aircraft is available for this mission.
-  - **Bogey dope**: Asks for the nearest enemy air threat
-  - **Picture**: Asks for a summary of all detected enemy aircraft
-- **Display mission score**: Displays the number of XP gained and objectives completed since your last takeoff. They will be added to your flight log (and any promotions/medals be awarded) the next time you land. If you crash, eject or abort the mission, all currently "stowed" XP and objectives will be lost. Only available when playing single-player missions and if the Lua IO module has been unsanitized (see "First setup" above)
-- **Abort mission**: Aborts the current mission and forfeit all XP/objectives gained since last landing. The game will ask for confirmation so you don't select this option by mistake.
-
-### Advanced stuff you may want to try
-
-The Universal Mission is designed to be easily editable to suit your preferences. Here are a few things you could do after opening the .miz file in DCS World's mission editor.
-
-#### Player aircraft
-
-- Change the player aircraft starting condition (runway, parking or parking hot). Air starts are not recommended as all players must be on the ground to begin a new mission
-- Move it to another airbase, change its coalition (make sure blue players are spawned on an airbase located in a BLUFOR zone are red players are spawned on an airbase located in a REDFOR zone)
-  - You may also add an aircraft carrier or a FARP for the player to take off from
-- Change its default loadout if you plan to play a specific kind of mission and don't want to lose time asking the ground crew to rearm your aircraft (e.g. if you know you want to play SEAD missions, you may as well stock up on AGM-88s)
-- Change the skill level from "Player" to "Client" and add other aircraft to create a multiplayer mission to play with your friends. Keep in mind that the persistent career/player stats system will be disabled in multiplayer missions and that all player aircraft must belong to the same coalition (TUM does not support PvP)
-
-#### Zones
-
-- All zones whose names starts with BLUFOR or REDFOR decide the territory (and airbases) controlled by the blue and red coalitions
-  - Be aware that any change to the airbases coalitions will be superseded by the BLUFOR and REFOR zones
-- All zones whose names starts with WATER are seas, used to spawn ships
-- Zones with a name not starting with BLUFOR, REDFOR or WATER are target zones. These are zones where objectives can be spawned, who can be selected in the "objective location" setting of the intermission F10 menu
-  - Change, add or remove zones to create new possible target areas. A maximum of 10 target areas can be created, so they fit the F10 menu
-
-#### A few notes regarding multiplayer
+### A few notes regarding multiplayer
 
 While The Universal Mission supports multiplayer and is perfectely suitable (and fun!) for playing with friends on a private server, it is **absolutely not suited for public servers** as missions settings can be edited by anyone at any time Using the mission menu.
 Please also note that PvP is not supported at the moment and that the mission will not launch if both coalitions have player slots.
 
-#### Other parameters
-
-- _(Not yet implemented in this version)_ By changing the year in mission time parameters, the time period will be changed accordingly and the proper factions and AI units will be spawned during the mission. Time periods are:
-  - 1945 and before: World War 2
-  - 1946-1959: Korea War
-  - 1960-1974: Vietnam War
-  - 1975-1989: Late Cold War
-  - 1990-now: Modern
-- _(Not yet implemented in this version)_ Changing the weather to make it more cloudy or windy, or setting the mission to nighttime, will make the mission more difficult but also award more points.
-
 ## Planned development
 
-### VERY high priority
+### Planned for next version (could be subject to change)
 
-- Additional "navigation" commands (vector to nearest airfield, complete weather report...)
-- Bugfix: AWACS datalink info not showing on SA pages
-- Improved score multiplier taking into account various aspects of mission difficulty (weather, nighttime ops...)
-- New objectives: helicopter (drop/pickup units...), CAP, CAS, OCA (airbase attack)
-- Support for the Germany and South America theaters
-- Support for more factions and five different time periods (World War 2, Korea war, Vietnam war, late Cold war, Modern)
+- Additional content
+  - [ ] At least partial Germany map support
+- AI improvements
+  - [ ] AI wingmen should engage tracking radars first when told to engage SAM sites, in order to disable the site ASAP
+- Balance improvements
+  - [ ] Lower enemy CAP respawn rate
+  - [ ] Tweaked XP requirements for medals/promotions
+- Bug fixes
+  - [ ] AWACS datalinked contacts not showing on SA pages
+  - [x] Some player callsigns causing a script error at startup
+- Extras
+  - [x] First draft of the PDF manual
+- New features
+  - [ ] Additional commands in the "navigation" menu
+    - [ ] Vector to nearest airfield
+    - [ ] Weather report
+  - [ ] Use of "Client" slot instead of "Player" slot even in single-player missions, allowing the player to respawn on death/ejection
+  - [ ] Single-player mission autostart on player take off
+- Quality of life/feedback
+  - [ ] AI wingment "Winchester!" call when out of ammo
+  - [ ] Target coordinates radio message displayed for a longer time so players have the time to write them down or enter them in their flight computer
 
 ### High priority
 
@@ -172,9 +104,12 @@ Please also note that PvP is not supported at the moment and that the mission wi
 - Better use of context for "ambient" radio messages (should only warn of a SAM launch if an AI pilot is there to witness it, etc)
 - Friendly air defenses
 - GitHub page
+- Improved score multiplier taking into account various aspects of mission difficulty (weather, nighttime ops...)
 - Laser designation of targets by JTAC
+- New objectives: helicopter (drop/pickup units...), CAP, CAS, OCA (airbase attack)
 - PDF manual
 - Support for all missing DCS World theaters
+- Support for more factions and five different time periods (World War 2, Korea war, Vietnam war, late Cold war, Modern)
 
 ### Medium priority
 
