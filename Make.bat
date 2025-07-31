@@ -1,6 +1,9 @@
 @echo off
 cls
 
+WHERE php >nul 2>nul
+IF %ERRORLEVEL% NEQ 0 goto ERROR-NO-PHP
+
 @REM -------------------------------------------
 @REM CREATE SCENARIOS
 @REM -------------------------------------------
@@ -13,14 +16,12 @@ echo.
 set /p buildConfig=Your choice:
 echo.
 
-IF "%buildConfig%" == "d" goto BUILD-DEBUG-ALL
-IF "%buildConfig%" == "D" goto BUILD-DEBUG-ALL
 IF "%buildConfig%" == "p" goto BUILD-DEBUG-PERSIAN
 IF "%buildConfig%" == "P" goto BUILD-DEBUG-PERSIAN
+IF "%buildConfig%" == "d" goto BUILD-DEBUG-ALL
+IF "%buildConfig%" == "D" goto BUILD-DEBUG-ALL
 IF "%buildConfig%" == "r" goto BUILD-RELEASE
 IF "%buildConfig%" == "R" goto BUILD-RELEASE
-IF "%buildConfig%" == "s" goto START-DEBUG
-IF "%buildConfig%" == "S" goto START-DEBUG
 goto CANCEL-END
 
 :BUILD-DEBUG-ALL
@@ -38,10 +39,16 @@ if exist *.miz del *.miz
 c:\php\php Make.php release
 goto COPY-TO-DCS
 
-:COPY-TO-DCS
+:BUILD-MANUAL
+WHERE pandoc >nul 2>nul
+IF %ERRORLEVEL% NEQ 0 goto ERROR-NO-PANDOC
+pandoc README.md -o README.pdf
+goto END
+
 @REM -------------------------------------------
 @REM COPY OUTPUT MIZ FILES TO DCS'S MISSIONS DIRECTORY
 @REM -------------------------------------------
+:COPY-TO-DCS
 if not exist "%userprofile%\Saved Games\DCS\Missions\" goto END
 if not exist *.miz goto END
 echo Copying output MIZ files to %userprofile%\Saved Games\DCS\Missions...
@@ -52,6 +59,11 @@ goto END
 :CANCEL-END
 echo.
 echo Build cancelled.
+goto END
+
+:ERROR-NO-PHP
+echo.
+echo CRITICAL ERROR: PHP not found. Please install PHP and add it to the PATH.
 goto END
 
 :END
