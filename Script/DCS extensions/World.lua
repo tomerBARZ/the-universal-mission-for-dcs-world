@@ -10,6 +10,7 @@
 -- DCSEx.world.getClosestPointOnRoadsVec2(vec2)
 -- DCSEx.world.getCoordinatesAsString(point, hideElevation)
 -- DCSEx.world.getCurrentMarkerID()
+-- DCSEx.world.getFirstPlayer(side)
 -- DCSEx.world.getGroupByID(groupID)
 -- DCSEx.world.getGroupCenter(group)
 -- DCSEx.world.getMarkerByText(text, coalition)
@@ -230,6 +231,24 @@ do
     function DCSEx.world.getCurrentMarkerID()
         if nextMarkerId == 1 then return nil end
         return nextMarkerId - 1
+    end
+
+    -------------------------------------
+    -- Returns the first player found
+    -------------------------------------
+    -- @param side The coalition the player must belong to, or nil to search for any player
+    -- @return A player unit object, or nil if no player was found
+    -------------------------------------
+    function DCSEx.world.getFirstPlayer(side)
+        local players = {}
+        if side then
+            players = coalition.getPlayers(side)
+        else
+            players = DCSEx.world.getAllPlayers()
+        end
+
+        if not players or #players == 0 then return nil end
+        return players[1]
     end
 
     -------------------------------------
