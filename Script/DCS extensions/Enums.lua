@@ -69,7 +69,8 @@ DCSEx.enums.timePeriod = {
     KOREA_WAR = 2,
     VIETNAM_WAR = 3,
     COLD_WAR = 4,
-    MODERN = 5
+    GULF_WAR = 5,
+    MODERN = 6
 }
 
 -------------------------------------
