@@ -53,11 +53,9 @@ do
         [TUM.settings.id.TARGET_COUNT] = { "1", "2", "3", "4" },
         [TUM.settings.id.TARGET_LOCATION] = { },
         [TUM.settings.id.TASKING] = { "Antiship strike", "Ground attack", "Interception", "SEAD", "Strike" }, -- Must match values in the DCSEx.enums.taskFamily enum
-        [TUM.settings.id.TIME_PERIOD] = { "World War 2", "Korea War", "Vietnam War", "Late Cold War", "Modern" }, -- Must match values in the DCSEx.enums.timePeriod enum
+        [TUM.settings.id.TIME_PERIOD] = { "World War 2", "Korea War", "Vietnam War", "Late Cold War", "Gulf war", "Modern" }, -- Must match values in the DCSEx.enums.timePeriod enum
         [TUM.settings.id.WINGMEN] = { "None", "1", "2", "3" }
     }
-
-    local targetLocation
 
     local function getFaction(side)
         if side == coalition.side.BLUE then
@@ -83,18 +81,20 @@ do
             [TUM.settings.id.WINGMEN] = 2
         }
 
-        -- TODO: set default time period according to mission year
+        -- TODO: enable WW2
         -- if env.mission.date.Year <= 1945 then
         --     settings[TUM.settings.id.TIME_PERIOD] = DCSEx.enums.timePeriod.WORLD_WAR_2
-        -- elseif env.mission.date.Year < 1960 then
-        --     settings[TUM.settings.id.TIME_PERIOD] = DCSEx.enums.timePeriod.KOREA_WAR
-        -- elseif env.mission.date.Year < 1975 then
-        --     settings[TUM.settings.id.TIME_PERIOD] = DCSEx.enums.timePeriod.VIETNAM_WAR
-        -- elseif env.mission.date.Year < 1990 then
-        --     settings[TUM.settings.id.TIME_PERIOD] = DCSEx.enums.timePeriod.COLD_WAR
-        -- else
-        --     settings[TUM.settings.id.TIME_PERIOD] = DCSEx.enums.timePeriod.MODERN
-        -- end
+        if env.mission.date.Year < 1960 then
+            settings[TUM.settings.id.TIME_PERIOD] = DCSEx.enums.timePeriod.KOREA_WAR
+        elseif env.mission.date.Year < 1975 then
+            settings[TUM.settings.id.TIME_PERIOD] = DCSEx.enums.timePeriod.VIETNAM_WAR
+        elseif env.mission.date.Year < 1990 then
+            settings[TUM.settings.id.TIME_PERIOD] = DCSEx.enums.timePeriod.COLD_WAR
+        elseif env.mission.date.Year < 2000 then
+            settings[TUM.settings.id.TIME_PERIOD] = DCSEx.enums.timePeriod.GULF_WAR
+        else
+            settings[TUM.settings.id.TIME_PERIOD] = DCSEx.enums.timePeriod.MODERN
+        end
 
         for i,id in pairs(SETTING_VALUES[TUM.settings.id.COALITION_BLUE]) do
             if id == Library.factions.defaults[coalition.side.BLUE] then settings[TUM.settings.id.COALITION_BLUE] = i end
