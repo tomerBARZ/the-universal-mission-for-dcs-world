@@ -37,7 +37,7 @@ The Universal Mission for DCS World is a fully dynamic single-player/PvE mission
 
 ## How to use/play The Universal Mission?
 
-**Please refer to the [User's manual](https://github.com/akaAgar/the-universal-mission-for-dcs-world/blob/main/docs/The%20Universal%20Mission%20-%20User's%20Manual.md) for additional information.**
+**Please refer to the [User's manual](https://github.com/akaAgar/the-universal-mission-for-dcs-world/blob/main/The%20Universal%20Mission%20-%20User's%20Manual.md) for additional information.**
 
 ### First setup
 
@@ -131,6 +131,7 @@ Please also note that PvP is not supported at the moment and that the mission wi
 ## Misc
 
 - **Released under the GNU GPL 3.0 licence**
+- Uses YoloWingPixie's [DCS World Schema API](https://github.com/YoloWingPixie/dcs-world-schema)
 - AI use/disclosure
   - [ChatGPT](https://chatgpt.com/): used to generate first draft of radio messages
   - [ElevenLabs](https://elevenlabs.io/fr): used to generate radio messages voiceover

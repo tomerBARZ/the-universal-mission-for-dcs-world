@@ -1,6 +1,6 @@
 <!------------------------- NEW PAGE ------------------------->
 <div style="text-align:center">
-<img style="width:100%" src="./logo.png" alt="The Universal Mission for DCS World" />
+<img style="width:100%" src="docs/logo.png" alt="The Universal Mission for DCS World" />
 <p class="heavy" style="font-size:175%;">
 User's manual
 </p>
