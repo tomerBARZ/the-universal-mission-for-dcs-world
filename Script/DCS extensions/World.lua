@@ -2,19 +2,25 @@
 -- DCSEX.WORLD - FUNCTIONS RELATED TO THE GAME WORLD
 -- ====================================================================================
 -- DCSEx.world.collidesWithScenery(vec2, radius)
--- DCSEx.world.findSpawnPoint(vec2, minRadius, maxRadius, surfaceType, radiusWithoutScenery)
+-- DCSEx.world.destroyGroupByID(groupID)
+-- DCSEx.world.explodeUnit(unitID, amount)
 -- DCSEx.world.getAllPlayers()
 -- DCSEx.world.getAllSceneryBuildings(minHealth)
--- DCSEx.world.getAllUnits(unitCategory)
+-- DCSEx.world.getAllUnits(coalitionID, unitCategory)
 -- DCSEx.world.getClosestPointOnRoadsVec2(vec2)
--- DCSEx.world.getCoordinatesAsString(point)
+-- DCSEx.world.getCoordinatesAsString(point, hideElevation)
 -- DCSEx.world.getCurrentMarkerID()
 -- DCSEx.world.getGroupByID(groupID)
+-- DCSEx.world.getGroupCenter(group)
+-- DCSEx.world.getMarkerByText(text, coalition)
 -- DCSEx.world.getNextMarkerID()
+-- DCSEx.world.getPlayersInAir(side)
 -- DCSEx.world.getSceneriesInZone(center, radius, minHealth)
+-- DCSEx.world.getSpawnPoint(zone, surfaceType, safeRadius)
 -- DCSEx.world.getStaticObjectByID(staticID)
 -- DCSEx.world.getTerrainHeightDiff(coord, searchRadius)
 -- DCSEx.world.getUnitByID(unitID)
+-- DCSEx.world.getUnitsCenter(units)
 -- DCSEx.world.isGroupAlive(g, unitsMustBeInAir)
 -- DCSEx.world.setUnitLifePercent(unitID, life)
 -- ====================================================================================
@@ -25,9 +31,16 @@ do
     -- TODO: get max marker already in use from envMission
     local nextMarkerId = 1 -- Next map marker ID
 
+    -------------------------------------
+    -- Returns true if vec2 is less than radius meters away from any scenery object
+    -------------------------------------
+    -- @param vec2 A 2d point
+    -- @param radius A range, in meters
+    -- @return True if vec2 is closer than radius meters from any object, false otherwise
+    -------------------------------------
     function DCSEx.world.collidesWithScenery(vec2, radius)
-        local foundOne = false
         radius = radius or 8
+        local foundOne = false
 
         local volS = {
             id = world.VolumeType.SPHERE,
@@ -47,46 +60,30 @@ do
         return foundOne
     end
 
-    -- function DCSEx.world.findSpawnPoint(vec2, minRadius, maxRadius, surfaceType, radiusWithoutScenery, territorySide, expandSearch)
-    --     expandSearch = expandSearch or true
+    -------------------------------------
+    -- Destroys a group
+    -------------------------------------
+    -- @param groupID ID of the group to destroy
+    -------------------------------------
+    function DCSEx.world.destroyGroupByID(groupID)
+        if not groupID then return end
+        local g = DCSEx.world.getGroupByID(groupID)
+        if g then g:destroy() end
+    end
 
-    --     for _=0,16 do
-    --         for _=0,16 do
-    --             local spawnPoint = nil
+    -------------------------------------
+    -- Spawns an explosion where an unit is located
+    -------------------------------------
+    -- @param unitID ID of the unit
+    -- @param amount Intensity of the explosion
+    -------------------------------------
+    function DCSEx.world.explodeUnit(unitID, amount)
+        net.dostring_in("mission", string.format("a_explosion_unit(%d, %f)", unitID, amount))
+    end
 
-    --             spawnPoint = DCSEx.math.randomPointInCircle(
-    --                 vec2,
-    --                 DCSEx.converter.nmToMeters(maxRadius),
-    --                 DCSEx.converter.nmToMeters(minRadius),
-    --                 surfaceType)
-
-    --             if spawnPoint and radiusWithoutScenery then
-    --                 if DCSEx.world.collidesWithScenery(spawnPoint, radiusWithoutScenery) then
-    --                     spawnPoint = nil
-    --                 end
-    --             end
-
-    --             if spawnPoint and territorySide then
-    --                 if scramble.territories.getOwner(spawnPoint) ~= territorySide then
-    --                     spawnPoint = nil
-    --                 end
-    --             end
-
-    --             if spawnPoint then return spawnPoint end
-    --         end
-
-    --         if not expandSearch then return nil end
-
-    --         minRadius = minRadius * 0.9
-    --         maxRadius = maxRadius * 1.2
-    --     end
-
-    --     return nil
-    -- end
-
-    
     -------------------------------------
     -- Returns a table of all player-controlled units currently in the game
+    -------------------------------------
     -- @return A table of unit objects
     -------------------------------------
     function DCSEx.world.getAllPlayers()
@@ -104,7 +101,8 @@ do
 
     -------------------------------------
     -- Returns a table of all map scenery buildings.
-    -- This function is rather CPU-consuming, better run it once on mission start and store the result in table.
+    -- This function is rather CPU-heavy, better run it once on mission start and store the results in a table.
+    -------------------------------------
     -- @param minHealth Minimum health a building must have to be included in the table
     -- @return A table of scenery objects
     -------------------------------------
@@ -134,6 +132,7 @@ do
 
     -------------------------------------
     -- Returns all units belonging to a given category
+    -------------------------------------
     -- @param coalitionID Coalition ID (coalition.side.XXX) or nil to search all coalitions
     -- @param unitCategory An unit category (Group.Category.XXX)
     -- @return A table of unit tables
@@ -156,7 +155,9 @@ do
     end
 
     -------------------------------------
-    -- Returns the closest point to roads as a vec2
+    -- Returns the closest point to roads as a vec2.
+    -- An alternative to ED's zany land.getClosestPointOnRoads which returns two integers (!!???)
+    -------------------------------------
     -- @param vec2 Coordinates to look for
     -- @return A vec2 with the closest point on roads
     -------------------------------------
@@ -168,6 +169,7 @@ do
     -------------------------------------
     -- Returns the LL/MGRS coordinates of a point, as a string
     -- Based on code by Bushmanni - https://forums.eagle.ru/showthread.php?t=99480
+    -------------------------------------
     -- @param point The point, as a vec2 or vec3
     -- @param hideElevation (optional) Show elevation NOT be displayed? Default: false
     -- @return A string
@@ -222,6 +224,7 @@ do
 
     -------------------------------------
     -- Returns the last map marker ID generated by DCSEx.world.getNextMarkerID(), if any
+    -------------------------------------
     -- @return A numeric ID, or nil
     -------------------------------------
     function DCSEx.world.getCurrentMarkerID()
@@ -231,6 +234,7 @@ do
 
     -------------------------------------
     -- Searches and return a group by its ID
+    -------------------------------------
     -- @param groupID ID of the group
     -- @return A group table, or nil if no group with this ID was found
     -------------------------------------
@@ -246,7 +250,13 @@ do
         return nil
     end
 
-    -- TODO: description
+    -------------------------------------
+    -- Searches and return a map marker by its text (case-insensitive)
+    -------------------------------------
+    -- @param text Text to look for (case insensitive)
+    -- @param coalition Coalition the marker must belong to, or nil to search all coalitions
+    -- @return A map marker table, or nil if no marker was found
+    -------------------------------------
     function DCSEx.world.getMarkerByText(text, coalition)
         if not text then return nil end
         text = text:lower()
@@ -256,7 +266,7 @@ do
             local markerText = m.text or ""
             markerText = markerText:lower()
             if markerText == text then
-                if coalition == nil or m.coalition == coalition then
+                if not coalition or m.coalition == coalition then
                     return m
                 end
             end
@@ -266,7 +276,8 @@ do
     end
 
     -------------------------------------
-    -- Returns a new, unique, map marker ID
+    -- Returns a new unique map marker ID
+    -------------------------------------
     -- @return A numeric ID
     -------------------------------------
     function DCSEx.world.getNextMarkerID()
@@ -274,7 +285,12 @@ do
         return nextMarkerId - 1
     end
 
-    -- TODO: description, file header
+    -------------------------------------
+    -- Returns a table of all player units currently in the air (not on ramp/ground/runway)
+    -------------------------------------
+    -- @param side Coalition the players must belong to, or nil to search all coalitions
+    -- @return A table of player objects
+    -------------------------------------
     function DCSEx.world.getPlayersInAir(side)
         local players = {}
         if side then
@@ -293,7 +309,14 @@ do
         return playersInAir
     end
 
-    -- TODO: description, file header
+    -------------------------------------
+    -- Returns a valid spawn point for a ground unit (not stuck in trees, buildings...) or a naval unit
+    -------------------------------------
+    -- @param zone Trigger zone in which to look for a spawn point
+    -- @param surface Type of surface (land.SurfaceType enum) to look for, or any to return any point (good for air units)
+    -- @param safeRadius Saferadius in meters from any obstacle (default: 100)
+    -- @return A 2D point, or nil if none was found
+    -------------------------------------
     function DCSEx.world.getSpawnPoint(zone, surfaceType, safeRadius)
         safeRadius = safeRadius or 100
 
@@ -336,7 +359,14 @@ do
         return nil
     end
 
-    -- TODO: description
+    -------------------------------------
+    -- Returns a table of all scenery objects in a given radius
+    -------------------------------------
+    -- @param center 2D point on which to center object search
+    -- @param radius Radius (in meters) around the center in which to search
+    -- @param minHealth Minimum health for a scenery object to be valid. Allow filtering of small objects like bollards (default: 0)
+    -- @return A table of scenery objects
+    -------------------------------------
     function DCSEx.world.getSceneriesInZone(center, radius, minHealth)
         minHealth = minHealth or 0
         local sceneries = {}
@@ -362,23 +392,12 @@ do
     end
 
     -------------------------------------
-    -- Searches and return a static object by its ID
-    -- @param staticID ID of the static object
-    -- @return An unit, or nil if no static object with this ID was found
+    -- Returns the maximum height difference in a given radius around a point
     -------------------------------------
-    function DCSEx.world.getStaticObjectByID(staticID)
-        for coalitionID = 1, 2 do
-            for _, s in pairs(coalition.getStaticObjects(coalitionID)) do
-                if DCSEx.dcs.getObjectIDAsNumber(s) == staticID then
-                    return s
-                end
-            end
-        end
-
-        return nil
-    end
-
-    -- TODO: description, update file header
+    -- @param coord 2D point in which to search
+    -- @param searchRadius Radius in meters
+    -- @return A numeric value, in meters
+    -------------------------------------
     function DCSEx.world.getTerrainHeightDiff(coord, searchRadius)
 		local samples = {}
         searchRadius = searchRadius or 5
@@ -403,30 +422,37 @@ do
         return tMax - tMin
 	end
 
-    -- TODO: description, update file header
+    -------------------------------------
+    -- Returns the 2D center of unit group
+    -------------------------------------
+    -- @param group A group of unit
+    -- @return The 2D point center of all units' positions or 0,0 if no units were found
+    -------------------------------------
     function DCSEx.world.getGroupCenter(group)
         return DCSEx.world.getUnitsCenter(group:getUnits())
     end
 
-    -- TODO: description, update file header
-    function DCSEx.world.getUnitsCenter(units)
-        if not units or #units == 0 then return { x = 0, y = 0 } end
-
-        local center = { x = 0, y = 0 }
-        for _,u in pairs(units) do
-            local uPt2 = DCSEx.math.vec3ToVec2(u:getPoint())
-            center.x = center.x + uPt2.x
-            center.y = center.y + uPt2.y
+    -------------------------------------
+    -- Searches and return a coalition static object by its ID
+    -------------------------------------
+    -- @param unitID ID of the static object
+    -- @return An static object, or nil if no unit with this ID was found
+    -------------------------------------
+    function DCSEx.world.getStaticObjectByID(staticID)
+        for coalitionID = 1,2 do
+            for _,s in pairs(coalition.getStaticObjects(coalitionID)) do
+                if DCSEx.dcs.getObjectIDAsNumber(s) == staticID then
+                    return s
+                end
+            end
         end
 
-        center.x = center.x / #units
-        center.y = center.y / #units
-
-        return center
+        return nil
     end
 
     -------------------------------------
-    -- Searches and return an unit by its ID
+    -- Searches and returns an unit by its ID
+    -------------------------------------
     -- @param unitID ID of the unit
     -- @return An unit, or nil if no unit with this ID was found
     -------------------------------------
@@ -446,23 +472,34 @@ do
     end
 
     -------------------------------------
-    -- Searches and return a coalition static object by its ID
-    -- @param unitID ID of the static object
-    -- @return An static object, or nil if no unit with this ID was found
+    -- Returns the 2D center of a number of units
     -------------------------------------
-    function DCSEx.world.getStaticObjectByID(staticID)
-        for coalitionID = 1,2 do
-            for _,s in pairs(coalition.getStaticObjects(coalitionID)) do
-                if DCSEx.dcs.getObjectIDAsNumber(s) == staticID then
-                    return s
-                end
-            end
+    -- @param units A table of units
+    -- @return The 2D point center of all units' positions or 0,0 if no units were found
+    -------------------------------------
+    function DCSEx.world.getUnitsCenter(units)
+        if not units or #units == 0 then return { x = 0, y = 0 } end
+
+        local center = { x = 0, y = 0 }
+        for _,u in pairs(units) do
+            local uPt2 = DCSEx.math.vec3ToVec2(u:getPoint())
+            center.x = center.x + uPt2.x
+            center.y = center.y + uPt2.y
         end
 
-        return nil
+        center.x = center.x / #units
+        center.y = center.y / #units
+
+        return center
     end
 
-    -- TODO: description
+    -------------------------------------
+    -- Returns true if a group exists and any of its units are alive, false otherwise
+    -------------------------------------
+    -- @param g A group
+    -- @param unitsMustBeInAir Are units on the ground ignored? (default: false)
+    -- @return True if a group exists and any of its units are alive, false otherwise
+    -------------------------------------
     function DCSEx.world.isGroupAlive(g, unitsMustBeInAir)
         if not g then return false end
         if not g:isExist() then return false end
@@ -484,20 +521,14 @@ do
         return atLeastOneActiveUnit
     end
 
-    -- TODO: description & file header
+    -------------------------------------
+    -- Sets the health of an unit
+    -------------------------------------
+    -- @param unitID ID of the unit
+    -- @param life Life percentage
+    -------------------------------------
     function DCSEx.world.setUnitLifePercent(unitID, life)
         net.dostring_in("mission", string.format("a_unit_set_life_percentage(%d, %f)", unitID, life))
-    end
-
-    -- TODO: description & file header
-    function DCSEx.world.explodeUnit(unitID, amount)
-        net.dostring_in("mission", string.format("a_explosion_unit(%d, %f)", unitID, amount))
-    end
-
-    function DCSEx.world.destroyGroupByID(groupID)
-        if not groupID then return end
-        local g = DCSEx.world.getGroupByID(groupID)
-        if g then g:destroy() end
     end
 
     -- function DCSEx.world.destroySceneryInZone(zone, destructionPercent)
@@ -517,5 +548,42 @@ do
 
     -- function DCSEx.world.shellingZone(zone, tnt, shellsCount)
     --     net.dostring_in("mission", string.format("a_shelling_zone(%d, %f, %d)", zone.zoneId, tnt, shellsCount))
+    -- end
+
+    -- function DCSEx.world.findSpawnPoint(vec2, minRadius, maxRadius, surfaceType, radiusWithoutScenery, territorySide, expandSearch)
+    --     expandSearch = expandSearch or true
+
+    --     for _=0,16 do
+    --         for _=0,16 do
+    --             local spawnPoint = nil
+
+    --             spawnPoint = DCSEx.math.randomPointInCircle(
+    --                 vec2,
+    --                 DCSEx.converter.nmToMeters(maxRadius),
+    --                 DCSEx.converter.nmToMeters(minRadius),
+    --                 surfaceType)
+
+    --             if spawnPoint and radiusWithoutScenery then
+    --                 if DCSEx.world.collidesWithScenery(spawnPoint, radiusWithoutScenery) then
+    --                     spawnPoint = nil
+    --                 end
+    --             end
+
+    --             if spawnPoint and territorySide then
+    --                 if scramble.territories.getOwner(spawnPoint) ~= territorySide then
+    --                     spawnPoint = nil
+    --                 end
+    --             end
+
+    --             if spawnPoint then return spawnPoint end
+    --         end
+
+    --         if not expandSearch then return nil end
+
+    --         minRadius = minRadius * 0.9
+    --         maxRadius = maxRadius * 1.2
+    --     end
+
+    --     return nil
     -- end
 end
