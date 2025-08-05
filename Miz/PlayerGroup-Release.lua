@@ -65,7 +65,7 @@
 										["alt"] = 22,
 										["alt_type"] = "BARO",
 										["livery_id"] = "default",
-										["skill"] = "Player",
+										["skill"] = "Client",
 										["speed"] = 138.88888888889,
 										["type"] = "Su-25T",
 										["unitId"] = 1,

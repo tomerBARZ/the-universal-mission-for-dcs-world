@@ -205,12 +205,11 @@ do
             end
         end
 
-        if TUM.settings.getValue(TUM.settings.id.MULTIPLAYER) then return end
-
+        -- if TUM.settings.getValue(TUM.settings.id.MULTIPLAYER) then return end
         -- When player dies in single-player, fail the mission
-        if event.id == world.event.S_EVENT_CRASH or event.id == world.event.S_EVENT_EJECTION or event.id == world.event.S_EVENT_PILOT_DEAD then
-            TUM.mission.endMission(TUM.mission.endCause.FAILED)
-        end
+        -- if event.id == world.event.S_EVENT_CRASH or event.id == world.event.S_EVENT_EJECTION or event.id == world.event.S_EVENT_PILOT_DEAD then
+        --     TUM.mission.endMission(TUM.mission.endCause.FAILED)
+        -- end
     end
 
     function TUM.mission.playMissionSummaryRadioMessage(onlyShowIncomplete, delayed)

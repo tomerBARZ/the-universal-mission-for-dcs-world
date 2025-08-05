@@ -68,29 +68,25 @@ function TUM.initialize()
             end
 
             if #DCSEx.envMission.getPlayerGroups() == 0 then
-                TUM.log("No \"Player\" or \"Client\" aircraft slots have been found. Please fix this problem in the mission editor.", TUM.logger.logLevel.ERROR)
+                TUM.log("No \"Client\" aircraft slots have been found. Please fix this problem in the mission editor.", TUM.logger.logLevel.ERROR)
                 return nil
             end
 
             if world:getPlayer() then
-                coreSettings.multiplayer = false
+                TUM.log("A \"Player\" aircraft slot has been found. The Universal Mission only uses \"Client\" slots, even for single-player missions. Please fix this problem in the mission editor.", TUM.logger.logLevel.ERROR)
+                return nil
+            end
 
-                if #DCSEx.envMission.getPlayerGroups() > 1 then
-                    TUM.log("Multiple players slots have been found in addition to the single-player \"Player\" aircraft. Please fix this problem in the mission editor.", TUM.logger.logLevel.ERROR)
-                    return nil
-                end
-            else
-                coreSettings.multiplayer = true
+            coreSettings.multiplayer = (#DCSEx.envMission.getPlayerGroups() > 1)
 
-                if #DCSEx.envMission.getPlayerGroups(coalition.side.BLUE) == 0 and #DCSEx.envMission.getPlayerGroups(coalition.side.RED) == 0 then
-                    TUM.log("Neither BLUE nor RED coalitions have player slots. Please make sure one coalition has player slots in the mission editor.", TUM.logger.logLevel.ERROR)
-                    return nil
-                end
+            if #DCSEx.envMission.getPlayerGroups(coalition.side.BLUE) == 0 and #DCSEx.envMission.getPlayerGroups(coalition.side.RED) == 0 then
+                TUM.log("Neither BLUE nor RED coalitions have player slots. Please make sure one coalition has player slots in the mission editor.", TUM.logger.logLevel.ERROR)
+                return nil
+            end
 
-                if #DCSEx.envMission.getPlayerGroups(coalition.side.BLUE) > 0 and #DCSEx.envMission.getPlayerGroups(coalition.side.RED) > 0 then
-                    TUM.log("Both coalitions have player slots. The Universal Mission is a purely singleplayer/PvE experience and does not support PvP. Please make sure only one coalition has player slots in the mission editor.", TUM.logger.logLevel.ERROR)
-                    return nil
-                end
+            if #DCSEx.envMission.getPlayerGroups(coalition.side.BLUE) > 0 and #DCSEx.envMission.getPlayerGroups(coalition.side.RED) > 0 then
+                TUM.log("Both coalitions have player slots. The Universal Mission is a purely singleplayer/PvE experience and does not support PvP. Please make sure only one coalition has player slots in the mission editor.", TUM.logger.logLevel.ERROR)
+                return nil
             end
 
             if not TUM.territories.onStartUp() then return nil end
