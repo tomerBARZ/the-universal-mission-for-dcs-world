@@ -132,7 +132,7 @@ do
                 end
                 TUM.log("Spawned AWACS aircraft")
             else
-                TUM.log("Failed to create AWACS aircraft", TUM.logLevel.WARNING)
+                TUM.log("Failed to create AWACS aircraft", TUM.logger.logLevel.WARNING)
             end
         else
             TUM.log("No AWACS aircraft available")

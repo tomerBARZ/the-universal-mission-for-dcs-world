@@ -9,146 +9,15 @@ TUM.VERSION_STRING = "0.1.250722"
 
 TUM.DEBUG_MODE = __DEBUG_MODE__
 
---------------------------------------
---- Logging system
---------------------------------------
-
-TUM.logLevel = {
-    TRACE = -2,
-    DEBUG = -1,
-    INFO = 0,
-    WARNING = 1,
-    ERROR = 2
-}
-
-TUM.Logger = {}
-
-function TUM.Logger.splitText(text)
-    local tbl = {}
-    while text:len() > 4000 do
-        local sub = text:sub(1, 4000)
-        text = text:sub(4001)
-        table.insert(tbl, sub)
-    end
-    table.insert(tbl, text)
-    return tbl
-end
-
-function TUM.Logger.formatText(text, ...)
-    if not text then
-        return ""
-    end
-    if type(text) ~= 'string' then
-        text = TUM.p(text)
-    else
-        local args = ...
-        if args and args.n and args.n > 0 then
-            local pArgs = {}
-            for i=1,args.n do
-                pArgs[i] = TUM.p(args[i])
-            end
-                text = text:format(unpack(pArgs))
-            end
-        end
-    local fName = nil
-    local cLine = nil
-    if debug and debug.getinfo then
-        local dInfo = debug.getinfo(3)
-        fName = dInfo.name
-        cLine = dInfo.currentline
-        -- local fsrc = dinfo.short_src
-        --local fLine = dInfo.linedefined
-    end
-    if fName and cLine then
-        return fName .. '|' .. cLine .. ': ' .. text
-    elseif cLine then
-        return cLine .. ': ' .. text
-    else
-        return ' ' .. text
-    end
-end
-
-function TUM.Logger.print(level, text)
-    local texts = TUM.Logger.splitText(text)
-    local levelChar = 'E'
-    local logFunction = function(messageForLogfile, messageForUser)
-        trigger.action.outText("ERROR: "..messageForUser, 3600)
-        env.error(messageForLogfile)
-    end
-    if level == TUM.logLevel.WARNING then
-        levelChar = 'W'
-        logFunction = function(messageForLogfile, messageForUser)
-            trigger.action.outText("WARNING: "..messageForUser, 10)
-            env.warning(messageForLogfile)
-        end
-    elseif level == TUM.logLevel.INFO then
-        levelChar = 'I'
-        logFunction = function(messageForLogfile, messageForUser)
-            if TUM.DEBUG_MODE then -- Info messages are only printed out if debug mode is enabled
-                trigger.action.outText(messageForUser, 3)
-            end
-            env.info(messageForLogfile)
-        end
-    elseif level == TUM.logLevel.DEBUG then
-        levelChar = 'D'
-        logFunction = env.info
-    elseif level == TUM.logLevel.TRACE then
-        levelChar = 'T'
-        logFunction = env.info
-    end
-    for i = 1, #texts do
-        if i == 1 then
-            local theText =  'TUM|' .. levelChar .. '|' .. texts[i]
-            logFunction(theText, texts[i])
-        else
-            local theText = texts[i]
-            logFunction(theText, theText)
-        end
-    end
-end
-
-function TUM.Logger.error(text, ...)
-    text = TUM.Logger.formatText(text, arg)
-    local mText = text
-    if debug and debug.traceback then
-        mText = mText .. "\n" .. debug.traceback()
-    end
-    TUM.Logger.print(TUM.logLevel.ERROR, mText)
-end
-
-function TUM.Logger.warn(text, ...)
-    text = TUM.Logger.formatText(text, arg)
-    TUM.Logger.print(TUM.logLevel.WARNING, text)
-end
-
-function TUM.Logger.info(text, ...)
-    text = TUM.Logger.formatText(text, arg)
-    TUM.Logger.print(TUM.logLevel.INFO, text)
-end
-
-function TUM.Logger.debug(text, ...)
-    if TUM.DEBUG_MODE then
-        text = TUM.Logger.formatText(text, arg)
-        TUM.Logger.print(TUM.logLevel.DEBUG, text)
-    end
-end
-
-function TUM.Logger.trace(text, ...)
-    if TUM.DEBUG_MODE then
-        text = TUM.Logger.formatText(text, arg)
-        TUM.Logger.print(TUM.logLevel.TRACE, text)
-    end
-end
-
 -------------------------------------
 -- Prints and logs a debug message
 -- @param message The message
--- @param logLevel Is it a warning, error or info messages (as defined in TUM.logLevel). Info messages are not printed out unless debug mode is enabled.
+-- @param logLevel Is it a warning, error or info messages (as defined in TUM.logger.logLevel). Info messages are not printed out unless debug mode is enabled.
 -------------------------------------
 
 function TUM.log(message, logLevel)
-    logLevel = logLevel or TUM.logLevel.INFO
-    TUM.Logger.print(logLevel, message)
+    logLevel = logLevel or TUM.logger.logLevel.INFO
+    TUM.logger.print(logLevel, message)
 end
 
 --------------------------------------
@@ -199,7 +68,7 @@ function TUM.administrativeSettings.setValue(key, value)
         end
     end
     if not foundKey then
-        TUM.log("Tried to set an unknown administrative setting: "..tostring(key), TUM.logLevel.ERROR)
+        TUM.log("Tried to set an unknown administrative setting: "..tostring(key), TUM.logger.logLevel.ERROR)
         return nil
     end
 
@@ -276,12 +145,12 @@ function TUM.initialize()
             }
 
             if not net or not net.dostring_in then
-                TUM.log("Mission failed to execute. Please copy the provided \"autoexec.cfg\" file to the [Saved Games]\\DCS\\Config directory.\nThe file can be downloaded from github.com/akaAgar/the-universal-mission-for-dcs-world", TUM.logLevel.ERROR)
+                TUM.log("Mission failed to execute. Please copy the provided \"autoexec.cfg\" file to the [Saved Games]\\DCS\\Config directory.\nThe file can be downloaded from github.com/akaAgar/the-universal-mission-for-dcs-world", TUM.logger.logLevel.ERROR)
                 return nil
             end
 
             if #DCSEx.envMission.getPlayerGroups() == 0 then
-                TUM.log("No \"Player\" or \"Client\" aircraft slots have been found. Please fix this problem in the mission editor.", TUM.logLevel.ERROR)
+                TUM.log("No \"Player\" or \"Client\" aircraft slots have been found. Please fix this problem in the mission editor.", TUM.logger.logLevel.ERROR)
                 return nil
             end
 
@@ -289,19 +158,19 @@ function TUM.initialize()
                 coreSettings.multiplayer = false
 
                 if #DCSEx.envMission.getPlayerGroups() > 1 then
-                    TUM.log("Multiple players slots have been found in addition to the single-player \"Player\" aircraft. Please fix this problem in the mission editor.", TUM.logLevel.ERROR)
+                    TUM.log("Multiple players slots have been found in addition to the single-player \"Player\" aircraft. Please fix this problem in the mission editor.", TUM.logger.logLevel.ERROR)
                     return nil
                 end
             else
                 coreSettings.multiplayer = true
 
                 if #DCSEx.envMission.getPlayerGroups(coalition.side.BLUE) == 0 and #DCSEx.envMission.getPlayerGroups(coalition.side.RED) == 0 then
-                    TUM.log("Neither BLUE nor RED coalitions have player slots. Please make sure one coalition has player slots in the mission editor.", TUM.logLevel.ERROR)
+                    TUM.log("Neither BLUE nor RED coalitions have player slots. Please make sure one coalition has player slots in the mission editor.", TUM.logger.logLevel.ERROR)
                     return nil
                 end
 
                 if #DCSEx.envMission.getPlayerGroups(coalition.side.BLUE) > 0 and #DCSEx.envMission.getPlayerGroups(coalition.side.RED) > 0 then
-                    TUM.log("Both coalitions have player slots. The Universal Mission is a purely singleplayer/PvE experience and does not support PvP. Please make sure only one coalition has player slots in the mission editor.", TUM.logLevel.ERROR)
+                    TUM.log("Both coalitions have player slots. The Universal Mission is a purely singleplayer/PvE experience and does not support PvP. Please make sure only one coalition has player slots in the mission editor.", TUM.logger.logLevel.ERROR)
                     return nil
                 end
             end
@@ -387,5 +256,5 @@ end
 if TUM.administrativeSettings.getValue(TUM.administrativeSettings.INITIALIZE_AUTOMATICALLY) then
     TUM.initialize()
 else
-    TUM.log("TUM has been loaded, but not initialized. Call TUM.initialize() to start the mission.", TUM.logLevel.INFO)
+    TUM.log("TUM has been loaded, but not initialized. Call TUM.initialize() to start the mission.", TUM.logger.logLevel.INFO)
 end

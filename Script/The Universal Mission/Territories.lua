@@ -155,18 +155,18 @@ do
                 local zoneName = "BLUFOR"
                 if side == 1 then zoneName = "REDFOR" end
 
-                TUM.log("Coalition "..name.." has no territory zones and/or controls no airfields. Please add zone with a name starting with "..zoneName.." in the mission editor and make sure at least one contains an airbase.", TUM.logLevel.ERROR)
+                TUM.log("Coalition "..name.." has no territory zones and/or controls no airfields. Please add zone with a name starting with "..zoneName.." in the mission editor and make sure at least one contains an airbase.", TUM.logger.logLevel.ERROR)
                 return false
             end
         end
 
         if #missionZones == 0 then
-            TUM.log("No mission zones found. Create at least one mission zone in the mission editor.", TUM.logLevel.ERROR)
+            TUM.log("No mission zones found. Create at least one mission zone in the mission editor.", TUM.logger.logLevel.ERROR)
             return false
         end
 
         if #missionZones > 10 then
-            TUM.log("Too many mission zones, extra zones removed.", TUM.logLevel.WARNING)
+            TUM.log("Too many mission zones, extra zones removed.", TUM.logger.logLevel.WARNING)
             while #missionZones > 10 do
                 table.remove(missionZones, 11)
             end
@@ -177,10 +177,10 @@ do
         -- zones[coalition.side.RED] = DCSEx.zones.getByName("REDFOR")
 
         -- if not zones[coalition.side.BLUE] then
-        --     TUM.log("BLUFOR zone not found.", TUM.logLevel.ERROR)
+        --     TUM.log("BLUFOR zone not found.", TUM.logger.logLevel.ERROR)
         --     return false
         -- elseif not zones[coalition.side.RED] then
-        --     TUM.log("REDFOR zone not found.", TUM.logLevel.ERROR)
+        --     TUM.log("REDFOR zone not found.", TUM.logger.logLevel.ERROR)
         --     return false
         -- end
 

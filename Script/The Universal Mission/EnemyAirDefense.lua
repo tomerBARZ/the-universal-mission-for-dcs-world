@@ -109,7 +109,7 @@ do
                     if addAirDefenseGroup(side, faction, unitFamily, point) then
                         realCount = realCount + 1
                     else
-                        TUM.log("Failed to add point air defense group near objective "..TUM.objectives.getObjective(i).name..".", TUM.logLevel.WARNING)
+                        TUM.log("Failed to add point air defense group near objective "..TUM.objectives.getObjective(i).name..".", TUM.logger.logLevel.WARNING)
                     end
                 end
             end
@@ -134,7 +134,7 @@ do
             if addAirDefenseGroup(side, faction, unitFamily, point) then
                 realCount = realCount + 1
             else
-                TUM.log("Failed to add local air defense group.", TUM.logLevel.WARNING)
+                TUM.log("Failed to add local air defense group.", TUM.logger.logLevel.WARNING)
             end
         end
 
@@ -154,7 +154,7 @@ do
             if addAirDefenseGroup(side, faction, DCSEx.enums.unitFamily.AIRDEFENSE_MANPADS, point) then
                 realCount = realCount + 1
             else
-                TUM.log("Failed to add local MANPADS group.", TUM.logLevel.WARNING)
+                TUM.log("Failed to add local MANPADS group.", TUM.logger.logLevel.WARNING)
             end
         end
 

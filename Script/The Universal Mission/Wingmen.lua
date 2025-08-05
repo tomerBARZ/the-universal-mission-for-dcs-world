@@ -48,7 +48,7 @@ do
         -- Retrive player unit type
         local playerTypeName = player:getTypeName()
         if not Library.aircraft[playerTypeName] then
-            TUM.log("Cannot spawn AI wingmen, aircraft \""..playerTypeName.."\" not found in the database.", TUM.logLevel.WARNING)
+            TUM.log("Cannot spawn AI wingmen, aircraft \""..playerTypeName.."\" not found in the database.", TUM.logger.logLevel.WARNING)
             return
         end
         local playerCategory = Group.Category.AIRPLANE
@@ -88,7 +88,7 @@ do
         )
 
         if not groupInfo then
-            TUM.log("Failed to spawn AI wingmen", TUM.logLevel.WARNING)
+            TUM.log("Failed to spawn AI wingmen", TUM.logger.logLevel.WARNING)
             return
         end
         wingmenGroupID = groupInfo.groupID

@@ -67,7 +67,7 @@ do
         end
 
         if TUM.objectives.getCount() == 0 then
-            TUM.log("Couldn't create any objective, mission creation failed.", TUM.logLevel.WARNING)
+            TUM.log("Couldn't create any objective, mission creation failed.", TUM.logger.logLevel.WARNING)
             closeMission(true)
             return
         end

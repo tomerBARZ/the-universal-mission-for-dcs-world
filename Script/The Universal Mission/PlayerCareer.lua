@@ -274,7 +274,7 @@ do
             msg = msg.."To enable the IO module, comment or remove the \"sanitizeModule('io')\" line in \n"
             msg = msg.."[DCSWorld installation directory]\\Scripts\\MissionScripting.lua and restart the game."
 
-            TUM.log(msg, TUM.logLevel.WARNING)
+            TUM.log(msg, TUM.logger.logLevel.WARNING)
         end
 
         return true

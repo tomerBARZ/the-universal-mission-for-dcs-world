@@ -46,7 +46,7 @@ do
 
         local taskID = pickRandomTask()
         if not taskID then
-            TUM.log("Failed to find a valid task.", TUM.logLevel.WARNING)
+            TUM.log("Failed to find a valid task.", TUM.logger.logLevel.WARNING)
             return nil
         end
         local objectiveDB = Library.tasks[taskID]
@@ -58,7 +58,7 @@ do
         if DCSEx.table.contains(objectiveDB.flags, DCSEx.enums.taskFlag.SCENERY_TARGET) then
             local validSceneries = DCSEx.world.getSceneriesInZone(zone, DCSEx.zones.getRadius(zone), 250)
             if not validSceneries or #validSceneries == 0 then
-                TUM.log("Failed to find a valid scenery object to use as target.", TUM.logLevel.WARNING)
+                TUM.log("Failed to find a valid scenery object to use as target.", TUM.logger.logLevel.WARNING)
                 return nil
             end
 
@@ -76,7 +76,7 @@ do
         end
 
         if not spawnPoint2 then
-            TUM.log("Failed to find a spawn point for objective.", TUM.logLevel.WARNING)
+            TUM.log("Failed to find a spawn point for objective.", TUM.logger.logLevel.WARNING)
             return nil
         end
 
@@ -136,7 +136,7 @@ do
             end
 
             if not groupInfo then
-                TUM.log("Failed to spawn a group for objective.", TUM.logLevel.WARNING)
+                TUM.log("Failed to spawn a group for objective.", TUM.logger.logLevel.WARNING)
                 return nil
             end
             objective.groupID = groupInfo.groupID
