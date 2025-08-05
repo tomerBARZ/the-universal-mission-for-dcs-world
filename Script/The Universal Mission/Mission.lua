@@ -107,7 +107,7 @@ do
     end
 
     function TUM.mission.getPlayerCallsign()
-        local player = world.getPlayer()
+        local player = DCSEx.world.getFirstPlayer(TUM.settings.getPlayerCoalition())
         if player then return player:getCallsign() end
         return "Flight"
     end

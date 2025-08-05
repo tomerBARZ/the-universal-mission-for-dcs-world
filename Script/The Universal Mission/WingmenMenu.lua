@@ -138,7 +138,9 @@ do
         -- "Change altitude" submenu
         ------------------------------------------------------
         local altitudePath = missionCommands.addSubMenu("Change altitude", rootPath)
-        local baseAltitude = DCSEx.converter.metersToFeet(Library.aircraft[world.getPlayer():getTypeName()].altitude)
+        local player = DCSEx.world.getFirstPlayer(TUM.settings.getPlayerCoalition())
+        local baseAltitude = DCSEx.converter.metersToFeet(10000)
+        if player then baseAltitude = DCSEx.converter.metersToFeet(Library.aircraft[player:getTypeName()].altitude) end
         local altitudeFactions = { 0, 0.25, 0.5, 0.75, 1.0, 1.25, 1.5 }
         for _,f in ipairs(altitudeFactions) do
             local altText = DCSEx.string.toStringThousandsSeparator(math.floor((baseAltitude * f) / 100) * 100).."ft"

@@ -29,7 +29,7 @@ do
     end
 
     local function getAltitude()
-        local player = world.getPlayer()
+        local player = DCSEx.world.getFirstPlayer(TUM.settings.getPlayerCoalition())
         if not player then return 600 end -- Don't care about altitude if player's dead anyway
 
         local altitude = Library.aircraft[player:getTypeName()].altitude * cruiseAltitudeFraction
@@ -133,10 +133,16 @@ do
     local function getRejoinTaskTable(formationDistance)
         formationDistance = formationDistance or 800
 
+        local player = DCSEx.world.getFirstPlayer(TUM.settings.getPlayerCoalition())
+        local groupID = 1
+        if player then
+            groupID = DCSEx.dcs.getObjectIDAsNumber(player:getGroup()) or 1
+        end
+
         return {
             id = "Follow",
             params = {
-                groupId = DCSEx.dcs.getObjectIDAsNumber(world.getPlayer():getGroup()),
+                groupId = groupID,
                 lastWptIndexFlag  = false,
                 lastWptIndex = -1,
                 pos = { x = -formationDistance, y = 0, z = -formationDistance }
