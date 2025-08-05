@@ -205,11 +205,15 @@ do
             end
         end
 
-        -- if TUM.settings.getValue(TUM.settings.id.MULTIPLAYER) then return end
-        -- When player dies in single-player, fail the mission
-        -- if event.id == world.event.S_EVENT_CRASH or event.id == world.event.S_EVENT_EJECTION or event.id == world.event.S_EVENT_PILOT_DEAD then
-        --     TUM.mission.endMission(TUM.mission.endCause.FAILED)
-        -- end
+        -- When the player dies in single-player, remind them that they can respawn
+        -- (because no one knows the "respawn" shortcut key in DCS and it's not possible to respawn by
+        -- changing slots when there's only one)
+        if not TUM.settings.getValue(TUM.settings.id.MULTIPLAYER) then
+            if event.id == world.event.S_EVENT_CRASH or event.id == world.event.S_EVENT_EJECTION or event.id == world.event.S_EVENT_PILOT_DEAD then
+                -- TUM.mission.endMission(TUM.mission.endCause.FAILED)
+                trigger.action.outText("Your aircraft has been downed.\nPress Right CTRL+Right Shift+Tab (default) to respawn.", 10)
+            end
+        end
     end
 
     function TUM.mission.playMissionSummaryRadioMessage(onlyShowIncomplete, delayed)
