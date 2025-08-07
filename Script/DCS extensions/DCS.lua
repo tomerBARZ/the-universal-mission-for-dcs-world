@@ -1,6 +1,7 @@
 -- ====================================================================================
 -- DCSEX.DCS - FUNCTIONS HANDLING DCS WORLD'S GAME RULES AND TABLES
 -- ====================================================================================
+-- DCSEx.dcs.doNothing()
 -- DCSEx.dcs.getBRAA(point, refPoint, showAltitude, metricSystem, casualFormat)
 -- DCSEx.dcs.getCJTFForCoalition(coalitionID)
 -- DCSEx.dcs.getCoalitionAsString(coalitionID)
@@ -22,6 +23,12 @@
 -- ====================================================================================
 
 DCSEx.dcs = { }
+
+-------------------------------------
+-- Does nothing. Used to create commands that do nothing in the F10 menu
+-------------------------------------
+function DCSEx.dcs.doNothing()
+end
 
 -------------------------------------
 -- Gets a BRAA (bearing, range, altitude, aspect) string about a point
