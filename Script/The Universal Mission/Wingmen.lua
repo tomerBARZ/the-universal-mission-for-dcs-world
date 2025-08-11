@@ -180,6 +180,8 @@ do
         elseif event.id == world.event.S_EVENT_LAND then -- Remove wingmen on player landing
             if not event.initiator:getPlayerName() then return end
             TUM.wingmen.removeAll()
+        elseif event.id == world.event.S_EVENT_PLAYER_ENTER_UNIT then -- Remove wingmen when player takes control of a new unit
+            TUM.wingmen.removeAll()
         end
     end
 
