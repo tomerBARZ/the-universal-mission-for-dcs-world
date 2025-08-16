@@ -94,7 +94,6 @@ do
     -------------------------------------
     function TUM.playerCareer.awardScore(score, objectives)
         if not DCSEx.io.canReadAndWrite() then return false end -- IO disabled, career and scoring disabled
-        if TUM.settings.getValue(TUM.settings.id.MULTIPLAYER) then return false end -- No career in multiplayer
         score = math.max(0, math.floor(score or 0))
 
         fixIncompleteStats()
@@ -147,7 +146,6 @@ do
     -------------------------------------
     function TUM.playerCareer.createMenu()
         if not DCSEx.io.canReadAndWrite() then return end -- IO disabled, career and scoring disabled
-        if TUM.settings.getValue(TUM.settings.id.MULTIPLAYER) then return end -- No career in multiplayer
 
         missionCommands.addCommand("✪ View pilot career stats", nil, TUM.playerCareer.displayMedalBox, true)
     end
@@ -157,7 +155,6 @@ do
     -------------------------------------
     function TUM.playerCareer.displayMedalBox(printSummary)
         if not DCSEx.io.canReadAndWrite() then return end -- IO disabled, career and scoring disabled
-        if TUM.settings.getValue(TUM.settings.id.MULTIPLAYER) then return end -- No career in multiplayer
         fixIncompleteStats()
 
         if printSummary then
@@ -184,7 +181,6 @@ do
     -------------------------------------
     function TUM.playerCareer.getCareerSummary()
         if not DCSEx.io.canReadAndWrite() then return "" end -- IO disabled, career and scoring disabled
-        if TUM.settings.getValue(TUM.settings.id.MULTIPLAYER) then return "" end -- No career in multiplayer
         fixIncompleteStats()
 
         local playerName = "Player"
@@ -235,7 +231,6 @@ do
     -- @return True if everything worked (or disabled because of MP), false if an error happened
     -------------------------------------
     function TUM.playerCareer.load()
-        if TUM.settings.getValue(TUM.settings.id.MULTIPLAYER) then return true end -- No career in multiplayer
         if not DCSEx.io.canReadAndWrite() then return false end
 
         local jsonString = DCSEx.io.load("TheUniversalMission.sav")
@@ -263,7 +258,6 @@ do
     -------------------------------------
     function TUM.playerCareer.onStartUp()
         fixIncompleteStats()
-        if TUM.settings.getValue(TUM.settings.id.MULTIPLAYER) then return true end -- No career in multiplayer
 
         if DCSEx.io.canReadAndWrite() then
             TUM.log("Lua IO module available, can read and write.")
@@ -284,7 +278,6 @@ do
     -------------------------------------
     function TUM.playerCareer.reset()
         if not DCSEx.io.canReadAndWrite() then return end -- IO disabled, career and scoring disabled
-        if TUM.settings.getValue(TUM.settings.id.MULTIPLAYER) then return end -- No career in multiplayer
 
         careerStats = nil
         fixIncompleteStats()
@@ -296,7 +289,6 @@ do
     -- @return True if everything worked (or disabled), false if an error happened
     -------------------------------------
     function TUM.playerCareer.save()
-        if TUM.settings.getValue(TUM.settings.id.MULTIPLAYER) then return true end -- No career in multiplayer
         if not DCSEx.io.canReadAndWrite() then return true end -- IO disabled, career and scoring disabled
 
         fixIncompleteStats()

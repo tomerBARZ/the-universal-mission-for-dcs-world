@@ -73,6 +73,7 @@ do
         local units = Library.factions.getUnits(faction, DCSEx.enums.unitFamily.PLANE_FIGHTER, groupSize, true)
         if not units or #units == 0 then return false end -- No aircraft found
 
+		trigger.action.outText("launchNewAircraftGroup " .. side .. " airbase options " .. #airbases, 5)
         local launchAirbase = airbases[DCSEx.math.clamp(math.random(1, math.ceil(math.sqrt(#airbases))), 1, #airbases)]
         local originPt = DCSEx.math.vec3ToVec2(launchAirbase:getPoint())
 

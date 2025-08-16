@@ -267,7 +267,8 @@ do
             -- end
 
             options.altitude = options.altitude or aircraftDB.altitude or DCSEx.converter.feetToMeters(15000)
-            options.altitudeType = "BARO"
+			trigger.action.outText("SPAWNING AIRCRAFT AT ALTITUDE " .. options.altitude, 5)
+            options.altitudeType = "RADIO"
             options.speed = DCSEx.math.randomFloat(0.9, 1.1) * (aircraftDB.speed or 250)
         end
 

@@ -52,8 +52,8 @@ goto END
 :COPY-TO-DCS
 if not exist "%userprofile%\Saved Games\DCS\Missions\" goto END
 if not exist *.miz goto END
-echo Copying output MIZ files to %userprofile%\Saved Games\DCS\Missions...
-copy /y *.miz "%userprofile%\Saved Games\DCS\Missions"
+echo Copying output MIZ files to %userprofile%\Saved Games\DCS\Missions\Universal\Build...
+copy /y *.miz "%userprofile%\Saved Games\DCS\Missions\Universal\Build"
 echo DONE
 goto END
 

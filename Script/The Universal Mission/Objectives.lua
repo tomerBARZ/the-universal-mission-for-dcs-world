@@ -171,8 +171,10 @@ do
         if index < 1 or index > #objectives then return end -- Out of bounds
         if objectives[index].completed then return end -- Objective already completed
 
-        if event.id ~= world.event.S_EVENT_DEAD and event.id ~= world.event.S_EVENT_UNIT_LOST then return end
         if not event.initiator then return end
+		if event.id ~= world.event.S_EVENT_DEAD and event.id ~= world.event.S_EVENT_UNIT_LOST then
+			return
+		end
 
         if objectives[index].isSceneryTarget then
             if Object.getCategory(event.initiator) == Object.Category.SCENERY then

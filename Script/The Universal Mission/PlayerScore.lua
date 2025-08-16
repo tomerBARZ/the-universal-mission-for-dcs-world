@@ -216,7 +216,6 @@ do
     -------------------------------------
     function TUM.playerScore.award(amount, message)
         if not DCSEx.io.canReadAndWrite() then return end -- IO disabled, career and scoring disabled
-        if TUM.settings.getValue(TUM.settings.id.MULTIPLAYER) then return end -- No scoring in multiplayer
 
         score = score + amount
 
@@ -230,7 +229,6 @@ do
     -------------------------------------
     function TUM.playerScore.awardCompletedObjective()
         if not DCSEx.io.canReadAndWrite() then return end -- IO disabled, career and scoring disabled
-        if TUM.settings.getValue(TUM.settings.id.MULTIPLAYER) then return end -- No scoring in multiplayer
 
         completedObjectives = completedObjectives + 1
     end
@@ -241,7 +239,6 @@ do
     -------------------------------------
     function TUM.playerScore.getCompletedObjectives()
         if not DCSEx.io.canReadAndWrite() then return 0 end -- IO disabled, career and scoring disabled
-        if TUM.settings.getValue(TUM.settings.id.MULTIPLAYER) then return 0 end -- No scoring in multiplayer
 
         return completedObjectives
     end
@@ -252,7 +249,6 @@ do
     -------------------------------------
     function TUM.playerScore.getScore()
         if not DCSEx.io.canReadAndWrite() then return 0 end -- IO disabled, career and scoring disabled
-        if TUM.settings.getValue(TUM.settings.id.MULTIPLAYER) then return 0 end -- No scoring in multiplayer
 
         return score
     end
@@ -265,7 +261,6 @@ do
     -------------------------------------
     function TUM.playerScore.getScoreMultiplier(settingID, settingValue)
         if not DCSEx.io.canReadAndWrite() then return 0 end -- IO disabled, career and scoring disabled
-        if TUM.settings.getValue(TUM.settings.id.MULTIPLAYER) then return 0 end -- No scoring in multiplayer
 
         settingValue = TUM.settings.getValue(settingID)
 
@@ -293,7 +288,6 @@ do
     -------------------------------------
     function TUM.playerScore.getTotalScoreMultiplier()
         if not DCSEx.io.canReadAndWrite() then return 1.0 end -- IO disabled, career and scoring disabled
-        if TUM.settings.getValue(TUM.settings.id.MULTIPLAYER) then return 1.0 end -- No scoring in multiplayer
 
         local scoreMultiplier = 1.0
         for _,v in pairs(TUM.settings.id) do
@@ -309,7 +303,6 @@ do
     ----------------------------------------------------------    
     function TUM.playerScore.onClockTick()
         if not DCSEx.io.canReadAndWrite() then return false end -- IO disabled, career and scoring disabled
-        if TUM.settings.getValue(TUM.settings.id.MULTIPLAYER) then return false end -- No scoring in multiplayer
         if score == 0 and completedObjectives == 0 then return false end -- Nothing to remind the player of
 
         scoreReminderIntervalLeft = scoreReminderIntervalLeft - 1
@@ -328,7 +321,6 @@ do
     function TUM.playerScore.onEvent(event)
         if not event.initiator then return end
         if not DCSEx.io.canReadAndWrite() then return end -- IO disabled, career and scoring disabled
-        if TUM.settings.getValue(TUM.settings.id.MULTIPLAYER) then return end -- No scoring in multiplayer
 
         if event.id == world.event.S_EVENT_KILL then
             onKillEvent(event)
@@ -341,7 +333,7 @@ do
         end
 
         if event.id == world.event.S_EVENT_CRASH or event.id == world.event.S_EVENT_PILOT_DEAD or event.id == world.event.S_EVENT_PLAYER_ENTER_UNIT or event.id == world.event.S_EVENT_EJECTION then
-            onResetEvent(event)
+            -- onResetEvent(event)
             return
         end
     end
@@ -355,7 +347,6 @@ do
         if completedObjectives == 0 and score == 0 then return end
 
         if not DCSEx.io.canReadAndWrite() then return end -- IO disabled, career and scoring disabled
-        if TUM.settings.getValue(TUM.settings.id.MULTIPLAYER) then return end -- No scoring in multiplayer
 
         if showMessage then
             local msg = ""
@@ -382,7 +373,6 @@ do
     -------------------------------------
     function TUM.playerScore.showScore()
         if not DCSEx.io.canReadAndWrite() then return end -- IO disabled, career and scoring disabled
-        if TUM.settings.getValue(TUM.settings.id.MULTIPLAYER) then return end -- No scoring in multiplayer
 
         local scoreMsg = "CURRENT PROGRESS (will be awarded to your career profile on landing):\n"
         scoreMsg = scoreMsg.."XP: "..DCSEx.string.toStringThousandsSeparator(score).."\n"

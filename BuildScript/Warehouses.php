@@ -23,7 +23,7 @@ function createWarehousesTable($theaterJson)
         $lua .= "\t\t\t	InitFuel = 100,\n";
         $lua .= "\t\t\t},\n";
         $lua .= "\t\t\tspeed = 16.666666,\n";
-        $lua .= "\t\t\tdynamicSpawn = false,\n";
+        $lua .= "\t\t\tdynamicSpawn = true,\n";
         $lua .= "\t\t\tunlimitedAircrafts = true,\n";
         $lua .= "\t\t\tunlimitedFuel = true,\n";
         $lua .= "\t\t\tmethanol_mixture =\n";

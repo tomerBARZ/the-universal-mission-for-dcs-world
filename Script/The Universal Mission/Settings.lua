@@ -142,7 +142,7 @@ do
 
     function TUM.settings.getSettingsSummary()
         local showScoreMultiplier = true
-        if not DCSEx.io.canReadAndWrite() or TUM.settings.getValue(TUM.settings.id.MULTIPLAYER) then
+        if not DCSEx.io.canReadAndWrite() then
             showScoreMultiplier = false
         end
 
