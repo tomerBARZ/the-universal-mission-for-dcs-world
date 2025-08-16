@@ -48,7 +48,7 @@ do
         -- Retrive player unit type
         local playerTypeName = player:getTypeName()
         if not Library.aircraft[playerTypeName] then
-            TUM.log("Cannot spawn AI wingmen, aircraft \""..playerTypeName.."\" not found in the database.", TUM.logLevel.WARNING)
+            TUM.log("Cannot spawn AI wingmen, aircraft \""..playerTypeName.."\" not found in the database.", TUM.logger.logLevel.WARNING)
             return
         end
         local playerCategory = Group.Category.AIRPLANE
@@ -88,7 +88,7 @@ do
         )
 
         if not groupInfo then
-            TUM.log("Failed to spawn AI wingmen", TUM.logLevel.WARNING)
+            TUM.log("Failed to spawn AI wingmen", TUM.logger.logLevel.WARNING)
             return
         end
         wingmenGroupID = groupInfo.groupID
@@ -179,6 +179,8 @@ do
             TUM.wingmen.create()
         elseif event.id == world.event.S_EVENT_LAND then -- Remove wingmen on player landing
             if not event.initiator:getPlayerName() then return end
+            TUM.wingmen.removeAll()
+        elseif event.id == world.event.S_EVENT_PLAYER_ENTER_UNIT then -- Remove wingmen when player takes control of a new unit
             TUM.wingmen.removeAll()
         end
     end

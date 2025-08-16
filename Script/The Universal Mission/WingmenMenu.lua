@@ -75,11 +75,12 @@ do
     end
 
     function TUM.wingmenMenu.create()
+        local rootMenu = TUM.getOrCreateRootMenu()
         if TUM.settings.getValue(TUM.settings.id.MULTIPLAYER) then return end -- No wingmen in multiplayer
         if TUM.settings.getValue(TUM.settings.id.WINGMEN) <= 1 then return end -- No wingmen
         local isWW2 = (TUM.settings.getValue(TUM.settings) == DCSEx.enums.timePeriod.WORLD_WAR_2) -- Some options are different when time period is WW2
 
-        local rootPath = missionCommands.addSubMenu("✈ Flight")
+        local rootPath = missionCommands.addSubMenu("✈ Flight", rootMenu)
         missionCommands.addCommand("Cover me!", rootPath, radioCommandCoverMe, nil)
 
         ------------------------------------------------------
@@ -137,7 +138,9 @@ do
         -- "Change altitude" submenu
         ------------------------------------------------------
         local altitudePath = missionCommands.addSubMenu("Change altitude", rootPath)
-        local baseAltitude = DCSEx.converter.metersToFeet(Library.aircraft[world.getPlayer():getTypeName()].altitude)
+        local player = DCSEx.world.getFirstPlayer(TUM.settings.getPlayerCoalition())
+        local baseAltitude = DCSEx.converter.metersToFeet(10000)
+        if player then baseAltitude = DCSEx.converter.metersToFeet(Library.aircraft[player:getTypeName()].altitude) end
         local altitudeFactions = { 0, 0.25, 0.5, 0.75, 1.0, 1.25, 1.5 }
         for _,f in ipairs(altitudeFactions) do
             local altText = DCSEx.string.toStringThousandsSeparator(math.floor((baseAltitude * f) / 100) * 100).."ft"

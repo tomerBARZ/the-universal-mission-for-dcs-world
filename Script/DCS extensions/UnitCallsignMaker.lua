@@ -143,7 +143,7 @@ do
 
     local currentCallsigns = {}
     for _,i in pairs(CALLSIGN_TYPE) do
-        currentCallsigns[i] = { 1, 1, 1, 1, 1, 1, 1, 1, 1 }
+        currentCallsigns[i] = { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 }
     end
 
     local function getCallsignTypeByUnitType(unitType)
@@ -229,7 +229,7 @@ do
         for _,g in ipairs(missionGroups) do
             if g.units and g.units[1] then
                 local unit = g.units[1]
-                if unit.callsign and unit.callsign[1] and unit.callsign.name then
+                if unit.callsign and type(unit.callsign) == "table" and unit.callsign.name then
                     local callsignName = unit.callsign.name:sub(1, #unit.callsign.name - 2)
                     incrementCallsign(callsignName, unit.callsign[2])
                 end

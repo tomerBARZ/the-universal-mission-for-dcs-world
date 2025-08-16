@@ -25,7 +25,7 @@ do
         local objective = TUM.objectivesMaker.create()
 
         if not objective then
-            TUM.log("Failed to spawn a group for objective #"..tostring(#objectives + 1)..".", TUM.logLevel.WARNING)
+            TUM.log("Failed to spawn a group for objective #"..tostring(#objectives + 1)..".", TUM.logger.logLevel.WARNING)
             return false
         end
 

@@ -86,7 +86,7 @@
 										["alt"] = 13,
 										["alt_type"] = "BARO",
 										["livery_id"] = "default",
-										["skill"] = "Player",
+										["skill"] = "Client",
 										["speed"] = 138.88888888889,
 										["AddPropAircraft"] = 
 										{

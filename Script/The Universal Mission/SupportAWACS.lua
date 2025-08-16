@@ -91,8 +91,9 @@ do
 
     function TUM.supportAWACS.createMenu()
         if not awacsGroupID then return end -- No AWACS
+        local rootMenu = TUM.getOrCreateRootMenu()
 
-        local rootPath = missionCommands.addSubMenu("⌾ Awacs")
+        local rootPath = missionCommands.addSubMenu("⌾ Awacs", rootMenu)
         missionCommands.addCommand("Bogey dope", rootPath, doCommandBogeyDope, nil)
         missionCommands.addCommand("Picture", rootPath, doCommandPicture, nil)
     end
@@ -131,7 +132,7 @@ do
                 end
                 TUM.log("Spawned AWACS aircraft")
             else
-                TUM.log("Failed to create AWACS aircraft", TUM.logLevel.WARNING)
+                TUM.log("Failed to create AWACS aircraft", TUM.logger.logLevel.WARNING)
             end
         else
             TUM.log("No AWACS aircraft available")

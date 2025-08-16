@@ -67,7 +67,7 @@ do
         end
 
         if TUM.objectives.getCount() == 0 then
-            TUM.log("Couldn't create any objective, mission creation failed.", TUM.logLevel.WARNING)
+            TUM.log("Couldn't create any objective, mission creation failed.", TUM.logger.logLevel.WARNING)
             closeMission(true)
             return
         end
@@ -107,7 +107,7 @@ do
     end
 
     function TUM.mission.getPlayerCallsign()
-        local player = world.getPlayer()
+        local player = DCSEx.world.getFirstPlayer(TUM.settings.getPlayerCoalition())
         if player then return player:getCallsign() end
         return "Flight"
     end
@@ -205,11 +205,14 @@ do
             end
         end
 
-        if TUM.settings.getValue(TUM.settings.id.MULTIPLAYER) then return end
-
-        -- When player dies in single-player, fail the mission
-        if event.id == world.event.S_EVENT_CRASH or event.id == world.event.S_EVENT_EJECTION or event.id == world.event.S_EVENT_PILOT_DEAD then
-            TUM.mission.endMission(TUM.mission.endCause.FAILED)
+        -- When the player dies in single-player, remind them that they can respawn
+        -- (because no one knows the "respawn" shortcut key in DCS and it's not possible to respawn by
+        -- changing slots when there's only one)
+        if not TUM.settings.getValue(TUM.settings.id.MULTIPLAYER) then
+            if event.id == world.event.S_EVENT_CRASH or event.id == world.event.S_EVENT_EJECTION or event.id == world.event.S_EVENT_PILOT_DEAD then
+                -- TUM.mission.endMission(TUM.mission.endCause.FAILED)
+                trigger.action.outText("Your aircraft has been downed.\nPress Right CTRL+Right Shift+Tab (default) to respawn.", 10)
+            end
         end
     end
 

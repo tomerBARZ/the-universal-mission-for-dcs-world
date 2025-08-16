@@ -145,9 +145,10 @@ do
     -- Appends the career menu to the F10 menu. Only works in single-player missions
     -------------------------------------
     function TUM.playerCareer.createMenu()
+        local rootMenu = TUM.getOrCreateRootMenu()
         if not DCSEx.io.canReadAndWrite() then return end -- IO disabled, career and scoring disabled
 
-        missionCommands.addCommand("✪ View pilot career stats", nil, TUM.playerCareer.displayMedalBox, true)
+        missionCommands.addCommand("✪ View pilot career stats", rootMenu, TUM.playerCareer.displayMedalBox, true)
     end
 
     -------------------------------------
@@ -267,7 +268,7 @@ do
             msg = msg.."To enable the IO module, comment or remove the \"sanitizeModule('io')\" line in \n"
             msg = msg.."[DCSWorld installation directory]\\Scripts\\MissionScripting.lua and restart the game."
 
-            TUM.log(msg, TUM.logLevel.WARNING)
+            TUM.log(msg, TUM.logger.logLevel.WARNING)
         end
 
         return true

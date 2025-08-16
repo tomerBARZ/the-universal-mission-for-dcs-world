@@ -125,7 +125,27 @@ do
             elseif DCSEx.string.startsWith(z.name:lower(), "water") then
                 table.insert(waterZones, z)
             else
-                table.insert(missionZones, z)
+                local onlyZonesStartingWith = TUM.administrativeSettings.getValue(TUM.administrativeSettings.ONLY_ZONES_STARTINGWITH)
+                if onlyZonesStartingWith and #onlyZonesStartingWith > 0 then
+                    if type(onlyZonesStartingWith) ~= "table" then
+                        onlyZonesStartingWith = { onlyZonesStartingWith }
+                    end
+                    for _, zonePrefix in ipairs(onlyZonesStartingWith) do
+                        if DCSEx.string.startsWith(z.name:lower(), zonePrefix:lower()) then
+                            table.insert(missionZones, z)
+                            break
+                        end
+                    end
+                else
+                    local ignoreZonesStartingWith = TUM.administrativeSettings.getValue(TUM.administrativeSettings.IGNORE_ZONES_STARTINGWITH)
+                    if ignoreZonesStartingWith then
+                        if not DCSEx.string.startsWith(z.name:lower(), ignoreZonesStartingWith:lower()) then
+                            table.insert(missionZones, z)
+                        end
+                    else
+                        table.insert(missionZones, z)
+                    end
+                end
             end
         end
 
@@ -135,18 +155,18 @@ do
                 local zoneName = "BLUFOR"
                 if side == 1 then zoneName = "REDFOR" end
 
-                TUM.log("Coalition "..name.." has no territory zones and/or controls no airfields. Please add zone with a name starting with "..zoneName.." in the mission editor and make sure at least one contains an airbase.", TUM.logLevel.ERROR)
+                TUM.log("Coalition "..name.." has no territory zones and/or controls no airfields. Please add zone with a name starting with "..zoneName.." in the mission editor and make sure at least one contains an airbase.", TUM.logger.logLevel.ERROR)
                 return false
             end
         end
 
         if #missionZones == 0 then
-            TUM.log("No mission zones found. Create at least one mission zone in the mission editor.", TUM.logLevel.ERROR)
+            TUM.log("No mission zones found. Create at least one mission zone in the mission editor.", TUM.logger.logLevel.ERROR)
             return false
         end
 
         if #missionZones > 10 then
-            TUM.log("Too many mission zones, extra zones removed.", TUM.logLevel.WARNING)
+            TUM.log("Too many mission zones, extra zones removed.", TUM.logger.logLevel.WARNING)
             while #missionZones > 10 do
                 table.remove(missionZones, 11)
             end
@@ -157,10 +177,10 @@ do
         -- zones[coalition.side.RED] = DCSEx.zones.getByName("REDFOR")
 
         -- if not zones[coalition.side.BLUE] then
-        --     TUM.log("BLUFOR zone not found.", TUM.logLevel.ERROR)
+        --     TUM.log("BLUFOR zone not found.", TUM.logger.logLevel.ERROR)
         --     return false
         -- elseif not zones[coalition.side.RED] then
-        --     TUM.log("REDFOR zone not found.", TUM.logLevel.ERROR)
+        --     TUM.log("REDFOR zone not found.", TUM.logger.logLevel.ERROR)
         --     return false
         -- end
 
